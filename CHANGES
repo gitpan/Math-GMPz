@@ -1,0 +1,7 @@
+0.20
+ - First CPAN release
+ - No longer assign Exporter and DynaLoader to @Math::GMPz::ISA.
+ - Add support for use64bitint
+ - add new() function/method to facilitate initialization/assignment
+
+
