@@ -84,7 +84,7 @@ Rrotate_left_ul Rrotate_right_gmp Rrotate_right_ul Rrsa_cert Rruns Rsieve_gmp
 eratosthenes eratosthenes_string merten prime_ratio query_eratosthenes_string
 trial_div_ul
     );
-    $Math::GMPz::VERSION = '0.20';
+    $Math::GMPz::VERSION = '0.21';
 
     DynaLoader::bootstrap Math::GMPz $Math::GMPz::VERSION;
 
@@ -433,6 +433,10 @@ sub query_eratosthenes_string {
 1;
 
 __END__
+
+=head1 NAME
+
+   Math::GMPz - perl interface to the GMP library's integer (mpz) functions.
 
 =head1 DESCRIPTION
 
