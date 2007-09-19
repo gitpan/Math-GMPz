@@ -3,8 +3,12 @@ use Math::GMPz qw(:mpz :primes :supp);
 use strict;
 use warnings;
 
-#$| = 1;
+$| = 1;
 print "1..21\n";
+
+print "# Using gmp version ", Math::GMPz::gmp_v(), "\n";
+
+my $ok = '';
 
 my $have_mpf = 0;
 my $have_mpq = 0;
@@ -17,22 +21,24 @@ eval{require Math::GMPq};
 if(!$@) {$have_mpq = 1}
 
 my
- $n1 = '10101010101010101111111111111111111111000000001110101';
+ $n1 = '101101101101101101101101101101101101101101101101101101101101101101101101101';
 my
- $n2 =  '1010101010101010000000000000000000000111111110001010';
+ $n2 =  '110110110110110110110110110110110110110110110110110110110110110110110110110';
 
 my $x = Rmpz_init_set_str($n1, 2);
 my $y = Rmpz_init_set_str( $n2, 2);
-if(Rmpz_get_str($x, 10) eq '6004845316112501'
+
+if(Rmpz_get_str($x, 10) eq '26984951330683686935405'
    &&
-   lc(Rmpz_get_str($y, 16)) eq 'aaaa000007f8a')
+   lc(Rmpz_get_str($y, 16)) eq '6db6db6db6db6db6db6')
      {print "ok 1\n"}
 else {print "not ok 1\n"}
 
 Rmpz_swap($x, $y);
-if(Rmpz_get_str($y, 10) eq '6004845316112501' 
+
+if(Rmpz_get_str($y, 10) eq '26984951330683686935405' 
    &&
-   lc(Rmpz_get_str($x, 16)) eq 'aaaa000007f8a')
+   lc(Rmpz_get_str($x, 16)) eq '6db6db6db6db6db6db6')
      {print "ok 2\n"}
 else {print "not ok 2\n"} 
 
@@ -50,14 +56,13 @@ else {print "not ok 3\n"}
 
 Rmpz_set($q, $y);
 
-Rmpz_realloc2($z, 10);
+Rmpz_realloc2($z, 30);
 Rmpz_realloc2($q, 100);
 
-if(Rmpz_get_str($z, 2) eq '0'
-   &&
-   Rmpz_get_str($q, 2) eq Rmpz_get_str($y, 2))
-     {print "ok 4\n"}
-else {print "not ok 4\n"}
+$ok .= 'a' if Rmpz_get_str($z, 2) eq '0';
+$ok .= 'b' if Rmpz_get_str($q, 2) eq Rmpz_get_str($y, 2);
+if($ok eq 'ab')  {print "ok 4\n"}
+else {print "not ok 4 $ok\n"}
 
 Rmpz_set_si($z, -12345);
 if(Rmpz_get_str($z, 10) eq '-12345')
@@ -82,17 +87,19 @@ else {print "not ok 8\n"}
 
 my
  $truncated = Rmpz_get_ui($y);
-if($truncated == 4294934645) 
+if($truncated == 1840700269) 
      {print "ok 9\n"}
 else {print "not ok 9\n"}
 
 $truncated = Rmpz_get_si($y);
-if($truncated == 2147450997) 
+if($truncated == 1840700269) 
      {print "ok 10\n"}
 else {print "not ok 10\n"}
 
+my $exp2 = Rmpz_init_set_str('1010101010101010000000000000000000000111111110001010', 2);
+
 my
- @log2 = Rmpz_get_d_2exp($x);
+ @log2 = Rmpz_get_d_2exp($exp2);
 if($log2[0] > 0.66665649414787
    &&
    $log2[0] < 0.66665649414788
@@ -101,9 +108,13 @@ if($log2[0] > 0.66665649414787
      {print "ok 11\n"}
 else {print "not ok 11\n"}
 
-if(Rmpz_getlimbn($y, 0) == 4294934645)
+# For 32-bit limb value should be: 1840700269
+# For 64-bit limb value should be: 15811494920322472813
+
+if(Rmpz_getlimbn($y, 0) == 1840700269 ||
+   Rmpz_getlimbn($y, 0) == 15811494920322472813)
      {print "ok 12\n"}
-else {print "not ok 12\n"}
+else {print "not ok 12, got: ", Rmpz_getlimbn($y, 0), "\n"}
 
 if($have_mpf){
   $float = Math::GMPf::Rmpf_init2(200);
@@ -167,7 +178,6 @@ if(!Rmpz_cmp($x10, $y10) && !Rmpz_cmp($x10, $z10)&& !Rmpz_cmp($x10, $q10) &&
    !Rmpz_cmp($x10, $s10) && !Rmpz_cmp($x10, $s11)) {print "ok 19\n"}
 else {print "not ok 19\n"}
 
-my $ok;
 eval {$ok = Math::GMPz::gmp_v();};
 
 if($@ || $ok =~ /[^0-9\.]/) {print "not ok 20\n"}

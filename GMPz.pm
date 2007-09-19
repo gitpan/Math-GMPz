@@ -44,7 +44,6 @@ use overload
     '='    => \&overload_copy,
     'abs'  => \&overload_abs;
 
-    @Math::GMPz::ISA = qw(Exporter DynaLoader);
     @Math::GMPz::EXPORT_OK = qw(
 Rmpz_abs Rmpz_add Rmpz_add_ui Rmpz_addmul Rmpz_addmul_ui Rmpz_and Rmpz_bin_ui
 Rmpz_bin_uiui Rmpz_cdiv_q Rmpz_cdiv_q_2exp Rmpz_cdiv_q_ui Rmpz_cdiv_qr 
@@ -84,7 +83,7 @@ Rrotate_left_ul Rrotate_right_gmp Rrotate_right_ul Rrsa_cert Rruns Rsieve_gmp
 eratosthenes eratosthenes_string merten prime_ratio query_eratosthenes_string
 trial_div_ul
     );
-    $Math::GMPz::VERSION = '0.21';
+    $Math::GMPz::VERSION = '0.22';
 
     DynaLoader::bootstrap Math::GMPz $Math::GMPz::VERSION;
 
@@ -132,57 +131,76 @@ Rrotate_right_gmp Rrsa_cert)]);
 sub dl_load_flags {0} # Prevent DynaLoader from complaining and croaking
 
 sub new {
-    if(@_ > 3) {die "Too many arguments supplied to new()"}
-    my @ret = ();
+
+    # This function caters for 2 possibilities:
+    # 1) that 'new' has been called OOP style - in which 
+    #    case there will be a maximum of 3 args
+    # 2) that 'new' has been called as a function - in
+    #    which case there will be a maximum of 2 args.
+    # If there are no args, then we just want to return an
+    # initialized Math::GMPz
     if(!@_) {return Rmpz_init()}
-    if(ref($_[0]) || $_[0] ne "Math::GMPz") {
-      my $type = _itsa($_[0]);
+   
+    if(@_ > 3) {die "Too many arguments supplied to new()"}
 
-      if(!$type) {die "Inappropriate argument supplied to new()"}
+    # If 'new' has been called OOP style, the first arg is the string
+    # "Math::GMPz" which we don't need - so let's remove it. However,
+    # if the first arg is a Math::GMPz object (which is a possibility),
+    # then we'll get a fatal error when we check it for equivalence to
+    # the string "Math::GMPz". So we first need to check that it's not
+    # an object - which we'll do by using the ref() function:
+    if(!ref($_[0]) && $_[0] eq "Math::GMPz") {
+      shift;
+      if(!@_) {return Rmpz_init()}
+      } 
 
-      if($type == 1 || $type == 2) { # UOK or IOK
-        if(@_ > 1) {die "Too many arguments supplied to new() - expected only one"}
-          return Rmpz_init_set_str($_[0], 10);
-      }
-      if($type == 3) { # NOK
-        if(@_ > 1) {die "Too many arguments supplied to new() - expected only one"}
-        return Rmpz_init_set_d($_[0]);
-      }
-      if($type == 4) { # POK
-        if(@_ > 2) {die "Too many arguments supplied to new() - expected no more than two"}
-        if(@_ == 2) {return Rmpz_init_set_str($_[0], $_[1])}
-        else {return Rmpz_init_set_str($_[0], 0)}
-      }
-      if($type == 5) { # Math::GMPz object
-        if(@_ > 1) {die "Too many arguments supplied to new() - expected only one"}
-        return Rmpz_init_set($_[0]);
-      }
-    }
+    # @_ can now contain a maximum of 2 args - the value, and iff the value is
+    # a string, (optionally) the base of the numeric string.
+    if(@_ > 2) {die "Too many arguments supplied to new() - expected no more than two"}
 
-    if($_[0] ne "Math::GMPz") {die "Invalid argument supplied to new()"} 
+    my ($arg1, $type, $base);
 
-    if(@_ == 1) {return Rmpz_init()}
+    # $_[0] is the value, $_[1] (if supplied) is the base of the number
+    # in the string $[_0].
+    $arg1 = shift;
+    $base = 0;
 
-    my $type = _itsa($_[1]);
-
+    $type = _itsa($arg1);
     if(!$type) {die "Inappropriate argument supplied to new()"}
 
+    # Create a Math::GMPz object that has $arg1 as its value.
+    # Die if there are any additional args (unless $type == 4)
     if($type == 1 || $type == 2) { # UOK or IOK
-      if(@_ > 2) {die "Too many arguments supplied to new() - expected only two"}
-      return Rmpz_init_set_str($_[1], 10);
+      if(@_ ) {die "Too many arguments supplied to new() - expected only one"}
+      return Rmpz_init_set_str($arg1, 10);
     }
+
     if($type == 3) { # NOK
-      if(@_ > 2) {die "Too many arguments supplied to new() - expected only two"}
-      return Rmpz_init_set_d($_[1]);
+      if(@_ ) {die "Too many arguments supplied to new() - expected only one"}
+      if(Math::GMPz::_has_longdouble()) {
+        return _Rmpz_init_set_ld($arg1);
+        }
+      return Rmpz_init_set_d($arg1);
+
     }
+    
     if($type == 4) { # POK
-      if(@_ == 3) {return Rmpz_init_set_str($_[1], $_[2])}
-      else {return Rmpz_init_set_str($_[1], 0)}
+      if(@_ > 1) {die "Too many arguments supplied to new() - expected no more than two"}
+      $base = shift if @_;
+      if($base < 0 || $base == 1 || $base > 36) {die "Invalid value for base"}
+      return Rmpz_init_set_str($arg1, $base);
     }
-    if($type == 5) { # Math::GMPz object
-      if(@_ > 2) {die "Too many arguments supplied to new() - expected only two"}
-      return Rmpz_init_set($_[1]);
+
+    if($type == 8 || $type == 9) { # Math::GMPz or Math::GMP object
+      if(@_) {die "Too many arguments supplied to new() - expected only one"}
+      return Rmpz_init_set($arg1);
     }
+}
+
+sub Rmpz_out_str {
+    if(@_ == 2) { return _Rmpz_out_str($_[0], $_[1]) }
+    elsif(@_ == 3) { return _Rmpz_out_str2($_[0], $_[1], $_[2]) }
+    else {die "Wrong number of arguments supplied to Rmpz_out_str()"}
 }
 
 sub Rpi_x {
@@ -393,7 +411,7 @@ sub _rewrite {
 }
 
 sub Rmpz_printf {
-    local($| = 1); # Make sure the output gets presented in the correct sequence.
+    local $| = 1; # Make sure the output gets presented in the correct sequence.
     if(@_ == 1) {printf(shift)}
 
     else {
@@ -1061,10 +1079,13 @@ __END__
    file (as well as to stdout). As provided here,
    the functions read/write from/to stdout only.
 
-   $ul = Rmpz_out_str($op, $base);
+   $ul = Rmpz_out_str($op, $base [, $suffix]);
     Output $op to STDOUT, as a string of digits in base $base.
     The base may vary from 2 to 36. Return the number of bytes
     written, or if an error occurred,return 0.
+    The optional third argument ($suffix) is a string (eg "\n")
+    that will be appended to the output. $bytes_written does 
+    not include the bytes contained in $suffix.
 
    $ul = Rmpz_inp_str($rop, $base);
     Input a string in base $base from STDIN, and put the read
@@ -1332,9 +1353,14 @@ __END__
    ###############################
    ###############################
 
-   The following (homegrown) functions are not covered in
-   the GMP manual. These should probably be removed from this
+   DISCLAIMER:
+   The following (homegrown) functions are not part of the
+   GMP library. They should probably be removed from this
    module ... but that's more work than I can be bothered with.
+   I still use some of these functions (in a 32-bit environment
+   only) - and find those that I *do* use to be of some value -
+   but please don't judge me too harshly on the basis if what
+   follows :-)
 
    @return = Rsieve_gmp($max_p, $max_add, $op);
 
@@ -1348,8 +1374,8 @@ __END__
     For each integer in the range [0..$max_add] that is not
     in @return, Z+that_integer is divisible by at least
     one integer less than $max_p (and > 1).
-    This is a fast and efficient method of determining which
-    numbers within a range need to be subjected to
+    This is a fast and relatively efficient method of determining
+    which numbers within a range need to be subjected to
     Fermat/Miller-Rabin tests to determine whether they are prime.
     $max_p and $max_add must be even (and less than 2**32).
     Z must be odd. 
@@ -1383,7 +1409,7 @@ __END__
     and Blum-Blum-Shub cryptographically secure pseudorandom
     bit generators. (Blum-Blum-Shub must surely be every
     two-year-old's favorite :-)
-    $p, $q hold distinct *large* prime values
+    $p, $q hold distinct *large* (say, >1000 bit) prime values
     (provided by the user). Let's say these 2 primes have values
     'P' and 'Q' respectively. And let's say the value held
     by $seed is 'S'.
@@ -1402,7 +1428,7 @@ __END__
     If either of the 2 primes is not congruent to 3, mod 4, then
     the application will die (again with an appropriate error
     message). The primality (or otherwise) of P and Q is not
-    checked internally (for either generator).
+    checked internally (for either prime).
     S is a pseudorandomly derived seed. No need for that seed to
     have been generated by a cryptographically secure pseudorandom
     number generator. The only requirement is that it be different
@@ -1665,5 +1691,9 @@ __END__
    Use this module for whatever you like. It's free and comes
    with no guarantees - except that the purchase price is
    fully refundable if you're dissatisfied with it.
+
+=head1 AUTHOR
+
+  Copyright Sisyhpus <sisyphus at(@) cpan dot (.) org>
 
 =cut

@@ -5,9 +5,14 @@ use Config;
 
 print "1..3\n";
 
-my $_64 = defined($Config::Config{use64bitint}) ? 1 : 0;
+print "# Using gmp version ", Math::GMPz::gmp_v(), "\n";
+
+my $_64 = Math::GMPz::_has_longlong();
 
 my $ok = '';
+
+if($_64) {print "Using 64-bit integer\n"}
+else {print "Using 32-bit integer\n"}
 
 if($_64) {
   use integer;
@@ -49,24 +54,30 @@ $ok = '';
 if($_64) {
   my $int3;
   my $pp2 = 2 ** 57 + 12345;
-  if(Math::GMPz::_itsa($pp2) == 2) {$ok = 'A'}
+  if(Math::GMPz::_itsa($pp2) == 2) {$ok = 'a1'}
   else {
    $int3 = Math::GMPz->new($pp2);
-   if($int3 == "144115188075868224"){$ok = 'a'}
+   if(Math::GMPz::_has_longdouble()) {
+     if($int3 == "144115188075868217"){$ok = 'a2'}
+   }
+   else {
+     if($int3 == "144115188075868224"){$ok = 'a3'}
+     print "Beware ... you may not have the precision you think\n";
+   }
   }
 
-# By way of explanation regarding perls built with -Duse64bitint:
-# If you don't 'use integer;' then the assignment of 2 ** 57 + 12345 to $pp2 will probably mean
+# By way of explanation regarding perls built with -Duse64bitint, but not -Duselongdouble:
+# If you don't 'use integer;' then the assignment of 2 ** 57 + 12345 to $pp2 will mean
 # that $pp2 is created as an NV (not an IV), and consequently incur a loss of precision - the
 # result being that $pp2 holds a value of 144115188075868224, despite the fact that
 # 2 ** 57 + 12345 == 144115188075868217. If one were to 'use integer;' then $pp2 would have
 # been created as an IV and would have contained the correct value of 144115188075868217.
 # It bothers me that perl behaves this way - but it doesn't bother anyone else, least of all
 # those that are in a position to change the behaviour. So ... if you don't 'use integer;',
-# you'll probably end up assigning values that you don't really intend to assign - and you
-# you probably won't even get a warning. Complain to p5p ... don't complain to me :-)
+# you can easily end up assigning values that you don't really intend to assign - and you
+# you won't even get a warning.
 
-  if(lc($ok) eq 'a') {print "ok 2 You probably wanted 144115188075868217 ... but you got what you asked for, namely: $int3\n"}
+  if($ok =~ /a/) {print "ok 2 $ok\n"}
   else {print "not ok 2 \n"}
 }
 

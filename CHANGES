@@ -1,6 +1,15 @@
+0.22 
+ - Rewrite new()
+ - Rmpz_out_str() now takes an optional third argument - a string that
+   will be appended to the mpz_out_str() output. Also stdout is
+   fflush()'d each time Rmpfr_out_str() is called.
+ - The overload functions and new() can now handle a long double value
+   correctly
+
 0.21
  - Add "Name" section to the pod
  - Remove 'Makefile.old' from the source. (Doh !!)
+
 0.20
  - First CPAN release
  - No longer assign Exporter and DynaLoader to @Math::GMPz::ISA.

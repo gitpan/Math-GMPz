@@ -4,6 +4,8 @@ use Math::GMPz qw(:mpz);
 
 print "1..9\n";
 
+print "# Using gmp version ", Math::GMPz::gmp_v(), "\n";
+
 my
  $n2 =  '1010101010101010000000000000000000000111111110001010';
 

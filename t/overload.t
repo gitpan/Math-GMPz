@@ -6,6 +6,8 @@ use Math::BigInt; # for some error checking
 
 print "1..39\n";
 
+print "# Using gmp version ", Math::GMPz::gmp_v(), "\n";
+
 my $have_mpf = 0;
 my $have_mpq = 0;
 my($float, $rat);

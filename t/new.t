@@ -6,6 +6,8 @@ use Config;
 
 print "1..4\n";
 
+print "# Using gmp version ", Math::GMPz::gmp_v(), "\n";
+
 my $ui = 123569;
 my $si = -19907;
 my $d = -1.625;
@@ -98,7 +100,6 @@ if($f26 == int($d)) {$ok .= 'h'}
 my $f27 = Math::GMPz->new(36028797018964023);
 my $f28 = Math::GMPz->new('36028797018964023');
 
-#print $f27, " ", $f28, "\n";
 if(defined($Config::Config{use64bitint})) {
   if($f27 == $f28) {$ok .= 'i'}
 }
@@ -116,7 +117,8 @@ my $bi = Math::BigInt->new(123456789);
 $ok = '';
 
 eval{my $f30 = Math::GMPz->new(17, 12);};
-if($@ =~ /Too many arguments supplied to new\(\) \- expected only two/) {$ok = 'a'}
+if($@ =~ /Too many arguments supplied to new\(\) \- expected only one/) {$ok = 'a'}
+else {print $@, "\n"}
 
 eval{my $f31 = Math::GMPz::new(17, 12);};
 if($@ =~ /Too many arguments supplied to new\(\) \- expected only one/) {$ok .= 'b'}
@@ -133,6 +135,13 @@ if($@ =~ /Inappropriate argument/) {$ok .= 'e'}
 eval{my $f35 = Math::GMPz::new($bi);};
 if($@ =~ /Inappropriate argument/) {$ok .= 'f'}
 
-if($ok eq 'abcdef') {print "ok 4\n"}
+eval{my $f36 = Math::GMPz->new($f28, 12);};
+if($@ =~ /Too many arguments supplied to new\(\) \- expected only one/) {$ok .= 'g'}
+else {print $@, "\n"}
+
+eval{my $f37 = Math::GMPz::new($f28, 12);};
+if($@ =~ /Too many arguments supplied to new\(\) \- expected only one/) {$ok .= 'h'}
+
+if($ok eq 'abcdefgh') {print "ok 4\n"}
 else {print "not ok 4 $ok\n"}
 

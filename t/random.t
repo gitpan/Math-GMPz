@@ -4,6 +4,8 @@ use Math::GMPz qw(:mpz);
 
 print "1..2\n";
 
+print "# Using gmp version ", Math::GMPz::gmp_v(), "\n";
+
 my $str = '';
 my $s = '';
 

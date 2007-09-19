@@ -5,6 +5,8 @@ use Math::GMPz qw(:mpz :primes :supp);
 #$| = 1;
 print "1..5\n";
 
+print "# Using gmp version ", Math::GMPz::gmp_v(), "\n";
+
 my ($q, $d, $e, $n);
 my $str = '1' x 181;
 my $p = Rmpz_init2(200);

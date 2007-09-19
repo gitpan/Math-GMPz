@@ -5,6 +5,8 @@ use Math::GMPz qw(:mpz :primes :supp);
 #$| = 1;
 print "1..5\n";
 
+print "# Using gmp version ", Math::GMPz::gmp_v(), "\n";
+
 my
  $n2 =  '1010101010101010000000000000000000000111111110001010';
 
@@ -34,7 +36,10 @@ if(Rmpz_even_p($q)
      {print "ok 4\n"}
 else {print "not ok 4\n"}
 
-if(Rmpz_size($q) == 2
+# If limbs are 32 bit, there will be 2
+# If limbs are 64 bit, there will be 1
+
+if((Rmpz_size($q) == 2 || Rmpz_size($q) == 1)
    &&
    Rmpz_sizeinbase($q, 2) == 52)
      {print "ok 5\n"}

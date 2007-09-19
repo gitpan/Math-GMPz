@@ -5,6 +5,8 @@ use Math::GMPz qw(:mpz);
 #$| = 1;
 print "1..10\n";
 
+print "# Using gmp version ", Math::GMPz::gmp_v(), "\n";
+
 my
  $n1 = '10101010101010101111111111111111111111000000001110101';
 my

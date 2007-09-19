@@ -5,6 +5,8 @@ use Math::GMPz qw(:mpz :primes :supp);
 #$| = 1;
 print "1..15\n";
 
+print "# Using gmp version ", Math::GMPz::gmp_v(), "\n";
+
 my($ok, $n1, $n2, $bitstring);
 
 my

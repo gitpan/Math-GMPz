@@ -8,6 +8,8 @@ use Config;
 
 print"1..3\n";
 
+print "# Using gmp version ", Math::GMPz::gmp_v(), "\n";
+
 my $n = ~0;
 
 my $gmpz1 = Math::GMPz::new($n);
@@ -34,5 +36,6 @@ else {
   if($n == $gmpz3) {print "ok 3 \n"}
   else {print "not ok 3 B $gmpz3 != $n\n"}
 }
+
   
 
