@@ -25,7 +25,7 @@ SV * Rmpz_init_set_str_nobless(SV * num, SV * base) {
      unsigned long b = SvUV(base);
      SV * obj_ref, * obj;
 
-     if(b == 1 || b > 36) croak("Second argument supplied to Rmpz_init_set_str_nobless() is not in acceptable range");
+     if(b == 1 || b > 62) croak("Second argument supplied to Rmpz_init_set_str_nobless() is not in acceptable range");
 
      New(1, mpz_t_obj, 1, mpz_t);
      if(mpz_t_obj == NULL) croak("Failed to allocate memory in Rmpz_create function");
@@ -237,7 +237,7 @@ SV * Rmpz_init_set_str(SV * num, SV * base) {
      unsigned long b = SvUV(base);
      SV * obj_ref, * obj;
 
-     if(b == 1 || b > 36) croak("Second argument supplied to Rmpz_init_set_str() is not in acceptable range");
+     if(b == 1 || b > 62) croak("Second argument supplied to Rmpz_init_set_str() is not in acceptable range");
 
      New(1, mpz_t_obj, 1, mpz_t);
      if(mpz_t_obj == NULL) croak("Failed to allocate memory in Rmpz_init_set_str function");
@@ -271,11 +271,13 @@ SV * Rmpz_init2(SV * bits) {
 SV * Rmpz_get_str(mpz_t * p, SV * base) {
      char * out;
      SV * outsv;
-     unsigned long b = SvUV(base);
+     int c = (int)SvIV(base), b = (int)SvIV(base);
 
-     if(b < 2 || b > 36) croak("Second argument supplied to Rmpz_get_str() is not in acceptable range");
+     if((b > -2 && b < 2) || b < -36 || b > 62) croak("Second argument supplied to Rmpz_get_str() is not in acceptable range");
 
-     New(2, out, mpz_sizeinbase(*p, b) + 5, char);
+     if(c < 0) c *= -1;
+
+     New(2, out, mpz_sizeinbase(*p, c) + 5, char);
      if(out == NULL) croak("Failed to allocate memory in Rmpz_deref function");
 
      mpz_get_str(out, b, *p);
@@ -333,7 +335,7 @@ void Rmpz_set_d(mpz_t * copy, SV * original) {
 }
 
 void Rmpz_set_str(mpz_t * copy, SV * original, SV * base) {
-    if(SvUV(base) == 1 || SvUV(base) > 36) croak("Second argument supplied to Rmpz_set_str() is not in acceptable range");
+    if(SvUV(base) == 1 || SvUV(base) > 62) croak("Second argument supplied to Rmpz_set_str() is not in acceptable range");
     if(mpz_set_str(*copy, SvPV_nolen(original), SvUV(base)))
        croak("Second argument supplied to Rmpz_set_str() is not a valid base %u number", SvUV(base));
 }
@@ -850,7 +852,8 @@ int Rmpz_size(mpz_t * in) {
 }
 
 int Rmpz_sizeinbase(mpz_t * in, SV * base) {
-    return mpz_sizeinbase(*in, SvUV(base));
+    if(SvIV(base) < 2 || SvIV(base) > 62) croak("Rmpz_sizeinbase handles only bases in the range 2..62");
+    return mpz_sizeinbase(*in, (int)SvIV(base));
 }
 
 void Rsieve_gmp(int x_arg, int a, mpz_t *number) {
@@ -1503,25 +1506,104 @@ void Rmers_div_qr(mpz_t * q, mpz_t * r, mpz_t * n, mpz_t * d) {
 
 SV * _Rmpz_out_str(mpz_t * p, SV * base) {
      unsigned long ret;
-     if(SvIV(base) < 2 || SvIV(base) > 36)
-       croak("2nd argument supplied to Rmpz_out_str is out of allowable range (must be between 2 and 36 inclusive)");
+     if((SvIV(base) > -2 && SvIV(base) < 2) || SvIV(base) < -36 || SvIV(base) > 62)
+       croak("2nd argument supplied to Rmpz_out_str is out of allowable range (must be in range -36..-2, 2..62)");
      ret = mpz_out_str(NULL, SvUV(base), *p);
      fflush(stdout);
      return newSVuv(ret);
 }
 
-SV * _Rmpz_out_str2(mpz_t * p, SV * base, SV * suff) {
+SV * _Rmpz_out_strS(mpz_t * p, SV * base, SV * suff) {
      unsigned long ret;
-     if(SvIV(base) < 2 || SvIV(base) > 36)
-       croak("2nd argument supplied to Rmpz_out_str is out of allowable range (must be between 2 and 36 inclusive)");
+     if((SvIV(base) > -2 && SvIV(base) < 2) || SvIV(base) < -36 || SvIV(base) > 62)
+       croak("2nd argument supplied to Rmpz_out_str is out of allowable range (must be in range -36..-2, 2..62)");
      ret = mpz_out_str(NULL, SvUV(base), *p);
      printf("%s", SvPV_nolen(suff));
      fflush(stdout);
      return newSVuv(ret);
 }
 
+SV * _Rmpz_out_strP(SV * pre, mpz_t * p, SV * base) {
+     unsigned long ret;
+     if((SvIV(base) > -2 && SvIV(base) < 2) || SvIV(base) < -36 || SvIV(base) > 62)
+       croak("3rd argument supplied to Rmpz_out_str is out of allowable range (must be in range -36..-2, 2..62)");
+     printf("%s", SvPV_nolen(pre));
+     ret = mpz_out_str(NULL, SvUV(base), *p);
+     fflush(stdout);
+     return newSVuv(ret);
+}
+
+SV * _Rmpz_out_strPS(SV * pre, mpz_t * p, SV * base, SV * suff) {
+     unsigned long ret;
+     if((SvIV(base) > -2 && SvIV(base) < 2) || SvIV(base) < -36 || SvIV(base) > 62)
+       croak("3rd argument supplied to Rmpz_out_str is out of allowable range (must be in range -36..-2, 2..62)");
+     printf("%s", SvPV_nolen(pre));
+     ret = mpz_out_str(NULL, SvUV(base), *p);
+     printf("%s", SvPV_nolen(suff));
+     fflush(stdout);
+     return newSVuv(ret);
+}
+
+SV * _TRmpz_out_str(FILE * stream, SV * base, mpz_t * p) {
+     size_t ret;
+     if((SvIV(base) > -2 && SvIV(base) < 2) || SvIV(base) < -36 || SvIV(base) > 62)
+       croak("2nd argument supplied to TRmpz_out_str is out of allowable range (must be in range -36..-2, 2..62)");
+     ret = mpz_out_str(stream, (int)SvIV(base), *p);
+     fflush(stream);
+     return newSVuv(ret);
+}
+
+SV * _TRmpz_out_strS(FILE * stream, SV * base, mpz_t * p, SV * suff) {
+     size_t ret;
+     if((SvIV(base) > -2 && SvIV(base) < 2) || SvIV(base) < -36 || SvIV(base) > 62)
+       croak("2nd argument supplied to TRmpz_out_str is out of allowable range (must be in range -36..-2, 2..62)");
+     ret = mpz_out_str(stream, (int)SvIV(base), *p);
+     fflush(stream);
+     fprintf(stream, "%s", SvPV_nolen(suff));
+     fflush(stream);
+     return newSVuv(ret);
+}
+
+SV * _TRmpz_out_strP(SV * pre, FILE * stream, SV * base, mpz_t * p) {
+     size_t ret;
+     if((SvIV(base) > -2 && SvIV(base) < 2) || SvIV(base) < -36 || SvIV(base) > 62)
+       croak("3rd argument supplied to TRmpz_out_str is out of allowable range (must be in range -36..-2, 2..62)");
+     fprintf(stream, "%s", SvPV_nolen(pre));
+     fflush(stream);
+     ret = mpz_out_str(stream, (int)SvIV(base), *p);
+     fflush(stream);
+     return newSVuv(ret);
+}
+
+SV * _TRmpz_out_strPS(SV * pre, FILE * stream, SV * base, mpz_t * p, SV * suff) {
+     size_t ret;
+     if((SvIV(base) > -2 && SvIV(base) < 2) || SvIV(base) < -36 || SvIV(base) > 62)
+       croak("3rd argument supplied to TRmpz_out_str is out of allowable range (must be in range -36..-2, 2..62)");
+     fprintf(stream, "%s", SvPV_nolen(pre));
+     fflush(stream);
+     ret = mpz_out_str(stream, (int)SvIV(base), *p);
+     fflush(stream);
+     fprintf(stream, "%s", SvPV_nolen(suff));
+     fflush(stream);
+     return newSVuv(ret);
+}
+
 SV * Rmpz_inp_str(mpz_t * p, SV * base) {
-     return newSVuv(mpz_inp_str(*p, NULL, SvUV(base)));
+     size_t ret;
+     if(SvUV(base) == 1 || SvUV(base) > 62)
+       croak("2nd argument supplied to Rmpz_inp_str is out of allowable range (must be in range 0, 2..62)");
+     ret = mpz_inp_str(*p, NULL, SvUV(base));
+     fflush(stdin);
+     return newSVuv(ret);
+}
+
+SV * TRmpz_inp_str(mpz_t * p, FILE * stream, SV * base) {
+     size_t ret;
+     if(SvUV(base) == 1 || SvUV(base) > 62)
+       croak("4th argument supplied to TRmpz_inp_str is out of allowable range (must be in range 0, 2..62)");
+     ret = mpz_inp_str(*p, stream, (int)SvIV(base));
+     fflush(stream);
+     return newSVuv(ret);
 }
 
 void eratosthenes(SV * x_arg) {
@@ -3540,35 +3622,53 @@ SV * gmp_v() {
 void wrap_gmp_printf(SV * a, SV * b) {
      if(sv_isobject(b)) { 
        if(strEQ(HvNAME(SvSTASH(SvRV(b))), "Math::GMPz") ||
-          strEQ(HvNAME(SvSTASH(SvRV(b))), "Math::GMP") ||
-          strEQ(HvNAME(SvSTASH(SvRV(b))), "GMP::Mpz"))
-          gmp_printf(SvPV_nolen(a), *(INT2PTR(mpz_t *, SvIV(SvRV(b)))));
+         strEQ(HvNAME(SvSTASH(SvRV(b))), "Math::GMP") ||
+         strEQ(HvNAME(SvSTASH(SvRV(b))), "GMP::Mpz")) {
+         gmp_printf(SvPV_nolen(a), *(INT2PTR(mpz_t *, SvIV(SvRV(b)))));
+         fflush(stdout);
+       }
        else {
          if(strEQ(HvNAME(SvSTASH(SvRV(b))), "Math::GMPq") ||
-            strEQ(HvNAME(SvSTASH(SvRV(b))), "GMP::Mpq"))
-            gmp_printf(SvPV_nolen(a), *(INT2PTR(mpq_t *, SvIV(SvRV(b)))));
+           strEQ(HvNAME(SvSTASH(SvRV(b))), "GMP::Mpq")) {
+           gmp_printf(SvPV_nolen(a), *(INT2PTR(mpq_t *, SvIV(SvRV(b)))));
+           fflush(stdout);
+         }
          else {
            if(strEQ(HvNAME(SvSTASH(SvRV(b))), "Math::GMPf") ||
-              strEQ(HvNAME(SvSTASH(SvRV(b))), "GMP::Mpf"))
-              gmp_printf(SvPV_nolen(a), *(INT2PTR(mpf_t *, SvIV(SvRV(b)))));
-              else croak("Unrecognised object supplied as argument to Rmpz_printf");
+             strEQ(HvNAME(SvSTASH(SvRV(b))), "GMP::Mpf")) {
+             gmp_printf(SvPV_nolen(a), *(INT2PTR(mpf_t *, SvIV(SvRV(b)))));
+             fflush(stdout);
            }
-         }
-       } 
-
-     else {
-       if(SvUOK(b)) gmp_printf(SvPV_nolen(a), SvUV(b));
-       else {
-         if(SvIOK(b)) gmp_printf(SvPV_nolen(a), SvIV(b)); 
-         else {
-           if(SvNOK(b)) gmp_printf(SvPV_nolen(a), SvNV(b)); 
-           else {
-             if(SvPOK(b)) gmp_printf(SvPV_nolen(a), SvPV_nolen(b));
-             else croak("Unrecognised type supplied as argument to Rmpz_printf");
-             }
-           } 
+             else croak("Unrecognised object supplied as argument to Rmpz_printf");
          }
        }
+     } 
+
+     else {
+       if(SvUOK(b)) {
+         gmp_printf(SvPV_nolen(a), SvUV(b));
+         fflush(stdout);
+       }
+       else {
+         if(SvIOK(b)) {
+           gmp_printf(SvPV_nolen(a), SvIV(b));
+           fflush(stdout);
+         }
+         else {
+           if(SvNOK(b)) {
+             gmp_printf(SvPV_nolen(a), SvNV(b));
+             fflush(stdout);
+           }
+           else {
+             if(SvPOK(b)) {
+               gmp_printf(SvPV_nolen(a), SvPV_nolen(b));
+               fflush(stdout);
+             }
+             else croak("Unrecognised type supplied as argument to Rmpz_printf");
+           }
+         } 
+       }
+     }
 }
 
 SV * _itsa(SV * a) {
@@ -5596,14 +5696,61 @@ _Rmpz_out_str (p, base)
 	SV *	base
 
 SV *
-_Rmpz_out_str2 (p, base, suff)
+_Rmpz_out_strS (p, base, suff)
 	mpz_t *	p
 	SV *	base
 	SV *	suff
 
 SV *
+_Rmpz_out_strP (pre, p, base)
+	SV *	pre
+	mpz_t *	p
+	SV *	base
+
+SV *
+_Rmpz_out_strPS (pre, p, base, suff)
+	SV *	pre
+	mpz_t *	p
+	SV *	base
+	SV *	suff
+
+SV *
+_TRmpz_out_str (stream, base, p)
+	FILE *	stream
+	SV *	base
+	mpz_t *	p
+
+SV *
+_TRmpz_out_strS (stream, base, p, suff)
+	FILE *	stream
+	SV *	base
+	mpz_t *	p
+	SV *	suff
+
+SV *
+_TRmpz_out_strP (pre, stream, base, p)
+	SV *	pre
+	FILE *	stream
+	SV *	base
+	mpz_t *	p
+
+SV *
+_TRmpz_out_strPS (pre, stream, base, p, suff)
+	SV *	pre
+	FILE *	stream
+	SV *	base
+	mpz_t *	p
+	SV *	suff
+
+SV *
 Rmpz_inp_str (p, base)
 	mpz_t *	p
+	SV *	base
+
+SV *
+TRmpz_inp_str (p, stream, base)
+	mpz_t *	p
+	FILE *	stream
 	SV *	base
 
 void

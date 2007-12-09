@@ -1,26 +1,26 @@
 use strict;
 use warnings;
-use Math::GMPz qw(:mpz :primes :supp);
+use Math::GMPz qw(:mpz);
 
 #$| = 1;
 print "1..5\n";
 
 print "# Using gmp version ", Math::GMPz::gmp_v(), "\n";
 
-my
- $n2 =  '1010101010101010000000000000000000000111111110001010';
+my $n2 =  '1010101010101010000000000000000000000111111110001010';
 
 my $q = Rmpz_init_set_str( $n2, 2);
+my $num = Rmpz_init_set_str($n2 x 3, 2);
 
-if(!Rmpz_fits_ulong_p($q)
+if(!Rmpz_fits_ulong_p($num)
    &&
-   !Rmpz_fits_slong_p($q))
+   !Rmpz_fits_slong_p($num))
      {print "ok 1\n"}
 else {print "not ok 1\n"}
 
-if(!Rmpz_fits_uint_p($q)
+if(!Rmpz_fits_uint_p($num)
    &&
-   !Rmpz_fits_sint_p($q))
+   !Rmpz_fits_sint_p($num))
      {print "ok 2\n"}
 else {print "not ok 2\n"}
 

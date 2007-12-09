@@ -1,4 +1,4 @@
-use Math::GMPz qw(:mpz :primes :supp);
+use Math::GMPz qw(:mpz);
 
 use strict;
 use warnings;
@@ -20,10 +20,8 @@ if(!$@) {$have_mpf = 1}
 eval{require Math::GMPq};
 if(!$@) {$have_mpq = 1}
 
-my
- $n1 = '101101101101101101101101101101101101101101101101101101101101101101101101101';
-my
- $n2 =  '110110110110110110110110110110110110110110110110110110110110110110110110110';
+my $n1 = '101101101101101101101101101101101101101101101101101101101101101101101101101';
+my $n2 =  '110110110110110110110110110110110110110110110110110110110110110110110110110';
 
 my $x = Rmpz_init_set_str($n1, 2);
 my $y = Rmpz_init_set_str( $n2, 2);
@@ -42,12 +40,9 @@ if(Rmpz_get_str($y, 10) eq '26984951330683686935405'
      {print "ok 2\n"}
 else {print "not ok 2\n"} 
 
-my
- $z = Rmpz_init2(45);
-my
- $q = Rmpz_init();
-my
- $r = Rmpz_init2(50);
+my $z = Rmpz_init2(45);
+my $q = Rmpz_init();
+my $r = Rmpz_init2(50);
 
 Rmpz_set($z, $y);
 if(Rmpz_get_str($z, 32) eq Rmpz_get_str($y, 32))
@@ -85,21 +80,23 @@ if(Rmpz_get_str($z, 33) eq '9999999999999999999999')
      {print "ok 8\n"}
 else {print "not ok 8\n"}
 
-my
- $truncated = Rmpz_get_ui($y);
-if($truncated == 1840700269) 
-     {print "ok 9\n"}
-else {print "not ok 9\n"}
+# Two stupid tests that rely on sizeof(long) == 4
+# (which is not always the case). 
+# Let's just remove tests 9 and 10
 
-$truncated = Rmpz_get_si($y);
-if($truncated == 1840700269) 
-     {print "ok 10\n"}
-else {print "not ok 10\n"}
+#my $truncated = Rmpz_get_ui($y);
+#if($truncated == 1840700269) 
+print "ok 9\n";
+#else {print "not ok 9\n"}
+
+#$truncated = Rmpz_get_si($y);
+#if($truncated == 1840700269) 
+print "ok 10\n";
+#else {print "not ok 10\n"}
 
 my $exp2 = Rmpz_init_set_str('1010101010101010000000000000000000000111111110001010', 2);
 
-my
- @log2 = Rmpz_get_d_2exp($exp2);
+my @log2 = Rmpz_get_d_2exp($exp2);
 if($log2[0] > 0.66665649414787
    &&
    $log2[0] < 0.66665649414788
@@ -183,10 +180,10 @@ eval {$ok = Math::GMPz::gmp_v();};
 if($@ || $ok =~ /[^0-9\.]/) {print "not ok 20\n"}
 else {print "ok 20\n"}
 
-eval {
-     local *STDOUT = *STDERR;
-     Rmpz_printf("The version is %s. Values are %d %#Zo %#Zo\n", $ok, 11, $x10, $y10);
-     };
+my $ofh = select(STDERR);
+eval {Rmpz_printf("The version is %s. Values are %d %#Zo %#Zo\n", $ok, 11, $x10, $y10);};
+select($ofh);
+
 if($@) {print "not ok 21\n"}
 else {print "ok 21\n"}
 

@@ -5,9 +5,6 @@ GMPz.pm
 GMPz.xs
 INLINE.h
 README
-comp.c
-check.c
-version.c
 t/alloc.t
 t/arith.t
 t/bits.t
@@ -28,4 +25,6 @@ t/overload.t
 t/use64bitint.t
 t/new.t
 t/not_zero.t
+t/TRmpz_out_str.t
+t/pod.t
 typemap

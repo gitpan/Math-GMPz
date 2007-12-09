@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Math::GMPz qw(:mpz :primes :supp);
+use Math::GMPz qw(:mpz);
 
 #$| = 1;
 print "1..15\n";
@@ -13,7 +13,7 @@ my
  $p = Rmpz_init_set_str('123456789098765432123456789', 10);
 
 my
- @rem = Rsieve_gmp(1000000, 1000, $p);
+ @rem = Math::GMPz::Rsieve_gmp(1000000, 1000, $p);
 
 my
  @check = qw(84 138 182 198 222 264 278 308 312 314 318 392 444 464 474 482 494 524 528 570 588 632 650 672 678 692 702 720 768 788 828 830 854 860 900 908 914 924 930 950 968 978 980);
@@ -30,12 +30,10 @@ if($ok
 else {print "not ok 1\n"}
 
 Rmpz_add_ui($p, $p, 198);
-my
- $ok1 =  Rfermat_gmp($p, 3);
+my $ok1 =  Math::GMPz::Rfermat_gmp($p, 3);
 
 Rmpz_add_ui($p, $p, 2);
-my 
-$ok2 = Rfermat_gmp($p, 3);
+my $ok2 = Math::GMPz::Rfermat_gmp($p, 3);
 
 if($ok1 && !$ok2)
      {print "ok 2\n"}
@@ -45,7 +43,7 @@ Rmpz_set_str($p, '96989842884825180018224409824220757414052961115959775409524706
 my $next = Rmpz_init2(Rmpz_sizeinbase($p, 2) + 5);
 my $r_init = Rmpz_init_set_ui(100000);
 
-Rnext_proven($next, $p, 0, 0, 1000, $r_init);
+Math::GMPz::Rnext_proven($next, $p, 0, 0, 1000, $r_init);
 
 if(Rmpz_get_str($next, 10) eq "193960287801073395000445174766476670676623111639696358863967508541134878514627069021")
   {print "ok 3\n"}
@@ -98,7 +96,7 @@ $string = '';
 
 for(@nums) {
     Rmpz_set_str($p, $_, 10);
-    $string .=  Rrm_gmp($p, int(rand(50) + 2))}
+    $string .=  Math::GMPz::Rrm_gmp($p, int(rand(50) + 2))}
 if($string eq "11111111111111111110000000000000000000")
      {print "ok 4\n"}
 else {print "not ok 4\n"} 
@@ -121,18 +119,18 @@ my
 my 
 $check2 = Rmpz_init();
 
- Rprbg_ms($check1, $n1, $n2, $seed, $bits);
- Rprbg_bbs($check2, $n1, $n2, $seed, $bits);
+ Math::GMPz::Rprbg_ms($check1, $n1, $n2, $seed, $bits);
+ Math::GMPz::Rprbg_bbs($check2, $n1, $n2, $seed, $bits);
 
-$ok1 = Rmonobit($check1) +
-       Rlong_run($check1) +
-       Rpoker($check1) +
-       Rruns($check1);
+$ok1 = Math::GMPz::Rmonobit($check1) +
+       Math::GMPz::Rlong_run($check1) +
+       Math::GMPz::Rpoker($check1) +
+       Math::GMPz::Rruns($check1);
 
-$ok2 = Rmonobit($check2) +
-       Rlong_run($check2) +
-       Rpoker($check2) +
-       Rruns($check2);
+$ok2 = Math::GMPz::Rmonobit($check2) +
+       Math::GMPz::Rlong_run($check2) +
+       Math::GMPz::Rpoker($check2) +
+       Math::GMPz::Rruns($check2);
 
 if($ok1 == 4)
      {
@@ -146,14 +144,14 @@ if($ok2 == 4)
       }
 else {print "not ok 6\n"}
 
-my @p = eratosthenes(111110);
+my @p = Math::GMPz::eratosthenes(111110);
 if(scalar(@p) == 10544)
      {print "ok 7\n"}
 else {print "not ok 7\n"}
 
 my $n = Rmpz_init_set_str('9439062681294561264265964833740517885319', 10);
 
-if(trial_div_ul($n, 68) == 67)
+if(Math::GMPz::trial_div_ul($n, 68) == 67)
      {print "ok 8\n"}
 else {print "not ok 8\n"}
 
@@ -161,7 +159,7 @@ Rmpz_set_str($n, '1234567890987654321234567890987654321', 10);
 
 my $s = Rmpz_init2(250);
 
-Rnext_germaine_prime($p, $s, $n, 40, 100000, 1000);
+Math::GMPz::Rnext_germaine_prime($p, $s, $n, 40, 100000, 1000);
 
 if(Rmpz_get_str($p, 10) eq '1234567890987654321234567890987655059'
    &&
@@ -169,7 +167,7 @@ if(Rmpz_get_str($p, 10) eq '1234567890987654321234567890987655059'
      {print "ok 9\n"}
 else {print "not ok 9\n"}
 
-Rnext_germaine_prime($p, $s, $n, 40, 100000, 500);
+Math::GMPz::Rnext_germaine_prime($p, $s, $n, 40, 100000, 500);
 
 if(!Rmpz_get_str($p, 10)
    &&
@@ -181,9 +179,9 @@ Rmpz_set_ui($p, 65534);
 Rmpz_set_d($s, 341550071728320);
 Rmpz_set_ui($n, 17);
 
-Rprovable_small($p);
-Rprovable_small($s);
-Rprovable_small($n);
+Math::GMPz::Rprovable_small($p);
+Math::GMPz::Rprovable_small($s);
+Math::GMPz::Rprovable_small($n);
 if(!Rmpz_get_str($s, 16)
    &&
    !Rmpz_cmp_ui($p, 65537)
@@ -192,30 +190,30 @@ if(!Rmpz_get_str($s, 16)
      {print "ok 11\n"}
 else {print "not ok 11\n"}
 
-my $conc = prime_ratio(100000);
+my $conc = Math::GMPz::prime_ratio(100000);
 if($conc == 34657)
      {print "ok 12\n"}
 else {print "not ok 12\n"}
 
-my $amount = Rpi_x($s, 200);
+my $amount = Math::GMPz::Rpi_x($s, 200);
 if(Rmpz_get_str($s, 10) eq "11644478581586886054651899219863497119726108650599948081894")
      {print "ok 13\n"}
 else {print "not ok 13\n"}
 
-if(merten(1000000000) > 0.027093195058 && merten(1000000000) < 0.027093195059)
+if(Math::GMPz::merten(1000000000) > 0.027093195058 && Math::GMPz::merten(1000000000) < 0.027093195059)
 {print "ok 14\n"}
 else {print "not ok 14\n"}
 
 $ok = 1;
 
-$bitstring = eratosthenes_string(111110);
+$bitstring = Math::GMPz::eratosthenes_string(111110);
 
 for(@p) {
-   if(!query_eratosthenes_string($_, $bitstring)) {$ok = 2}
+   if(!Math::GMPz::query_eratosthenes_string($_, $bitstring)) {$ok = 2}
    }
 
 for(2 .. 111110){
-   if(!query_eratosthenes_string($_, $bitstring) &&
+   if(!Math::GMPz::query_eratosthenes_string($_, $bitstring) &&
       matches($_, \@p)) {$ok = 3}
    }
 

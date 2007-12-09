@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Math::GMPz qw(:mpz :primes :supp);
+use Math::GMPz qw(:mpz);
 
 #$| = 1;
 print "1..1\n";

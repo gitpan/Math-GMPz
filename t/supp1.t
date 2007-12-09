@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Math::GMPz qw(:mpz :primes :supp);
+use Math::GMPz qw(:mpz);
 
 #$| = 1;
 print "1..5\n";
@@ -15,16 +15,16 @@ $q = Rmpz_init();
 
 Rmpz_set_str($p, $str, 2);
 
-my $ok = Rparity_gmp($p);
+my $ok = Math::GMPz::Rparity_gmp($p);
 Rmpz_clrbit($p, 0);
 
-my $nok = Rparity_gmp($p);
+my $nok = Math::GMPz::Rparity_gmp($p);
 
 if($ok && !$nok)
      {print "ok 1\n"}
 else {print "not ok 1\n"}
 
-if(!Rparity_ul(65535) && Rparity_ul(65534))
+if(!Math::GMPz::Rparity_ul(65535) && Math::GMPz::Rparity_ul(65534))
      {print "ok 2\n"}
 else {print "not ok 2\n"}
 
@@ -34,30 +34,30 @@ my $c = $num;
 
 my @ok = ();
 
-$num = Rrotate_left_ul($num, $s, 17);
-$num = Rrotate_right_ul($num, $s, 17);
+$num = Math::GMPz::Rrotate_left_ul($num, $s, 17);
+$num = Math::GMPz::Rrotate_right_ul($num, $s, 17);
 
 if($num eq $c) {push @ok, 1}
 else {push @ok, 0}
 
-$num = Rrotate_right_ul($num, $s, 15);
-$num = Rrotate_left_ul($num, $s, 15);
+$num = Math::GMPz::Rrotate_right_ul($num, $s, 15);
+$num = Math::GMPz::Rrotate_left_ul($num, $s, 15);
 
 if($num eq $c) {push @ok, 1}
 else {push @ok, 0}
 
-$num = Rrotate_left_ul($num, $s, 3);
-$num = Rrotate_left_ul($num, $s, 4);
-$num = Rrotate_left_ul($num, $s, 6);
-$num = Rrotate_left_ul($num, $s, 7);
+$num = Math::GMPz::Rrotate_left_ul($num, $s, 3);
+$num = Math::GMPz::Rrotate_left_ul($num, $s, 4);
+$num = Math::GMPz::Rrotate_left_ul($num, $s, 6);
+$num = Math::GMPz::Rrotate_left_ul($num, $s, 7);
 
 if($num eq $c) {push @ok, 1}
 else {push @ok, 0}
 
-$num = Rrotate_right_ul($num, $s, 3);
-$num = Rrotate_right_ul($num, $s, 4);
-$num = Rrotate_right_ul($num, $s, 6);
-$num = Rrotate_right_ul($num, $s, 7);
+$num = Math::GMPz::Rrotate_right_ul($num, $s, 3);
+$num = Math::GMPz::Rrotate_right_ul($num, $s, 4);
+$num = Math::GMPz::Rrotate_right_ul($num, $s, 6);
+$num = Math::GMPz::Rrotate_right_ul($num, $s, 7);
 
 if($num eq $c) {push @ok, 1}
 else {push @ok, 0}
@@ -78,44 +78,44 @@ $num = '11100101001101010001' x 20;
 Rmpz_set_str($p, $num, 2);
 @ok = ();
 
-Rrotate_left_gmp($z, $p, 400, 123);
+Math::GMPz::Rrotate_left_gmp($z, $p, 400, 123);
 Rmpz_set($p, $z);
-Rrotate_right_gmp($z, $p, 400, 123);
+Math::GMPz::Rrotate_right_gmp($z, $p, 400, 123);
 
 if($num eq Rmpz_get_str($z, 2)) {push @ok, 1}
 else {push @ok, 0}
 
 Rmpz_set_str($p, $num, 2);
 
-Rrotate_right_gmp($z, $p, 400, 122);
+Math::GMPz::Rrotate_right_gmp($z, $p, 400, 122);
 Rmpz_set($p, $z);
-Rrotate_left_gmp($z, $p, 400, 122);
+Math::GMPz::Rrotate_left_gmp($z, $p, 400, 122);
 
 if($num eq Rmpz_get_str($z, 2)) {push @ok, 1}
 else {push @ok, 0}
 
 Rmpz_set_str($p, $num, 2);
 
-Rrotate_left_gmp($z, $p, 400, 98);
+Math::GMPz::Rrotate_left_gmp($z, $p, 400, 98);
 Rmpz_set($p, $z);
-Rrotate_left_gmp($z, $p, 400, 99);
+Math::GMPz::Rrotate_left_gmp($z, $p, 400, 99);
 Rmpz_set($p, $z);
-Rrotate_left_gmp($z, $p, 400, 101);
+Math::GMPz::Rrotate_left_gmp($z, $p, 400, 101);
 Rmpz_set($p, $z);
-Rrotate_left_gmp($z, $p, 400, 102);
+Math::GMPz::Rrotate_left_gmp($z, $p, 400, 102);
 
 if($num eq Rmpz_get_str($z, 2)) {push @ok, 1}
 else {push @ok, 0}
 
 Rmpz_set_str($p, $num, 2);
 
-Rrotate_right_gmp($z, $p, 400, 98);
+Math::GMPz::Rrotate_right_gmp($z, $p, 400, 98);
 Rmpz_set($p, $z);
-Rrotate_right_gmp($z, $p, 400, 99);
+Math::GMPz::Rrotate_right_gmp($z, $p, 400, 99);
 Rmpz_set($p, $z);
-Rrotate_right_gmp($z, $p, 400, 101);
+Math::GMPz::Rrotate_right_gmp($z, $p, 400, 101);
 Rmpz_set($p, $z);
-Rrotate_right_gmp($z, $p, 400, 102);
+Math::GMPz::Rrotate_right_gmp($z, $p, 400, 102);
 
 if($num eq Rmpz_get_str($z, 2)) {push @ok, 1}
 else {push @ok, 0}
@@ -140,7 +140,7 @@ $n = Rmpz_init2(200);
 
 Rmpz_set_str($e, 2, 8);
 
-Rrsa_cert($n, $d, $e, $p, $q);
+Math::GMPz::Rrsa_cert($n, $d, $e, $p, $q);
 
 if(Rmpz_get_str($n, 10) eq '9951413916088675822700269649378741805748498918964532256953692911803753609995081556398455195108746384541024445526150032062024459746706590203'
    &&

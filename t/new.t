@@ -15,6 +15,9 @@ my $str = '-119';
 
 my $ok = '';
 
+my $f000 = new Math::GMPz('z', 62);
+if($f000 == 61) {$ok .= 'a'}
+
 my $f00 = new Math::GMPz();
 Rmpz_set_ui($f00, $ui);
 if($f00 == $ui) {$ok .= 'b'}
@@ -37,13 +40,16 @@ if($f05 == $str) {$ok .= 'g'}
 my $f06 = new Math::GMPz($d);
 if($f06 == int($d)) {$ok .= 'h'}
 
-if($ok eq 'bcdefgh') {print "ok 1\n"}
+if($ok eq 'abcdefgh') {print "ok 1\n"}
 else {print "not ok 1 $ok\n"}
 
 #############################
 
 
 $ok = '';
+
+my $f09 = Math::GMPz::new('0xf', 0);
+if($f09 == 15) {$ok .= 'a'}
 
 my $f10 = Math::GMPz::new();
 Rmpz_set_ui($f10, $ui);
@@ -67,12 +73,15 @@ if($f15 == $str) {$ok .= 'g'}
 my $f16 = Math::GMPz::new($d);
 if($f16 == int($d)) {$ok .= 'h'}
 
-if($ok eq 'bcdefgh') {print "ok 2\n"}
+if($ok eq 'abcdefgh') {print "ok 2\n"}
 else {print "not ok 2 $ok\n"}
 
 ################################
 
 $ok = '';
+
+my $f19 = Math::GMPz->new('z', 62);
+if($f19 == 61) {$ok .= 'a'}
 
 my $f20 = Math::GMPz->new();
 Rmpz_set_ui($f20, $ui);
@@ -107,7 +116,7 @@ else {
   if($f27 != $f28) {$ok .= 'i'}
 }
 
-if($ok eq 'bcdefghi') {print "ok 3\n"}
+if($ok eq 'abcdefghi') {print "ok 3\n"}
 else {print "not ok 3 $ok\n"}
 
 #############################
@@ -142,6 +151,9 @@ else {print $@, "\n"}
 eval{my $f37 = Math::GMPz::new($f28, 12);};
 if($@ =~ /Too many arguments supplied to new\(\) \- expected only one/) {$ok .= 'h'}
 
-if($ok eq 'abcdefgh') {print "ok 4\n"}
+eval{my $f38 = Math::GMPz::new('z', -12);};
+if($@ =~ /Invalid value for base/) {$ok .= 'i'}
+
+if($ok eq 'abcdefghi') {print "ok 4\n"}
 else {print "not ok 4 $ok\n"}
 

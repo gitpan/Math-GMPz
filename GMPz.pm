@@ -76,14 +76,9 @@ Rmpz_tdiv_q_ui Rmpz_tdiv_qr Rmpz_tdiv_qr_ui Rmpz_tdiv_r Rmpz_tdiv_r_2exp
 Rmpz_tdiv_r_ui Rmpz_tdiv_ui Rmpz_tstbit Rmpz_ui_kronecker Rmpz_ui_pow_ui 
 Rmpz_ui_sub Rmpz_urandomb Rmpz_urandomm Rmpz_xor
 rand_init rand_clear
-Rfermat_gmp Rflipbit Rgenerator_zp Rlong_run Rmers_div_q Rmers_div_qr Rmers_div_r
-Rmonobit Rnext_germaine_prime Rnext_proven Rparity_gmp Rparity_ul Rpi_x Rpoker
-Rprbg_bbs Rprbg_ms Rprime_test Rprovable_small Rrm_gmp Rrotate_left_gmp
-Rrotate_left_ul Rrotate_right_gmp Rrotate_right_ul Rrsa_cert Rruns Rsieve_gmp
-eratosthenes eratosthenes_string merten prime_ratio query_eratosthenes_string
-trial_div_ul
+TRmpz_out_str TRmpz_inp_str
     );
-    $Math::GMPz::VERSION = '0.22';
+    $Math::GMPz::VERSION = '0.24';
 
     DynaLoader::bootstrap Math::GMPz $Math::GMPz::VERSION;
 
@@ -118,15 +113,9 @@ Rmpz_submul Rmpz_submul_ui Rmpz_swap Rmpz_tdiv_q Rmpz_tdiv_q_2exp
 Rmpz_tdiv_q_ui Rmpz_tdiv_qr Rmpz_tdiv_qr_ui Rmpz_tdiv_r Rmpz_tdiv_r_2exp
 Rmpz_tdiv_r_ui Rmpz_tdiv_ui Rmpz_tstbit Rmpz_ui_kronecker Rmpz_ui_pow_ui 
 Rmpz_ui_sub Rmpz_urandomb Rmpz_urandomm Rmpz_xor
-rand_init rand_clear)],
-primes => [qw(Rsieve_gmp Rfermat_gmp Rrm_gmp
-eratosthenes eratosthenes_string trial_div_ul Rnext_germaine_prime 
-Rprovable_small Rnext_proven query_eratosthenes_string
-prime_ratio Rpi_x Rprime_test merten)],
-supp => [qw(Rprbg_ms Rprbg_bbs Rmonobit Rlong_run Rruns Rpoker
-Rmers_div_q Rmers_div_r Rmers_div_qr Rgenerator_zp Rflipbit
-Rparity_gmp Rparity_ul Rrotate_left_ul Rrotate_right_ul Rrotate_left_gmp 
-Rrotate_right_gmp Rrsa_cert)]);
+rand_init rand_clear
+TRmpz_out_str TRmpz_inp_str)]
+);
 
 sub dl_load_flags {0} # Prevent DynaLoader from complaining and croaking
 
@@ -187,7 +176,7 @@ sub new {
     if($type == 4) { # POK
       if(@_ > 1) {die "Too many arguments supplied to new() - expected no more than two"}
       $base = shift if @_;
-      if($base < 0 || $base == 1 || $base > 36) {die "Invalid value for base"}
+      if($base < 0 || $base == 1 || $base > 62) {die "Invalid value for base"}
       return Rmpz_init_set_str($arg1, $base);
     }
 
@@ -197,10 +186,44 @@ sub new {
     }
 }
 
+#sub Rmpz_out_str {
+#    if(@_ == 2) { return _Rmpz_out_str($_[0], $_[1]) }
+#    elsif(@_ == 3) { return _Rmpz_out_str2($_[0], $_[1], $_[2]) }
+#    else {die "Wrong number of arguments supplied to Rmpz_out_str()"}
+#}
+
 sub Rmpz_out_str {
-    if(@_ == 2) { return _Rmpz_out_str($_[0], $_[1]) }
-    elsif(@_ == 3) { return _Rmpz_out_str2($_[0], $_[1], $_[2]) }
-    else {die "Wrong number of arguments supplied to Rmpz_out_str()"}
+    if(@_ == 2) {
+       die "Inappropriate 1st arg supplied to Rmpz_out_str" if _itsa($_[0]) != 8;
+       return _Rmpz_out_str($_[0], $_[1]);
+    }
+    if(@_ == 3) {
+      if(_itsa($_[0]) == 8) {return _Rmpz_out_strS($_[0], $_[1], $_[2])}
+      die "Incorrect args supplied to Rmpz_out_str" if _itsa($_[1]) != 8;
+      return _Rmpz_out_strP($_[0], $_[1], $_[2]);
+    }
+    if(@_ == 4) {
+      die "Inappropriate 2nd arg supplied to Rmpz_out_str" if _itsa($_[1]) != 8;
+      return _Rmpz_out_strPS($_[0], $_[1], $_[2], $_[3]);
+    }
+    die "Wrong number of arguments supplied to Rmpz_out_str()";
+}
+
+sub TRmpz_out_str {
+    if(@_ == 3) {
+      die "Inappropriate 3rd arg supplied to TRmpz_out_str" if _itsa($_[2]) != 8;
+      return _TRmpz_out_str($_[0], $_[1], $_[2]);
+    }
+    if(@_ == 4) {
+      if(_itsa($_[2]) == 8) {return _TRmpz_out_strS($_[0], $_[1], $_[2], $_[3])}
+      die "Incorrect args supplied to TRmpz_out_str" if _itsa($_[3]) != 8;
+      return _TRmpz_out_strP($_[0], $_[1], $_[2], $_[3]);
+    }
+    if(@_ == 5) {
+      die "Inappropriate 4th arg supplied to TRmpz_out_str" if _itsa($_[3]) != 8;
+      return _TRmpz_out_strPS($_[0], $_[1], $_[2], $_[3], $_[4]);
+    }
+    die "Wrong number of arguments supplied to TRmpz_out_str()";
 }
 
 sub Rpi_x {
@@ -456,6 +479,11 @@ __END__
 
    Math::GMPz - perl interface to the GMP library's integer (mpz) functions.
 
+=head1 DEPENDENCIES
+
+   This module needs the GMP C library - available from:
+   http://swox.com/gmp
+
 =head1 DESCRIPTION
 
    A bignum module utilising the Gnu MP (GMP) library.
@@ -634,7 +662,7 @@ __END__
 
    Rmpz_set_str($rop, $str, $base); 
     Set $rop to the base $base value of $str. $base may vary from
-    2 to 36.  If $base is 0, the actual base is determined from the
+    2 to 62.  If $base is 0, the actual base is determined from the
     leading characters: if the first two characters are "0x" or "0X",
     hexadecimal is assumed, otherwise if the first character is "0",
     octal is assumed, otherwise decimal is assumed.
@@ -707,7 +735,7 @@ __END__
 
    $str = Rmpz_get_str($op, $base);
     Convert $op to a string of digits in base $base.
-    The base may vary from 2 to 36. 
+    The base may vary from -36..-2, 2..62. 
 
    ##################
  
@@ -1074,27 +1102,42 @@ __END__
    I/O of INTEGERS
    http://swox.com/gmp/manual/I-O-of-Integers.html
 
-   The GMP library versions of these functions have
-   the capability to read/write directly from/to a 
-   file (as well as to stdout). As provided here,
-   the functions read/write from/to stdout only.
-
-   $ul = Rmpz_out_str($op, $base [, $suffix]);
+   $bytes_written = Rmpz_out_str([$prefix,] $op, $base [, $suffix]);
+    BEST TO USE TRmpz_out_str INSTEAD.
     Output $op to STDOUT, as a string of digits in base $base.
-    The base may vary from 2 to 36. Return the number of bytes
-    written, or if an error occurred,return 0.
-    The optional third argument ($suffix) is a string (eg "\n")
-    that will be appended to the output. $bytes_written does 
-    not include the bytes contained in $suffix.
+    The base may vary from -36..-2, 2..62. Return the number 
+    of bytes written, or if an error occurred,return 0.
+    The optional arguments ($prefix and $suffix) are strings
+    that will be prepended/appended to the mpz_out_str output.
+    $bytes_written does not include the bytes contained in
+    $prefix and $suffix.
 
-   $ul = Rmpz_inp_str($rop, $base);
+   $bytes_written = TRmpz_out_str([$prefix,] $stream, $base, $op, [, $suffix]);
+    As for Rmpz_out_str, except that there's the capability to print
+    to somewhere other than STDOUT. Note that the order of the args
+    is different (to match the order of the mpz_out_str args).
+    To print to STDERR:
+       TRmpz_out_str(*stderr, $base, $digits, $op);
+    To print to an open filehandle (let's call it FH):
+       TRmpz_out_str(\*FH, $base, $digits, $op);
+
+   $bytes_read = Rmpz_inp_str($rop, $base);
+    BEST TO USE TRmpz_inp_str instead.
     Input a string in base $base from STDIN, and put the read
-    integer in $rop. The base may vary from 2 to 36.  If $base
+    integer in $rop. The base may vary from 2 to 62.  If $base
     is 0, the actual base is determined from the leading
     characters: if the first two characters are `0x' or `0X',
     hexadecimal is assumed, otherwise if the first character is
    `0', octal is assumed, otherwise decimal is assumed.
     Return the number of bytes read, or if an error occurred, return 0.
+
+   $bytes_read = TRmpz_inp_str($rop, $stream, $base);
+    As for Rmpz_inp_str, except that there's the capability to read
+    from somewhere other than STDIN.
+    To read from STDIN:
+       TRmpz_inp_str($rop, *stdin, $base);
+    To read from an open filehandle (let's call it FH):
+       TRmpz_inp_str($rop, \*FH, $base);
 
    #######################
 
@@ -1178,7 +1221,7 @@ __END__
 
    $ui = Rmpz_sizeinbase($op, $base);
     Return the size of $op measured in number of digits in base
-    $base. The base may vary from 2 to 36.  The sign of $op is 
+    $base. The base may vary from 2 to 62.  The sign of $op is 
     ignored, just the absolute value is used.  The result will be
     exact or 1 too big.  If $base is a power of 2, the result will
     always be exact. If $op is zero the return value is always 1.
@@ -1350,335 +1393,8 @@ __END__
     Also, in Rmpz_printf, there's no support for POSIX '$' style 
     numbered arguments.
 
-   ###############################
-   ###############################
-
-   DISCLAIMER:
-   The following (homegrown) functions are not part of the
-   GMP library. They should probably be removed from this
-   module ... but that's more work than I can be bothered with.
-   I still use some of these functions (in a 32-bit environment
-   only) - and find those that I *do* use to be of some value -
-   but please don't judge me too harshly on the basis if what
-   follows :-)
-
-   @return = Rsieve_gmp($max_p, $max_add, $op);
-
-    "$op" is a Math::GMPz object that holds a certain
-    numeric value, say 'Z'.
-    $max_add and $max_p are simply variables of type "$ui".
+   ###################
     
-    Returns an array of integers in the range [0..$max_add].
-    For each integer in @return, Z+that_integer is not
-    divisible by any integer less than $max_p (and > 1).
-    For each integer in the range [0..$max_add] that is not
-    in @return, Z+that_integer is divisible by at least
-    one integer less than $max_p (and > 1).
-    This is a fast and relatively efficient method of determining
-    which numbers within a range need to be subjected to
-    Fermat/Miller-Rabin tests to determine whether they are prime.
-    $max_p and $max_add must be even (and less than 2**32).
-    Z must be odd. 
- 
-   $bool = Rrm_gmp($op,$ui);
-
-    "$op" is a Math::GMPz object that holds a certain
-    numeric value, say 'Z'.
-
-    Runs a Miller Rabin test on Z for base $ui.
-    Returns 1 (success) if Z is either prime, or is
-    pseudoprime to base $ui.
-    Else returns 0 (Z is definitely composite).
-
-   $bool = Rfermat_gmp($op, $ui);
-
-    "$op" is a Math::GMPz object that holds a certain
-    numeric value, say 'Z' and "$ui" is an unsigned long
-    with a numeric value, say U, such that U < Z.
-
-    This is Fermat's Little Theorem.
-    Returns 1 if (U ** Z ) % Z == U. (Z might be prime.)
-    Else returns 0 (Z is definitely composite).
-
-   Rprbg_ms($o, $p, $q, $seed, $bits);
-   Rprbg_bbs($o, $p, $q, $seed, $bits);
-
-    "$o", "$p", "$q", and "$seed" are all Math::GMPz objects.
-
-    These, if they've been correctly coded, are the Micali-Schnorr
-    and Blum-Blum-Shub cryptographically secure pseudorandom
-    bit generators. (Blum-Blum-Shub must surely be every
-    two-year-old's favorite :-)
-    $p, $q hold distinct *large* (say, >1000 bit) prime values
-    (provided by the user). Let's say these 2 primes have values
-    'P' and 'Q' respectively. And let's say the value held
-    by $seed is 'S'.
-    The cryptographic security of these generators hinges upon
-    the 2 primes (and their product) being secret. How these
-    primes are generated and protected is therefore of considerable
-    importance, and I'll offer no advice on that matter. You can
-    obtain sound advice from the sci.crypt newsgroup.
-    For the Micali-Schnorr generator, there is no guarantee that
-    a suitable exponent (for a given P and Q) exists. In practise,
-    such a situation will be rare, but if it happens, the
-    application will die (with an appropriate error message) and
-    it will be necessary to choose another P and/or Q.
-    For the Blum-Blum-Shub generator the only requirement is that
-    the 2 primes be congruent to 3, mod 4. (ie P%4==3 && Q%4==3.)
-    If either of the 2 primes is not congruent to 3, mod 4, then
-    the application will die (again with an appropriate error
-    message). The primality (or otherwise) of P and Q is not
-    checked internally (for either prime).
-    S is a pseudorandomly derived seed. No need for that seed to
-    have been generated by a cryptographically secure pseudorandom
-    number generator. The only requirement is that it be different
-    each time the prbg is run. (S actually seeds the GMP
-    mpz_urandomb/m generator - which produces a pseudorandom seed
-    of the correct size for the M-S/B-B-S generator. If S is
-    bigger than 64 bits, then the 64 least significant bits are
-    taken as the mpz_urandomb/m seed.)
-    $bits is the bit-size of the pseudorandom bit sequence required.
-    The pseudorandom bit sequence is treated as a number.
-    "$o" is a Math::GMPz object that holds that number.
-    If it is intended to use either of these generators for
-    cryptographic purposes then you should probably verify that
-    they have, in fact, been correctly coded (in addition to the
-    other considerations mentioned above).
-    Micali-Schnorr is very fast, producing multiple random bits at
-    each internal iteration. Blum-Blum-Shub (as implemented here)
-    is considerably slower, producing only one pseudorandom bit at
-    each internal iteration.
-
-   $bool = Rmonobit($op);
-   $bool = Rlong_run($op);
-   $bool = Rruns($op);
-   $bool = Rpoker($op);
-
-    These are the 4 standard FIPS-140 statistical tests for testing
-    prbg's. They return '1' for success and '0' for failure.
-    They test 20000-bit pseudorandom sequences, stored in a 
-    Math::GMPz object, "$op".
-    If any of the tests report failure (0), then the prbg that
-    produced the bit sequence is unsuitable for cryptographic
-    purposes and should not be used for such a purpose.(In fact,
-    it probably shouldn't be used for *any* purpose at all.)
-    The converse - namely that 'success' implies suitability for
-    cryptographic purposes - is NOT necessarily true.
-    Even perl's rand function passes these tests, so long as you
-    make allowances for the value of $Config{randbits}.
-
-   $bool = Rparity_ul($ui);
-   $bool = Rparity_gmp($op);
-
-    Returns the parity of the number in question - 1 for odd parity
-    and 0 for even parity.
-
-
-   $rotated_left = Rrotate_left_ul($num, $lsbs, $shift);
-
-    Left rotate the $lsbs least significant bits through
-    $shift shifts. $num must fit into a "signed int"
-    (usually 32 bits). For larger values, use
-    rotate_left_gmp. $shift must be less than $lsbs.
-    It is assumed that all bits outside of the rotated
-    segment are zero.
-
-   $rotated_right = Rrotate_right_ul($num, $lsbs, $shift);
-
-    Right rotate the $lsbs least significant bits through
-    $shift shifts. $num must fit into a "signed int"
-    (usually 32 bits). For larger values, use
-    rotate_right_gmp. $shift must be less than $lsbs.
-    It is assumed that all bits outside of the rotated
-    segment are zero.
-
-   Rrotate_left_gmp($newnum, $num, $lsbs, $shift);
-
-    As for Rrotated_left_ul(), but there is no size limit on
-    the number of bits that $num contains. $newnum is the
-    value after $num has been rotated. Both $newnum and 
-    $num are Math::GMPz objects.
-
-   Rrotate_right_gmp($newnum, $num, $lsbs, $shift);
-
-    As for rotated_right(), but there is no size limit on the
-    number of bits that $num contains. $newnum is the
-    value after $num has been rotated. Both $newnum and 
-    $num are Math::GMPz objects.
-
-   Rmers_div_q($q, $x, $m);
-
-    $q = $x / $m where $m is of the form (2 ** a) - 1, where
-    'a' is a positive integer. (The function does not check
-    this.) $q, $x, and $m are all of Math::GMPz objects.
-
-   Rmers_div_r($rem, $x, $m);
-
-    $rem = $x % $m where $m is of the form (2 ** a) - 1, where
-    'a' is a positive integer. (The function does not check
-    this.) $rem, $x, and $m are all Math::GMPz objects.
-    Check that this function behaves as you desire when $x 
-    holds a negative value.
-
-   Rmers_div_qr($q, $rem, $x, $m);
-
-    As for the above 2 Rmers_div functions.
-    $q = $x / $m and $rem = $x % $m
-
-   Rgenerator_zp($min, $p, \@factors_ul, \@factors_gmp);
-
-    $p and $min are Math::GMPz objects.
-    $p holds a prime value,
-    say P. @factors_ul is an array of all of the distinct
-    prime factors of P-1 that fit into an unsigned long (ie 
-    are of type "$ul"). eg if P = 53, then @factors_ul = (2,13)
-    since 52 = (2 ** 2) * 13, which is the complete prime
-    factorisation of 52.
-    @factors_gmp is an array of Math::GMPz objects that
-    hold the large (bignum) factors of P-1. If all of the 
-    factors of P fit into 'unsigned longs', then @factors_gmp
-    will be empty - in which case it is not provided. (ie don't
-    supply a 4th argument.)
-    $min is a Math::GMPz object that holds a value in the range
-    [1..P-1], say M. (The initial value of M would normally be
-    allocated by the user.) If M is a generator of the multiplicative
-    group represented by the aforementioned 'range' it is left
-    unaltered. Else M is incremented until it is a generator.
-    If M > P-1, then the operation 'M %= (P - 1);' is
-    performed. (A warning that this has happened will be issued.)
-    No checks are performed to verify that either P, or the
-    factors supplied, are in fact prime.
-    Failure to supply all of the factors of P will be detected.
-
-   Rflipbit($flipped, $orig);
-
-    $flipped and $orig are both Math::GMP objects.
-    Flips the values of all of the bits (up to and
-    including the most significant bit) of $orig.
-    The result is stored in $flipped. $orig is not
-    altered (assuming, of course, that $orig and
-    $flipped are not the same perl variable).
-
-   @primes = eratosthenes($max);
-
-    @primes contains all of the primes < $max.
-    @primes therefore requires a significant amount
-    of memory when $max gets to around 2**20.
-    $max must be even.
-
-   $prime_vector = eratosthenes_string($max);
-
-    $prime_vector is a string whose bits encode the 
-    primality of all numbers less than $max. ($max
-    must be even.) To determine the primality of a $num
-    (which must be less than or equal to $max) use the 
-    query_eratosthenes_string() function (see next).
-
-   $is_prime = query_eratosthenes_string($num, $prime_vector);
-
-    $prime_vector is the return value of eratosthenes_string($max),
-    where $max is an even unsigned long. $num must be less than or
-    equal to $max. The function returns 1 if $num is prime, and 0
-    otherwise.
-
-   $div = trial_div_ul($b, $max);
-
-    $b is a Math::GMPz object that holds a value, say Z.
-    $max must be even, and fit into an 'unsigned long'.
-    The function returns the first prime found in the range
-    [2..$max] that divides Z. If no such prime is found
-    the function returns '1'. Note, therefore, that
-    this function always returns 'true'.
-
-   Rnext_germaine_prime($g,$s,$b,$reps,$max_p,$max_add);
-
-    $g, $s and $b are Math::GMPz objects. $g is the smallest
-    germaine prime greater than or equal to $b. A germaine 
-    prime is simply a prime, p, such that p * 2 + 1 is
-    also prime. $s is this second prime (p * 2 + 1), known
-    commonly as a "safe prime".
-    Since the process of finding a germaine/safe prime pair
-    can be slow, sieving is in order (to speed things up).
-    $max_p and $max_add are sieve parameters (see the
-    Rsieve_gmp() documentation above). Appropriate values
-    can be determined by trial and error. Start with them equal
-    to, say, 100000. They don't have to be equal to each other
-    but they do both need to be even. If no germaine/safe
-    primes are found in the range, $g and $s are set to zero.
-    $reps is the number of Miller-Rabin primality tests that
-    will be conducted to determine primality.
-
-   $bool = Rprime_test($b, $reps);
-
-    $b is a Math::GMPz object holding a value, say Z.
-    Performs rm_gmp() on Z for bases in the range
-    [2..$reps+1]. Returns 0 as soon as an rm_gmp() test
-    returns 0. Returns 1 if all of the rm_gmp() tests
-    return 1.
-
-   Rprovable_small($d);
-
-    $d is a Math::GMPz object holding a value
-    in the range [2..341550071728321] say X.
-    If X is prime $d is set to X. Else $d is set to
-    the first prime in the range [X..341550071828320].
-    If no such prime exists in that range then $d is
-    to zero.
-
-   Rnext_proven($next, $current, $progress, $check, $max_prime, $R_init);
-
-    $next, $current, and $R_init are all Math::GMPz
-    objects. $progress and $check are simple booleans.
-    Given that $current holds a value, say Q, that
-    is a proven prime, then the function sets the value
-    held by $next to a proven prime value,
-    N, of the form N = 2RQ + 1.
-    If $progress is true, a progress report is given to
-    STDERR. This report takes the form of a '.' printed
-    whenever a new value for R is being tested for 
-    primality by trial division. If the preliminary tests
-    show that the current candidate is possibly prime
-    a '*' is printed to STDERR while the remaining
-    conclusive tests are conducted. Else, no such report.
-    The trial division will be performed for all primes less
-    than $max_prime (the 5th argument) which must be even.
-    If $check is true, the returned prime is subjected to
-    10 Miller-Rabin tests (as a bug check).
-    $R_init is the initial value for R. It is decremented
-    by one until the new proven prime is found. Default value
-    for $R_init is Q - 1 and it is not necessary to supply
-    this 6th argument unless you wish to choose a value
-    other than Q - 1. (R must satisfy 0 < R < Q)
-    If R reaches zero before a prime is found, then the
-    function dies with an appropriate error message.
-
-   Rpi_x($q, $bits);
-
-    $q is a Math::GMPz object holding a value
-    roughly equal to the number of primes in the
-    range [2 .. 2 ** $bits], based on the primes
-    distribution relation that x / ln(x) approximates pi(x).
-
-   $conc = prime_ratio($bits);
-
-    There is (roughly) a 1 in $conc chance that a
-    randomly selected $bits-bit *odd* number is prime.
-    This is also based on the primes distribution
-    relation that x / ln(x) approximates pi(x).
-
-   $probability = merten($max);
-
-    Returns the approximate probability that any randomly
-    selected large number is not divisible by any number in the
-    range [2..$max]. ($max must be less than 2 ** 53).
-    This is simply mertens approximation - that such probability
-    equals 1 / exp(Euler's constant) / log($max).
-    This function is useful for determining how deeply to
-    sieve/trial-divide.
-    If you're working in the field of odd-only integers, then
-    you need to halve the return value.
-
-  
 =head1 BUGS
 
    You can get segfaults if you pass the wrong type of
@@ -1689,8 +1405,7 @@ __END__
 =head1 TERMS AND CONDITIONS
 
    Use this module for whatever you like. It's free and comes
-   with no guarantees - except that the purchase price is
-   fully refundable if you're dissatisfied with it.
+   with no guarantees.
 
 =head1 AUTHOR
 

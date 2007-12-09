@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Math::GMPz qw(:mpz :primes :supp);
+use Math::GMPz qw(:mpz);
 
 #$| = 1;
 print "1..5\n";
@@ -17,8 +17,8 @@ my $r = Rmpz_init2(1500);
 my $cq = Rmpz_init2(500);
 my $cr = Rmpz_init2(1500);
 
-Rmers_div_q($q, $bnum, $bm);
-Rmers_div_r($r, $bnum, $bm);
+Math::GMPz::Rmers_div_q($q, $bnum, $bm);
+Math::GMPz::Rmers_div_r($r, $bnum, $bm);
 Rmpz_tdiv_qr($cq, $cr, $bnum, $bm);
 
 if(!Rmpz_cmp($cq, $q))
@@ -29,7 +29,7 @@ if(!Rmpz_cmp($cr, $r))
      {print "ok 2\n"}
 else {print "not ok 2\n"}
 
-Rmers_div_qr($q, $r, $bnum, $bm);
+Math::GMPz::Rmers_div_qr($q, $r, $bnum, $bm);
 
 if(!Rmpz_cmp($cq, $q)
    &&
@@ -46,7 +46,7 @@ my @factors_ul = (2);
 my @factors_gmp = ($cq);
 for(1..75) {
     Rmpz_add_ui($r, $r, $_);
-    Rgenerator_zp($r, $q, \@factors_ul, \@factors_gmp);
+    Math::GMPz::Rgenerator_zp($r, $q, \@factors_ul, \@factors_gmp);
     $ok .= substr(Rmpz_get_str($r, 10), -1, 1);
     }
 
@@ -58,7 +58,7 @@ for(1..60) {$num .= int(rand(2))}
 
 Rmpz_set_str($q, $num, 2);
 
-Rflipbit($r, $q);
+Math::GMPz::Rflipbit($r, $q);
 
 Rmpz_and($r, $r, $q);
 if(!Rmpz_cmp_ui($r, 0)) {print "ok 5\n"}
