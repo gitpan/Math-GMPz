@@ -3619,56 +3619,152 @@ SV * gmp_v() {
      return newSVpv(gmp_version, 0);
 }
 
-void wrap_gmp_printf(SV * a, SV * b) {
+SV * wrap_gmp_printf(SV * a, SV * b) {
+     int ret;
      if(sv_isobject(b)) { 
        if(strEQ(HvNAME(SvSTASH(SvRV(b))), "Math::GMPz") ||
          strEQ(HvNAME(SvSTASH(SvRV(b))), "Math::GMP") ||
          strEQ(HvNAME(SvSTASH(SvRV(b))), "GMP::Mpz")) {
-         gmp_printf(SvPV_nolen(a), *(INT2PTR(mpz_t *, SvIV(SvRV(b)))));
+         ret = gmp_printf(SvPV_nolen(a), *(INT2PTR(mpz_t *, SvIV(SvRV(b)))));
          fflush(stdout);
+         return newSViv(ret);
        }
-       else {
-         if(strEQ(HvNAME(SvSTASH(SvRV(b))), "Math::GMPq") ||
-           strEQ(HvNAME(SvSTASH(SvRV(b))), "GMP::Mpq")) {
-           gmp_printf(SvPV_nolen(a), *(INT2PTR(mpq_t *, SvIV(SvRV(b)))));
-           fflush(stdout);
-         }
-         else {
-           if(strEQ(HvNAME(SvSTASH(SvRV(b))), "Math::GMPf") ||
-             strEQ(HvNAME(SvSTASH(SvRV(b))), "GMP::Mpf")) {
-             gmp_printf(SvPV_nolen(a), *(INT2PTR(mpf_t *, SvIV(SvRV(b)))));
-             fflush(stdout);
-           }
-             else croak("Unrecognised object supplied as argument to Rmpz_printf");
-         }
+       if(strEQ(HvNAME(SvSTASH(SvRV(b))), "Math::GMPq") ||
+         strEQ(HvNAME(SvSTASH(SvRV(b))), "GMP::Mpq")) {
+         ret = gmp_printf(SvPV_nolen(a), *(INT2PTR(mpq_t *, SvIV(SvRV(b)))));
+         fflush(stdout);
+         return newSViv(ret);
        }
+       if(strEQ(HvNAME(SvSTASH(SvRV(b))), "Math::GMPf") ||
+         strEQ(HvNAME(SvSTASH(SvRV(b))), "GMP::Mpf")) {
+         ret = gmp_printf(SvPV_nolen(a), *(INT2PTR(mpf_t *, SvIV(SvRV(b)))));
+         fflush(stdout);
+         return newSViv(ret);
+       }
+   
+       croak("Unrecognised object supplied as argument to Rmpz_printf");
      } 
 
-     else {
-       if(SvUOK(b)) {
-         gmp_printf(SvPV_nolen(a), SvUV(b));
-         fflush(stdout);
-       }
-       else {
-         if(SvIOK(b)) {
-           gmp_printf(SvPV_nolen(a), SvIV(b));
-           fflush(stdout);
-         }
-         else {
-           if(SvNOK(b)) {
-             gmp_printf(SvPV_nolen(a), SvNV(b));
-             fflush(stdout);
-           }
-           else {
-             if(SvPOK(b)) {
-               gmp_printf(SvPV_nolen(a), SvPV_nolen(b));
-               fflush(stdout);
-             }
-             else croak("Unrecognised type supplied as argument to Rmpz_printf");
-           }
-         } 
-       }
+     if(SvUOK(b)) {
+       ret = gmp_printf(SvPV_nolen(a), SvUV(b));
+       fflush(stdout);
+       return newSViv(ret);
      }
+     if(SvIOK(b)) {
+       ret = gmp_printf(SvPV_nolen(a), SvIV(b));
+       fflush(stdout);
+       return newSViv(ret);
+     }
+     if(SvNOK(b)) {
+       ret = gmp_printf(SvPV_nolen(a), SvNV(b));
+       fflush(stdout);
+       return newSViv(ret);
+     }
+     if(SvPOK(b)) {
+       ret = gmp_printf(SvPV_nolen(a), SvPV_nolen(b));
+       fflush(stdout);
+       return newSViv(ret);
+     }
+  
+     croak("Unrecognised type supplied as argument to Rmpz_printf");
+}
+
+SV * wrap_gmp_fprintf(FILE * stream, SV * a, SV * b) {
+     int ret;
+     if(sv_isobject(b)) { 
+       if(strEQ(HvNAME(SvSTASH(SvRV(b))), "Math::GMPz") ||
+         strEQ(HvNAME(SvSTASH(SvRV(b))), "Math::GMP") ||
+         strEQ(HvNAME(SvSTASH(SvRV(b))), "GMP::Mpz")) {
+         ret = gmp_fprintf(stream, SvPV_nolen(a), *(INT2PTR(mpz_t *, SvIV(SvRV(b)))));
+         fflush(stream);
+         return newSViv(ret);
+       }
+       if(strEQ(HvNAME(SvSTASH(SvRV(b))), "Math::GMPq") ||
+         strEQ(HvNAME(SvSTASH(SvRV(b))), "GMP::Mpq")) {
+         ret = gmp_fprintf(stream, SvPV_nolen(a), *(INT2PTR(mpq_t *, SvIV(SvRV(b)))));
+         fflush(stream);
+         return newSViv(ret);
+       }
+       if(strEQ(HvNAME(SvSTASH(SvRV(b))), "Math::GMPf") ||
+         strEQ(HvNAME(SvSTASH(SvRV(b))), "GMP::Mpf")) {
+         ret = gmp_fprintf(stream, SvPV_nolen(a), *(INT2PTR(mpf_t *, SvIV(SvRV(b)))));
+         fflush(stream);
+         return newSViv(ret);
+       }
+ 
+       else croak("Unrecognised object supplied as argument to Rmpz_fprintf");
+     } 
+
+     if(SvUOK(b)) {
+       ret = gmp_fprintf(stream, SvPV_nolen(a), SvUV(b));
+       fflush(stream);
+       return newSViv(ret);
+     }
+     if(SvIOK(b)) {
+       ret = gmp_fprintf(stream, SvPV_nolen(a), SvIV(b));
+       fflush(stream);
+       return newSViv(ret);
+     }
+     if(SvNOK(b)) {
+       ret = gmp_fprintf(stream, SvPV_nolen(a), SvNV(b));
+       fflush(stream);
+       return newSViv(ret);
+     }
+     if(SvPOK(b)) {
+       ret = gmp_fprintf(stream, SvPV_nolen(a), SvPV_nolen(b));
+       fflush(stream);
+       return newSViv(ret);
+     }
+
+     croak("Unrecognised type supplied as argument to Rmpz_fprintf");
+}
+
+SV * wrap_gmp_sprintf(char * stream, SV * a, SV * b) {
+     int ret;
+     if(sv_isobject(b)) { 
+       if(strEQ(HvNAME(SvSTASH(SvRV(b))), "Math::GMPz") ||
+         strEQ(HvNAME(SvSTASH(SvRV(b))), "Math::GMP") ||
+         strEQ(HvNAME(SvSTASH(SvRV(b))), "GMP::Mpz")) {
+         ret = gmp_sprintf(stream, SvPV_nolen(a), *(INT2PTR(mpz_t *, SvIV(SvRV(b)))));
+         return newSViv(ret);
+       }
+
+       if(strEQ(HvNAME(SvSTASH(SvRV(b))), "Math::GMPq") ||
+         strEQ(HvNAME(SvSTASH(SvRV(b))), "GMP::Mpq")) {
+         ret = gmp_sprintf(stream, SvPV_nolen(a), *(INT2PTR(mpq_t *, SvIV(SvRV(b)))));
+         return newSViv(ret);
+       }
+
+       if(strEQ(HvNAME(SvSTASH(SvRV(b))), "Math::GMPf") ||
+         strEQ(HvNAME(SvSTASH(SvRV(b))), "GMP::Mpf")) {
+         ret = gmp_sprintf(stream, SvPV_nolen(a), *(INT2PTR(mpf_t *, SvIV(SvRV(b)))));
+         return newSViv(ret);
+       }
+
+       croak("Unrecognised object supplied as argument to Rmpz_sprintf");
+     } 
+
+     if(SvUOK(b)) {
+       ret = gmp_sprintf(stream, SvPV_nolen(a), SvUV(b));
+       return newSViv(ret);
+     }
+
+     if(SvIOK(b)) {
+       ret = gmp_sprintf(stream, SvPV_nolen(a), SvIV(b));
+       return newSViv(ret);
+     }
+
+     if(SvNOK(b)) {
+       ret = gmp_sprintf(stream, SvPV_nolen(a), SvNV(b));
+       return newSViv(ret);
+     }
+
+     if(SvPOK(b)) {
+       ret = gmp_sprintf(stream, SvPV_nolen(a), SvPV_nolen(b));
+       return newSViv(ret);
+     }
+
+     croak("Unrecognised type supplied as argument to Rmpz_sprintf");
 }
 
 SV * _itsa(SV * a) {
@@ -3679,7 +3775,7 @@ SV * _itsa(SV * a) {
      if(sv_isobject(a)) {
        if(strEQ(HvNAME(SvSTASH(SvRV(a))), "Math::GMPz")) return newSVuv(8);
        if(strEQ(HvNAME(SvSTASH(SvRV(a))), "Math::GMP")) return newSVuv(9);
-       }
+     }
      return newSVuv(0);
 }
 
@@ -3778,6 +3874,18 @@ return 1;
 return 0;
 #endif
 #endif
+}
+
+SV * Rmpz_inp_raw(mpz_t * a, FILE * stream) {
+     size_t ret = mpz_inp_raw(*a, stream);
+     fflush(stream);
+     return newSVuv(ret);
+}
+
+SV * Rmpz_out_raw(FILE * stream, mpz_t * a) {
+     size_t ret = mpz_out_raw(stream, *a);
+     fflush(stream);
+     return newSVuv(ret);
 }
 
 MODULE = Math::GMPz	PACKAGE = Math::GMPz	
@@ -6060,22 +6168,22 @@ eratosthenes_string (x_arg)
 SV *
 gmp_v ()
 
-void
+SV *
 wrap_gmp_printf (a, b)
 	SV *	a
 	SV *	b
-	PREINIT:
-	I32* temp;
-	PPCODE:
-	temp = PL_markstack_ptr++;
-	wrap_gmp_printf(a, b);
-	if (PL_markstack_ptr != temp) {
-          /* truly void, because dXSARGS not invoked */
-	  PL_markstack_ptr = temp;
-	  XSRETURN_EMPTY; /* return empty stack */
-        }
-        /* must have used dXSARGS; list context implied */
-	return; /* assume stack size is correct */
+
+SV *
+wrap_gmp_fprintf (stream, a, b)
+	FILE *	stream
+	SV *	a
+	SV *	b
+
+SV *
+wrap_gmp_sprintf (stream, a, b)
+	char *	stream
+	SV *	a
+	SV *	b
 
 SV *
 _itsa (a)
@@ -6157,4 +6265,14 @@ _has_longdouble ()
 
 int
 _has_inttypes ()
+
+SV *
+Rmpz_inp_raw (a, stream)
+	mpz_t *	a
+	FILE *	stream
+
+SV *
+Rmpz_out_raw (stream, a)
+	FILE *	stream
+	mpz_t *	a
 

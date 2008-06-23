@@ -5,6 +5,7 @@ GMPz.pm
 GMPz.xs
 INLINE.h
 README
+t/aa_basic.t
 t/alloc.t
 t/arith.t
 t/bits.t
@@ -19,9 +20,11 @@ t/theoretic.t
 t/div2.t
 t/cdiv.t
 t/fdiv.t
+t/io_raw.t
 t/longdouble.t
 t/out_str.t
 t/overload.t
+t/printf.t
 t/use64bitint.t
 t/new.t
 t/not_zero.t

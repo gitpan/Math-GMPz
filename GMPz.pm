@@ -56,16 +56,19 @@ Rmpz_export Rmpz_fac_ui Rmpz_fdiv_q Rmpz_fdiv_q_2exp Rmpz_fdiv_q_ui
 Rmpz_fdiv_qr Rmpz_fdiv_qr_ui Rmpz_fdiv_r Rmpz_fdiv_r_2exp Rmpz_fdiv_r_ui 
 Rmpz_fdiv_ui Rmpz_fib2_ui Rmpz_fib_ui Rmpz_fits_sint_p Rmpz_fits_slong_p 
 Rmpz_fits_sshort_p Rmpz_fits_uint_p Rmpz_fits_ulong_p Rmpz_fits_ushort_p
+Rmpz_fprintf Rmpz_sprintf Rmpz_sprintf_ret
 Rmpz_gcd Rmpz_gcd_ui Rmpz_gcdext Rmpz_get_d_2exp Rmpz_get_si Rmpz_get_str 
 Rmpz_get_ui Rmpz_getlimbn Rmpz_hamdist Rmpz_import Rmpz_init Rmpz_init2 
 Rmpz_init2_nobless Rmpz_init_nobless Rmpz_init_set Rmpz_init_set_d 
 Rmpz_init_set_d_nobless Rmpz_init_set_nobless Rmpz_init_set_si 
 Rmpz_init_set_si_nobless Rmpz_init_set_str Rmpz_init_set_str_nobless
-Rmpz_init_set_ui Rmpz_init_set_ui_nobless Rmpz_inp_str Rmpz_invert Rmpz_ior 
+Rmpz_init_set_ui Rmpz_init_set_ui_nobless Rmpz_inp_str Rmpz_inp_raw
+Rmpz_invert Rmpz_ior 
 Rmpz_jacobi Rmpz_kronecker Rmpz_kronecker_si Rmpz_kronecker_ui Rmpz_lcm 
 Rmpz_lcm_ui Rmpz_legendre Rmpz_lucnum2_ui Rmpz_lucnum_ui Rmpz_mod Rmpz_mod_ui
 Rmpz_mul Rmpz_mul_2exp Rmpz_mul_si Rmpz_mul_ui Rmpz_neg Rmpz_nextprime 
-Rmpz_odd_p Rmpz_out_str Rmpz_perfect_power_p Rmpz_perfect_square_p 
+Rmpz_odd_p Rmpz_out_str Rmpz_out_raw
+Rmpz_perfect_power_p Rmpz_perfect_square_p 
 Rmpz_popcount Rmpz_pow_ui Rmpz_powm Rmpz_powm_ui Rmpz_printf 
 Rmpz_probab_prime_p Rmpz_realloc2 Rmpz_remove Rmpz_root Rmpz_rootrem 
 Rmpz_rrandomb Rmpz_scan0 Rmpz_scan1 Rmpz_set Rmpz_set_d Rmpz_set_f Rmpz_set_q
@@ -78,7 +81,7 @@ Rmpz_ui_sub Rmpz_urandomb Rmpz_urandomm Rmpz_xor
 rand_init rand_clear
 TRmpz_out_str TRmpz_inp_str
     );
-    $Math::GMPz::VERSION = '0.24';
+    $Math::GMPz::VERSION = '0.26';
 
     DynaLoader::bootstrap Math::GMPz $Math::GMPz::VERSION;
 
@@ -94,16 +97,19 @@ Rmpz_export Rmpz_fac_ui Rmpz_fdiv_q Rmpz_fdiv_q_2exp Rmpz_fdiv_q_ui
 Rmpz_fdiv_qr Rmpz_fdiv_qr_ui Rmpz_fdiv_r Rmpz_fdiv_r_2exp Rmpz_fdiv_r_ui 
 Rmpz_fdiv_ui Rmpz_fib2_ui Rmpz_fib_ui Rmpz_fits_sint_p Rmpz_fits_slong_p 
 Rmpz_fits_sshort_p Rmpz_fits_uint_p Rmpz_fits_ulong_p Rmpz_fits_ushort_p
+Rmpz_fprintf Rmpz_sprintf Rmpz_sprintf_ret
 Rmpz_gcd Rmpz_gcd_ui Rmpz_gcdext Rmpz_get_d_2exp Rmpz_get_si Rmpz_get_str 
 Rmpz_get_ui Rmpz_getlimbn Rmpz_hamdist Rmpz_import Rmpz_init Rmpz_init2 
 Rmpz_init2_nobless Rmpz_init_nobless Rmpz_init_set Rmpz_init_set_d 
 Rmpz_init_set_d_nobless Rmpz_init_set_nobless Rmpz_init_set_si 
 Rmpz_init_set_si_nobless Rmpz_init_set_str Rmpz_init_set_str_nobless
-Rmpz_init_set_ui Rmpz_init_set_ui_nobless Rmpz_inp_str Rmpz_invert Rmpz_ior 
+Rmpz_init_set_ui Rmpz_init_set_ui_nobless Rmpz_inp_str Rmpz_inp_raw 
+Rmpz_invert Rmpz_ior 
 Rmpz_jacobi Rmpz_kronecker Rmpz_kronecker_si Rmpz_kronecker_ui Rmpz_lcm 
 Rmpz_lcm_ui Rmpz_legendre Rmpz_lucnum2_ui Rmpz_lucnum_ui Rmpz_mod Rmpz_mod_ui
 Rmpz_mul Rmpz_mul_2exp Rmpz_mul_si Rmpz_mul_ui Rmpz_neg Rmpz_nextprime 
-Rmpz_odd_p Rmpz_out_str Rmpz_perfect_power_p Rmpz_perfect_square_p 
+Rmpz_odd_p Rmpz_out_str Rmpz_out_raw
+Rmpz_perfect_power_p Rmpz_perfect_square_p 
 Rmpz_popcount Rmpz_pow_ui Rmpz_powm Rmpz_powm_ui Rmpz_printf 
 Rmpz_probab_prime_p Rmpz_realloc2 Rmpz_remove Rmpz_root Rmpz_rootrem 
 Rmpz_rrandomb Rmpz_scan0 Rmpz_scan1 Rmpz_set Rmpz_set_d Rmpz_set_f Rmpz_set_q
@@ -462,6 +468,23 @@ sub Rmpz_printf {
       }
 }
 
+sub Rmpz_fprintf {
+    die "Rmpz_fprintf must take 3 arguments: filehandle, format string, and variable" if @_ != 3;
+    wrap_gmp_fprintf(@_);
+}
+
+sub Rmpz_sprintf {
+    die "Rmpz_sprintf must take 3 arguments: buffer, format string, and variable" if @_ != 3;
+    my $len = wrap_gmp_sprintf(@_);
+    $_[0] = substr($_[0], 0, $len);
+}
+
+sub Rmpz_sprintf_ret {
+    die "Rmpz_sprintf must take 3 arguments: buffer, format string, and variable" if @_ != 3;
+    my $len = wrap_gmp_sprintf(@_);
+    return substr($_[0], 0, $len);
+}
+
 sub query_eratosthenes_string {
     my $x = $_[0] - 1;
     if($x == 1) {return 1}
@@ -647,10 +670,10 @@ __END__
 
    Rmpz_set_si($rop, $si);
     Assign the 'signed int', $si, to $rop.
- 
+
    Rmpz_set_ui($rop, $ui);
     Assign the 'unsigned int', $ui, to $rop.
- 
+
    Rmpz_set_d($rop, $double);
     Assign $double to $rop. (Truncate to an integer if necessary.)
 
@@ -682,8 +705,8 @@ __END__
    $rop = Math::GMPz->new($arg);
    $rop = Math::GMPz::new($arg);
    $rop = new Math::GMPz($arg);
-    Returns a Math::GMPz object with the value of $arg, with default
-    precision. $arg can be either an integer (signed integer, unsigned
+    Returns a Math::GMPz object with the value of $arg.
+    $arg can be either an integer (signed integer, unsigned
     integer, signed fraction or unsigned fraction) or a string that 
     represents a numeric value. If $arg is a string, an optional
     additional argument that specifies the base of the number can be
@@ -710,7 +733,7 @@ __END__
    $ui = Rmpz_get_ui($op);
     Return the value of $op as an `unsigned long'.
     The sign of $op is ignored, only the absolute value is used.
- 
+
    $si = Rmpz_get_si($op); 
     If $op fits into a `signed long int' return the value of $op.
     Otherwise return the least significant part of OP, with the
@@ -738,7 +761,7 @@ __END__
     The base may vary from -36..-2, 2..62. 
 
    ##################
- 
+
    INTEGER ARITHMETIC
    http://swox.com/gmp/manual/Integer-Arithmetic.html
 
@@ -750,7 +773,7 @@ __END__
    Rmpz_sub_ui($rop, $op, $ui); 
    Rmpz_ui_sub($rop, $ui, $op);
     $rop = 2nd arg - 3rd arg.
- 
+
    Rmpz_mul($rop, $op1, $op2); 
    Rmpz_mul_si($rop, $op, $si); 
    Rmpz_mul_ui($rop, $op, $ui);
@@ -759,7 +782,7 @@ __END__
    Rmpz_addmul($rop, $op1, $op2);
    Rmpz_addmul_ui($rop, $op, $ui);
     $rop += 2nd arg * 3rd arg.
- 
+
    Rmpz_submul($rop, $op1, $op2); 
    Rmpz_submul_ui($rop, $op, $ui);
     $rop -= 2nd arg * 3rd arg.
@@ -770,7 +793,7 @@ __END__
 
    Rmpz_neg($rop, $op);
     $rop = -$op.
- 
+
    Rmpz_abs($rop, $op);
     $rop = abs($op).
 
@@ -790,7 +813,7 @@ __END__
    `tdiv' rounds quotient towards zero, and remainder
           will have the same sign as the number. 
           The `t' stands for "truncate".
- 
+
    Rmpz_cdiv_q($rop, $op1, $op2);
    Rmpz_fdiv_q($rop, $op1, $op2);
    Rmpz_tdiv_q($rop, $op1, $op2); 
@@ -800,25 +823,25 @@ __END__
    Rmpz_fdiv_r($rop, $op1, $op2);
    Rmpz_tdiv_r($rop, $op1, $op2);
     $rop = $op1 % $op2.
- 
+
    Rmpz_cdiv_qr($rop1, $rop2, $op1, $op2);
    Rmpz_fdiv_qr($rop1, $rop2, $op1, $op2);
    Rmpz_tdiv_qr($rop1, $rop1, $op1, $op2);
     $rop1 = $op1 / $op2.
     $rop2 = $op1 % $op2.
- 
+
    $ul = Rmpz_cdiv_q_ui($rop, $op, $ui);
    $ul = Rmpz_fdiv_q_ui($rop, $op, $ui);
    $ul = Rmpz_tdiv_q_ui($rop, $op, $ui);
     $rop = $op / $ui.
     $ul = $op % $ui.
-     
+
    $ul = Rmpz_cdiv_r_ui($rop, $op, $ui);
    $ul = Rmpz_fdiv_r_ui($rop $op, $ui);
    $ul = Rmpz_tdiv_r_ui($rop, $op, $ui);
     $rop = $op % $ui.
     $ul = $op % $ui.
- 
+
    $ul = Rmpz_cdiv_qr_ui($rop1, $rop2, $op, $ui);
    $ul = Rmpz_fdiv_qr_ui($rop1, $rop2, $op, $ui);
    $ul = Rmpz_tdiv_qr_ui($rop1, $rop2, $op, $ui);
@@ -830,18 +853,18 @@ __END__
    $ul = Rmpz_fdiv_ui($op, $ui);
    $ul = Rmpz_tdiv_ui($op, $ui);
     $ul = $op % $ui.
- 
+
    Rmpz_cdiv_q_2exp($rop, $op, $ui);
    Rmpz_fdiv_q_2exp($rop, $op, $ui);
    Rmpz_tdiv_q_2exp($rop, $op, $ui);
     $rop = $op / (2 ** $ui). ie $rop is $op right-shifted
     by $ui bits.
- 
+
    Rmpz_cdiv_r_2exp($rop, $op, $ui); 
    Rmpz_fdiv_r_2exp($rop, $op, $ui);
    Rmpz_tdiv_r_2exp($rop, $op, $ui); 
     $rop = $op % (2 ** $ui).
- 
+
    Rmpz_mod($rop, $op1, $op2);
     $rop = $op1 % $op2. The sign of the divisor is ignored.
     The result is never negative.
@@ -862,7 +885,7 @@ __END__
    $bool = Rmpz_divisible_2exp_p($op, $ui);
     Return non-zero if 1st arg is exactly divisible by 2nd arg,
     or in the case of `Rmpz_divisible_2exp_p' by 2 ** 2nd arg.
- 
+
    $bool = Rmpz_congruent_p($op1, $op2, $op3); 
    $bool = Rmpz_congruent_ui_p($op, $ui, $ui); 
    $bool = Rmpz_congruent_2exp_p($op1, $op2, $ui);
@@ -883,7 +906,7 @@ __END__
 
    Rmpz_pow_ui($rop, $op, $ui);
     $rop = $op ** $ui
- 
+
    Rmpz_ui_pow_ui($rop, $ui1, $ui2);
     $rop = $ui1 ** $ui2
 
@@ -891,10 +914,10 @@ __END__
 
    INTEGER ROOTS
    http://swox.com/gmp/manual/Integer-Roots.html
- 
+
    Rmpz_root($rop, $op, $ui);
     $rop = $op ** (1 / $ui).
- 
+
    Rmpz_sqrt($rop, $op);
     $rop = $op ** 0.5.
 
@@ -905,7 +928,7 @@ __END__
    $bool = Rmpz_perfect_power_p($op);
     Return zero if $op is not a perfect power.
     Else return non-zero.
- 
+
    $bool = Rmpz_perfect_square_p($op);
     Return zero if $op is not a perfect square.
     Else return non-zero.
@@ -914,7 +937,7 @@ __END__
 
    NUMBER THEORETIC FUNCTIONS
    http://swox.com/gmp/manual/Number-Theoretic-Functions.html
- 
+
    $si = Rmpz_probab_prime_p($rop, $ui); 
     Determine whether $rop is prime. Return 2 if $rop is
     definitely prime, return 1 if $rop is probably prime 
@@ -954,25 +977,25 @@ __END__
     satisfying $op1*$rop2 + $op2*$rop3 = $rop1. $rop1 is
     always positive, even if one or both of $op1 and $op2 
     are negative.
- 
+
    Rmpz_lcm($rop, $op1, $op2); 
    Rmpz_lcm_ui($rop, $op, $ui);
     Set $rop to the least common multiple of 2nd and 3rd args.
     $rop is always positive, irrespective of the signs of the
     2nd and 3rd args. $rop will be zero if either 
     2nd or 3rd arg is zero.
- 
+
    $bool = Rmpz_invert($rop, $op1, $op2);
     Compute the inverse of $op1 modulo $op2 and put the result
     in $rop. If the inverse exists, the return value is 
     non-zero and $rop will satisfy 0 <= $rop < $op2.
     If an inverse doesn't exist the return value is zero and
     $rop is undefined.
- 
+
    $si = Rmpz_jacobi($op1, $op2);
     Calculate the Jacobi symbol ($op1/$op2). This is defined
     only for $op2 odd.
- 
+
    $si = Rmpz_legendre($op1, $op2); 
     Calculate the Legendre symbol ($op1/$op2). This is defined
     only for $op2 an odd positive prime, and for such $op2
@@ -988,7 +1011,7 @@ __END__
     when a even. When 2nd arg is odd the Jacobi symbol and
     Kronecker symbol are identical, so `mpz_kronecker_ui'
     etc can be used for mixed precision Jacobi symbols too.
-   
+
    $ui = Rmpz_remove($rop, $op1, $op2); 
     Remove all occurrences of the factor $op2 from $op1 and
     store the result in $rop.  The return value is how many
@@ -1035,7 +1058,7 @@ __END__
     Compare 1st and 2nd args.  Return a positive value if
     1st arg > 2nd arg, zero if 1st arg = 2nd arg, or a 
     negative value if 1st arg < 2nd arg.
- 
+
    $si = Rmpz_cmpabs($op1, $op2); 
    $si = Rmpz_cmpabs_d($op, $double); 
    $si = Rmpz_cmpabs_ui($op, $ui);
@@ -1054,7 +1077,7 @@ __END__
 
    Rmpz_and($rop, $op1, $op2);
     Set $rop to $op1 logical-and $op2.
- 
+
    Rmpz_ior($rop, $op1, $op2); 
     Set $rop to $op1 inclusive-or $op2.
 
@@ -1077,7 +1100,7 @@ __END__
     one operand is >=0 and the other <0 then the number of bits
     different is infinite, and the return value is MAX_ULONG, 
     the largest possible `unsigned long'.
- 
+
    $ui = Rmpz_scan0($op, $ui); 
    $ui = Rmpz_scan1($op, $ui);
     Scan $op, starting from bit index $ui, towards more
@@ -1121,6 +1144,13 @@ __END__
     To print to an open filehandle (let's call it FH):
        TRmpz_out_str(\*FH, $base, $digits, $op);
 
+   $bytes_written = Rmpz_out_raw(\*FH, $op);
+    Output $op to filehandle FH, in raw binary format. The integer is
+    written in a portable format, with 4 bytes of size information, and
+    that many bytes of limbs. Both the size and the limbs are written
+    in decreasing significance order (i.e., in big-endian). The output 
+    can be read with mpz_inp_raw.
+
    $bytes_read = Rmpz_inp_str($rop, $base);
     BEST TO USE TRmpz_inp_str instead.
     Input a string in base $base from STDIN, and put the read
@@ -1138,6 +1168,12 @@ __END__
        TRmpz_inp_str($rop, *stdin, $base);
     To read from an open filehandle (let's call it FH):
        TRmpz_inp_str($rop, \*FH, $base);
+
+    $bytes_read = Rmpz_inp_raw($rop, \*FH);
+     Input from filehandle FH in the format written by Rmpz_out_raw,
+     and put the result in $rop. Return the number of bytes read, or
+     if an error occurred, return 0.
+
 
    #######################
 
@@ -1209,12 +1245,12 @@ __END__
     Return non-zero iff the value of $op fits an `unsigned long int',
     `signed long int', `unsigned int', `signed int', `unsigned short
     int', or `signed short int', respectively. Otherwise, return zero.
- 
+
    $bool = Rmpz_odd_p($op); 
    $bool = Rmpz_even_p($op);
     Determine whether $op is odd or even, respectively.
     Return non-zero if yes, zero if no.
- 
+
    $ui = Rmpz_size($op); 
     Return the size of $op measured in number of limbs.
     If $op is zero, the returned value will be zero.
@@ -1393,6 +1429,31 @@ __END__
     Also, in Rmpz_printf, there's no support for POSIX '$' style 
     numbered arguments.
 
+   Rmpz_fprintf($fh, $format_string, $var);
+
+    This function (unlike the GMP counterpart) is limited to taking
+    3 arguments - the filehandle, the format string, and the variable
+    to be formatted. That is, you can format only one variable at a time.
+    Other than that, the rules outlined above wrt Rmpz_printf apply.
+
+   Rmpz_sprintf($buffer, $format_string, $var);
+
+    This function (unlike the GMP counterpart) is limited to taking
+    3 arguments - the filehandle, the format string, and the variable
+    to be formatted. $buffer must be large enough to accommodate the
+    formatted string, and is truncated to the length of that formatted
+    string. If you prefer to have the resultant string returned (rather
+    than stored in $buffer), use Rmpz_sprintf_ret instead - which will
+    also leave the length of $buffer unaltered. See Rmpz_printf
+    documentation for further info.
+
+   $string = Rmpz_sprintf_ret($buffer, $format_string, $var);
+
+    As for Rmpz_sprintf, but returns the formatted string, rather than
+    storing it in $buffer. $buffer needs to be large enough to 
+    accommodate the formatted string. The length of $buffer (but not the
+    contents) will be unaltered.
+
    ###################
     
 =head1 BUGS
@@ -1402,13 +1463,13 @@ __END__
    first thing to do is to check that the argument types 
    you have supplied are appropriate.
 
-=head1 TERMS AND CONDITIONS
+=head1 LICENSE
 
-   Use this module for whatever you like. It's free and comes
-   with no guarantees.
+    This perl code is free software; you may redistribute it
+    and/or modify it under the same terms as Perl itself.
 
 =head1 AUTHOR
 
-  Copyright Sisyhpus <sisyphus at(@) cpan dot (.) org>
+    Sisyphus <sisyphus at(@) cpan dot (.) org>
 
 =cut

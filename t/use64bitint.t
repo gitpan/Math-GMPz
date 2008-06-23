@@ -131,6 +131,8 @@ if(!$_64) {
      $mpz2 == $uintmax && 
      $uintmax == $mpz1) {print "ok 1\n"}
   else {print "not ok 1\n"}
-  print "ok 2 - skipped, nothing to test\n";
-  print "ok 3 - skipped, nothing to test\n";
+  warn "Skipping test 2 - nothing to test\n";
+  print "ok 2\n";
+  warn "Skipping test3 - nothing to test\n";
+  print "ok 3\n";
 }

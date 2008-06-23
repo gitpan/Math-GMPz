@@ -119,8 +119,11 @@ if($have_mpf){
   Rmpz_set_f($x, $float);
   if(!Rmpz_cmp_ui($x, 123)) {print "ok 13\n"}
   else {print "not ok 13\n"}
-  }
-else {print "ok 13 - skipped - no Math::GMPf\n"}
+}
+else {
+  warn "Skipping test 13 - no Math::GMPf\n";
+  print "ok 13\n";
+}
 
 if($have_mpq){
   $rat = Math::GMPq::Rmpq_init();
@@ -128,8 +131,11 @@ if($have_mpq){
   Rmpz_set_q($x, $rat);
   if(!Rmpz_cmp_ui($x, 123)) {print "ok 14\n"}
   else {print "not ok 14\n"}
-  }
-else {print "ok 14 - skipped - no Math::GMPq\n"}
+}
+else {
+  warn "Skipping test 14 - no Math::GMPq\n";
+  print "ok 14\n";
+}
 
 my $str = '4321' x 50;
 
@@ -180,9 +186,9 @@ eval {$ok = Math::GMPz::gmp_v();};
 if($@ || $ok =~ /[^0-9\.]/) {print "not ok 20\n"}
 else {print "ok 20\n"}
 
-my $ofh = select(STDERR);
+#my $ofh = select(STDERR);
 eval {Rmpz_printf("The version is %s. Values are %d %#Zo %#Zo\n", $ok, 11, $x10, $y10);};
-select($ofh);
+#select($ofh);
 
 if($@) {print "not ok 21\n"}
 else {print "ok 21\n"}
