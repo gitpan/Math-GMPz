@@ -1,0 +1,2 @@
+An mpz object: -1234567 followed by a signed int: -17 followed by an unsigned long: 56789
+A string and an mpz object in hex: -12d686
