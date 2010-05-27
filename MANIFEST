@@ -3,6 +3,7 @@ CHANGES
 Makefile.PL
 GMPz.pm
 GMPz.xs
+Random/t/gmp_random.t
 README
 t/aa_basic.t
 t/alloc.t
@@ -13,6 +14,7 @@ t/imp_exp.t
 t/misc.t
 t/power.t
 t/primes.t
+t/random.t
 t/supp2.t
 t/supp1.t
 t/theoretic.t

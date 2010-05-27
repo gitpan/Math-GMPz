@@ -3,36 +3,36 @@ use strict;
 use Math::GMPz qw(:mpz);
 use Math::BigInt; # for some error checks
 
-print "1..6\n";
+print "1..7\n";
 
 print "# Using gmp version ", Math::GMPz::gmp_v(), "\n";
 
 open(WR1, '>', 'out1.txt') or die "Can't open WR1: $!";
 open(WR2, '>', 'out2.txt') or die "Can't open WR2: $!";
 
-my $mpz = Math::GMPz->new(-1234567);
+my $mp = Math::GMPz->new(-1234567);
 my $int = -17;
 my $ul = 56789;
 my $string = "A string";
 
-Rmpz_fprintf(\*WR1, "An mpz object: %Zd ", $mpz);
-$mpz++;
-Rmpz_fprintf(\*WR2, "An mpz object: %Zd ", $mpz);
+Rmpz_fprintf(\*WR1, "An mpz object: %Zd ", $mp);
+$mp++;
+Rmpz_fprintf(\*WR2, "An mpz object: %Zd ", $mp);
 
-Rmpz_fprintf(\*WR1, "followed by a signed int: %d ", $int);
+Rmpz_fprintf(\*WR1, "followed by a signed int: $int ");
 $int++;
-Rmpz_fprintf(\*WR2, "followed by a signed int: %d ", $int);
+Rmpz_fprintf(\*WR2, "followed by a signed int: $int ");
 
-Rmpz_fprintf(\*WR1, "followed by an unsigned long: %u\n", $ul);
+Rmpz_fprintf(\*WR1, "followed by an unsigned long: $ul\n");
 $ul++;
-Rmpz_fprintf(\*WR2, "followed by an unsigned long: %u\n", $ul);
+Rmpz_fprintf(\*WR2, "followed by an unsigned long: $ul\n");
 
 Rmpz_fprintf(\*WR1, "%s ", $string);
 Rmpz_fprintf(\*WR2, "%s ", $string);
 
-Rmpz_fprintf(\*WR1, "and an mpz object in hex: %Zx\n", $mpz);
-$mpz++;
-Rmpz_fprintf(\*WR2, "and an mpz object in hex: %Zx\n", $mpz);
+Rmpz_fprintf(\*WR1, "and an mpz object in hex: %Zx\n", $mp);
+$mp++;
+Rmpz_fprintf(\*WR2, "and an mpz object in hex: %Zx\n", $mp);
 
 close(WR1) or die "Can't close WR1: $!";
 close(WR2) or die "Can't close WR2: $!";
@@ -75,21 +75,26 @@ $ok = '';
 my $buffer = 'XOXO' x 10;
 my $buf = $buffer;
 
-Rmpz_sprintf($buf, "The mpz object: %Zd", $mpz);
+Rmpz_sprintf($buf, "The mpz object: %Zd", $mp);
 if ($buf eq 'The mpz object: -1234565') {$ok .= 'a'}
 else {warn "2a got: $buf\n"}
 
 $buf = $buffer;
-$mpz *= -1;
+$mp *= -1;
 
-my $ret = Rmpz_sprintf_ret($buf, "The mpz object: %Zd", $mpz);
+my $ret = Rmpz_sprintf_ret($buf, "The mpz object: %Zd", $mp);
 if ($ret eq 'The mpz object: 1234565') {$ok .= 'b'}
 else {warn "2b got: $ret\n"}
 if ($buf eq 'The mpz object: 1234565' . "\0" . 'XOXO' x 4) {$ok .= 'c'}
 else {warn "2c got: $buf\n"}
 
+$ret = Rmpz_sprintf($buf, "$ul");
+if($ret == 5) {$ok .= 'd'}
+else {warn "2d got: $ret\n"}
+if ($buf eq '56790') {$ok .= 'e'}
+else {warn "2e got: $buf\n"}
 
-if($ok eq 'abc') {print "ok 2\n"}
+if($ok eq 'abcde') {print "ok 2\n"}
 else {print "not ok 2 $ok\n"}
 
 $ok = '';
@@ -112,60 +117,59 @@ if($@ =~ /Unrecognised object/) {$ok .= 'd'}
 else {warn "3d got: $@\n"}
 
 eval {Rmpz_fprintf(\*STDOUT, "%Zd", $mbi, $ul);};
-if($@ =~ /must take 3 arguments/) {$ok .= 'e'}
+if($@ =~ /must pass 3 arguments/) {$ok .= 'e'}
 else {warn "3e got: $@\n"}
 
 eval {Rmpz_sprintf($buf, "%Zd", $mbi, $ul);};
-if($@ =~ /must take 3 arguments/) {$ok .= 'f'}
+if($@ =~ /must pass 3 arguments/) {$ok .= 'f'}
 else {warn "3f got: $@\n"}
 
-eval {Rmpz_sprintf_ret("%Zd", $mbi);};
-if($@ =~ /must take 3 arguments/) {$ok .= 'g'}
+eval {Rmpz_printf("%Zd", $mbi, $ul);};
+if($@ =~ /must pass 2 arguments/) {$ok .= 'g'}
 else {warn "3g got: $@\n"}
 
-eval {Rmpz_printf("%Zd", $mbi, $ul);};
-if($@ =~ /must take 2 arguments/) {$ok .= 'h'}
-else {warn "3h got: $@\n"}
-
-if($ok eq 'abcdefgh') {print "ok 3\n"}
+if($ok eq 'abcdefg') {print "ok 3\n"}
 else {print "not ok 3 $ok\n"}                                                                                                                                                                                                                                          
 
 $ok = '';
 
-$ret = Rmpz_printf("40%% of %Zd", $mpz);
+$ret = Rmpz_printf("40%% of %Zd", $mp);
 if($ret == 14) {$ok .= 'a'}
 
 my $w = 10;
 
-$ret = Rmpz_printf("40%% of %${w}Zd", $mpz);
+$ret = Rmpz_printf("40%% of %${w}Zd", $mp);
 if($ret == 17) {$ok .= 'b'}
 
-$ret = Rmpz_printf("$string of %${w}Zd", $mpz);
+$ret = Rmpz_printf("$string of %${w}Zd", $mp);
 if($ret == 22) {$ok .= 'c'}
 
-$ret = Rmpz_printf("$ul of %${w}Zd", $mpz);
+$ret = Rmpz_printf("$ul of %${w}Zd", $mp);
 if($ret == 19) {$ok .= 'd'}
 
-if($ok eq 'abcd') {print "\nok 4\n"}
+$ret = Rmpz_printf('hello world');
+if($ret == 11) {$ok .= 'e'}
+
+if($ok eq 'abcde') {print "\nok 4\n"}
 else {print "not ok 4 $ok\n"}
 
 eval{require Math::GMPq;};
 if(!$@) {
   my $ok = '';
-  my $mpz = Math::GMPq->new(1234567);
+  my $mp = Math::GMPq->new(1234567);
 
-  my $ret = Rmpz_printf("40%% of %Qd", $mpz);
+  my $ret = Rmpz_printf("40%% of %Qd", $mp);
   if($ret == 14) {$ok .= 'a'}
 
   my $w = 10;
 
-  $ret = Rmpz_printf("40%% of %${w}Qd", $mpz);
+  $ret = Rmpz_printf("40%% of %${w}Qd", $mp);
   if($ret == 17) {$ok .= 'b'}
 
-  $ret = Rmpz_printf("$string of %${w}Qd", $mpz);
+  $ret = Rmpz_printf("$string of %${w}Qd", $mp);
   if($ret == 22) {$ok .= 'c'}
 
-  $ret = Rmpz_printf("$ul of %${w}Qd", $mpz);
+  $ret = Rmpz_printf("$ul of %${w}Qd", $mp);
   if($ret == 19) {$ok .= 'd'}
 
   if($ok eq 'abcd') {print "\nok 5\n"}
@@ -179,19 +183,19 @@ else {
 eval{require Math::GMPf;};
 if(!$@) {
   my $ok = '';
-  my $mpz = Math::GMPf->new(1234567);
-  my $ret = Rmpz_printf("40%% of %Ff", $mpz);
+  my $mp = Math::GMPf->new(1234567);
+  my $ret = Rmpz_printf("40%% of %Ff", $mp);
   if($ret == 21) {$ok .= 'a'}
 
   my $w = 16;
 
-  $ret = Rmpz_printf("40%% of %${w}Ff", $mpz);
+  $ret = Rmpz_printf("40%% of %${w}Ff", $mp);
   if($ret == 23) {$ok .= 'b'}
 
-  $ret = Rmpz_printf("$string of %${w}Ff", $mpz);
+  $ret = Rmpz_printf("$string of %${w}Ff", $mp);
   if($ret == 28) {$ok .= 'c'}
 
-  $ret = Rmpz_printf("$ul of %${w}Ff", $mpz);
+  $ret = Rmpz_printf("$ul of %${w}Ff", $mp);
   if($ret == 25) {$ok .= 'd'}
 
   if($ok eq 'abcd') {print "\nok 6\n"}
@@ -201,4 +205,25 @@ else {
   warn "Skipping test 6 - Math::GMPf not available\n";
   print "ok 6\n";
 }
+
+$ok = '';
+
+$mp *= -1;
+
+$buf = 'X' x 10;
+$ret = Rmpz_snprintf_ret($buf, 5, "%Zd", $mp);
+
+if($ret eq '-123') {$ok .= 'a'}
+else {warn "7a: $ret\n"}
+
+$ret = Rmpz_snprintf($buf, 6, "%Zd", $mp);
+
+if($ret == 8) {$ok .= 'b'}
+else {warn "7b: $ret\n"}
+
+if($buf eq '-1234') {$ok .= 'c'}
+else {warn "7c: $buf\n"}
+
+if($ok eq 'abc') {print "ok 7\n"}
+else {print "not ok 7\n"}
 

@@ -1,5 +1,6 @@
     package Math::GMPz;
     use strict;
+    use Math::GMPz::Random;
     require Exporter;
     *import = \&Exporter::import;
     require DynaLoader;
@@ -60,6 +61,7 @@ use overload
 
     @Math::GMPz::EXPORT_OK = qw(
 __GNU_MP_VERSION __GNU_MP_VERSION_MINOR __GNU_MP_VERSION_PATCHLEVEL
+__GMP_CC __GMP_CFLAGS
 Rmpz_abs Rmpz_add Rmpz_add_ui Rmpz_addmul Rmpz_addmul_ui Rmpz_and Rmpz_bin_ui
 Rmpz_bin_uiui Rmpz_cdiv_q Rmpz_cdiv_q_2exp Rmpz_cdiv_q_ui Rmpz_cdiv_qr 
 Rmpz_cdiv_qr_ui Rmpz_cdiv_r Rmpz_cdiv_r_2exp Rmpz_cdiv_r_ui Rmpz_cdiv_ui 
@@ -71,7 +73,7 @@ Rmpz_export Rmpz_fac_ui Rmpz_fdiv_q Rmpz_fdiv_q_2exp Rmpz_fdiv_q_ui
 Rmpz_fdiv_qr Rmpz_fdiv_qr_ui Rmpz_fdiv_r Rmpz_fdiv_r_2exp Rmpz_fdiv_r_ui 
 Rmpz_fdiv_ui Rmpz_fib2_ui Rmpz_fib_ui Rmpz_fits_sint_p Rmpz_fits_slong_p 
 Rmpz_fits_sshort_p Rmpz_fits_uint_p Rmpz_fits_ulong_p Rmpz_fits_ushort_p
-Rmpz_fprintf Rmpz_sprintf Rmpz_sprintf_ret
+Rmpz_fprintf Rmpz_sprintf Rmpz_sprintf_ret Rmpz_snprintf Rmpz_snprintf_ret
 Rmpz_gcd Rmpz_gcd_ui Rmpz_gcdext Rmpz_get_d_2exp Rmpz_get_si Rmpz_get_str 
 Rmpz_get_ui Rmpz_getlimbn Rmpz_hamdist Rmpz_import Rmpz_init Rmpz_init2 
 Rmpz_init2_nobless Rmpz_init_nobless Rmpz_init_set Rmpz_init_set_d 
@@ -95,8 +97,13 @@ Rmpz_tdiv_r_ui Rmpz_tdiv_ui Rmpz_tstbit Rmpz_ui_kronecker Rmpz_ui_pow_ui
 Rmpz_ui_sub Rmpz_urandomb Rmpz_urandomm Rmpz_xor
 rand_init rand_clear
 TRmpz_out_str TRmpz_inp_str
+zgmp_randseed zgmp_randseed_ui zgmp_randclear
+zgmp_randinit_default zgmp_randinit_mt zgmp_randinit_lc_2exp zgmp_randinit_lc_2exp_size
+zgmp_randinit_set zgmp_randinit_default_nobless zgmp_randinit_mt_nobless
+zgmp_randinit_lc_2exp_nobless zgmp_randinit_lc_2exp_size_nobless zgmp_randinit_set_nobless
+zgmp_urandomb_ui zgmp_urandomm_ui
     );
-    $Math::GMPz::VERSION = '0.28';
+    $Math::GMPz::VERSION = '0.29';
 
     DynaLoader::bootstrap Math::GMPz $Math::GMPz::VERSION;
 
@@ -112,7 +119,7 @@ Rmpz_export Rmpz_fac_ui Rmpz_fdiv_q Rmpz_fdiv_q_2exp Rmpz_fdiv_q_ui
 Rmpz_fdiv_qr Rmpz_fdiv_qr_ui Rmpz_fdiv_r Rmpz_fdiv_r_2exp Rmpz_fdiv_r_ui 
 Rmpz_fdiv_ui Rmpz_fib2_ui Rmpz_fib_ui Rmpz_fits_sint_p Rmpz_fits_slong_p 
 Rmpz_fits_sshort_p Rmpz_fits_uint_p Rmpz_fits_ulong_p Rmpz_fits_ushort_p
-Rmpz_fprintf Rmpz_sprintf Rmpz_sprintf_ret
+Rmpz_fprintf Rmpz_sprintf Rmpz_sprintf_ret Rmpz_snprintf Rmpz_snprintf_ret
 Rmpz_gcd Rmpz_gcd_ui Rmpz_gcdext Rmpz_get_d_2exp Rmpz_get_si Rmpz_get_str 
 Rmpz_get_ui Rmpz_getlimbn Rmpz_hamdist Rmpz_import Rmpz_init Rmpz_init2 
 Rmpz_init2_nobless Rmpz_init_nobless Rmpz_init_set Rmpz_init_set_d 
@@ -135,7 +142,12 @@ Rmpz_tdiv_q_ui Rmpz_tdiv_qr Rmpz_tdiv_qr_ui Rmpz_tdiv_r Rmpz_tdiv_r_2exp
 Rmpz_tdiv_r_ui Rmpz_tdiv_ui Rmpz_tstbit Rmpz_ui_kronecker Rmpz_ui_pow_ui 
 Rmpz_ui_sub Rmpz_urandomb Rmpz_urandomm Rmpz_xor
 rand_init rand_clear
-TRmpz_out_str TRmpz_inp_str)]
+TRmpz_out_str TRmpz_inp_str
+zgmp_randseed zgmp_randseed_ui zgmp_randclear
+zgmp_randinit_default zgmp_randinit_mt zgmp_randinit_lc_2exp zgmp_randinit_lc_2exp_size
+zgmp_randinit_set zgmp_randinit_default_nobless zgmp_randinit_mt_nobless
+zgmp_randinit_lc_2exp_nobless zgmp_randinit_lc_2exp_size_nobless zgmp_randinit_set_nobless
+zgmp_urandomb_ui zgmp_urandomm_ui )]
 );
 
 sub dl_load_flags {0} # Prevent DynaLoader from complaining and croaking
@@ -450,26 +462,45 @@ sub _rewrite {
 
 sub Rmpz_printf {
     local $| = 1;
-    die "Rmpz_printf must take 2 arguments: format string, and variable" if @_ != 2;
+    push @_, 0 if @_ == 1; # add a dummy second argument
+    die "Rmpz_printf must pass 2 arguments: format string, and variable" if @_ != 2;
     wrap_gmp_printf(@_);
 }
 
 sub Rmpz_fprintf {
-    die "Rmpz_fprintf must take 3 arguments: filehandle, format string, and variable" if @_ != 3;
+    push @_, 0 if @_ == 2; # add a dummy third argument
+    die "Rmpz_fprintf must pass 3 arguments: filehandle, format string, and variable" if @_ != 3;
     wrap_gmp_fprintf(@_);
 }
 
 sub Rmpz_sprintf {
-    die "Rmpz_sprintf must take 3 arguments: buffer, format string, and variable" if @_ != 3;
+    push @_, 0 if @_ == 2; # add a dummy third argument
+    die "Rmpz_sprintf must pass 3 arguments: buffer, format string, and variable" if @_ != 3;
     my $len = wrap_gmp_sprintf(@_);
     $_[0] = substr($_[0], 0, $len);
     return $len;
 }
 
 sub Rmpz_sprintf_ret {
-    die "Rmpz_sprintf must take 3 arguments: buffer, format string, and variable" if @_ != 3;
+    push @_, 0 if @_ == 2; # add a dummy third argument
+    die "Rmpz_sprintf_ret must pass 3 arguments: buffer, format string, and variable" if @_ != 3;
     my $len = wrap_gmp_sprintf(@_);
     return substr($_[0], 0, $len);
+}
+
+sub Rmpz_snprintf {
+    push @_, 0 if @_ == 3; # add a dummy third argument
+    die "Rmpz_snprintf must pass 4 arguments: buffer, bytes written, format string, and variable" if @_ != 4;
+    my $len = wrap_gmp_snprintf(@_);
+    $_[0] = substr($_[0], 0, $_[1] - 1);
+    return $len;
+}
+
+sub Rmpz_snprintf_ret {
+    push @_, 0 if @_ == 3; # add a dummy third argument
+    die "Rmpz_snprintf_ret must pass 4 arguments: buffer, bytes written, format string, and variable" if @_ != 4;
+    my $len = wrap_gmp_snprintf(@_);
+    return substr($_[0], 0, $_[1] - 1);
 }
 
 sub query_eratosthenes_string {
@@ -486,6 +517,22 @@ sub __GNU_MP_VERSION_MINOR {return ___GNU_MP_VERSION_MINOR()}
 sub __GNU_MP_VERSION_PATCHLEVEL {return ___GNU_MP_VERSION_PATCHLEVEL()}
 sub __GMP_CC {return ___GMP_CC()}
 sub __GMP_CFLAGS {return ___GMP_CFLAGS()}
+
+*zgmp_randseed =                      \&Math::GMPz::Random::Rgmp_randseed;
+*zgmp_randseed_ui =                   \&Math::GMPz::Random::Rgmp_randseed_ui;
+*zgmp_randclear =                     \&Math::GMPz::Random::Rgmp_randclear;
+*zgmp_randinit_default =              \&Math::GMPz::Random::Rgmp_randinit_default;
+*zgmp_randinit_mt =                   \&Math::GMPz::Random::Rgmp_randinit_mt;
+*zgmp_randinit_lc_2exp =              \&Math::GMPz::Random::Rgmp_randinit_lc_2exp;
+*zgmp_randinit_lc_2exp_size =         \&Math::GMPz::Random::Rgmp_randinit_lc_2exp_size;
+*zgmp_randinit_set =                  \&Math::GMPz::Random::Rgmp_randinit_set;
+*zgmp_randinit_default_nobless =      \&Math::GMPz::Random::Rgmp_randinit_default_nobless;
+*zgmp_randinit_mt_nobless =           \&Math::GMPz::Random::Rgmp_randinit_mt_nobless;
+*zgmp_randinit_lc_2exp_nobless =      \&Math::GMPz::Random::Rgmp_randinit_lc_2exp_nobless;
+*zgmp_randinit_lc_2exp_size_nobless = \&Math::GMPz::Random::Rgmp_randinit_lc_2exp_size_nobless;
+*zgmp_randinit_set_nobless =          \&Math::GMPz::Random::Rgmp_randinit_set_nobless;
+*zgmp_urandomb_ui =                   \&Math::GMPz::Random::Rgmp_urandomb_ui;                
+*zgmp_urandomm_ui =                   \&Math::GMPz::Random::Rgmp_urandomm_ui;
 
 1;
 
@@ -1168,12 +1215,98 @@ __END__
    required). $how_many is the number of random numbers you 
    want and must be equal to scalar(@r). $bits is simply the
    number of random bits required. Before calling the random
-   number functions, first initialise state by calling 
-   rand_init(). When you've finished with the random number 
-   functions, call rand_clear().
+   number functions, $state must be initialised and seeded.
 
    $state = rand_init($op); # $op is the seed.
-   Rmpz_urandomm(@r, $state, $op, $how_many);
+    Initialises and seeds $state, ready for use with the random
+    number functions. However, $state has not been blessed into
+    any package, and therefore does not get cleaned up when it 
+    goes out of scope. To avoid memory leaks you therefore need
+    to call 'rand_clear($state);' once you have finished with it
+    and before it goes out of scope. Also, it uses the default
+    algorithm. Consider using the following initialisation and
+    seeding routines - they provide a choice of algorithm, and
+    there's no need to call rand_clear() when you've finished with
+    them.
+
+   $state = zgmp_randinit_default();
+    This is the Math::GMPz interface to the gmp library function
+   'gmp_randinit_default'.
+    $state is blessed into package Math::GMPz::Random and will be
+    automatically cleaned up when it goes out of scope.
+    Initialize $state with a default algorithm. This will be a
+    compromise between speed and randomness, and is recommended for
+    applications with no special requirements. Currently this is
+    the gmp_randinit_mt function (Mersenne Twister algorithm).
+
+   $state = zgmp_randinit_mt();
+    This is the Math::GMPz interface to the gmp library function
+   'gmp_randinit_mt'.
+    Currently identical to zgmp_randinit_default().
+
+   $state = zgmp_randinit_lc_2exp($mpz, $ui, $m2exp);
+    This is the Math::GMPz interface to the gmp library function
+   'gmp_randinit_lc_2exp'.
+    $state is blessed into package Math::GMPz::Random and will be
+    automatically cleaned up when it goes out of scope.
+    Initialize $state with a linear congruential algorithm
+    X = ($mpz*X + $ui) mod (2 ** $m2exp). The low bits of X in this
+    algorithm are not very random. The least significant bit will have a
+    period no more than 2, and the second bit no more than 4, etc. For
+    this reason only the high half of each X is actually used. 
+    When a random number of more than m2exp/2 bits is to be generated,
+    multiple iterations of the recurrence are used and the results
+    concatenated. 
+
+   $state = zgmp_randinit_lc_2exp_size($ui);
+    This is the Math::GMPz interface to the gmp library function
+   'gmp_randinit_lc_2exp_size'.
+    $state is blessed into package Math::GMPz::Random and will be
+    automatically cleaned up when it goes out of scope.
+    Initialize state for a linear congruential algorithm as per
+    gmp_randinit_lc_2exp. a, c and m2exp are selected from a table,
+    chosen so that $ui bits (or more) of each X will be used,
+    ie. m2exp/2 >= $ui. 
+    If $ui is bigger than the table data provides then the function fails
+    and dies with an appropriate error message. The maximum value for $ui
+    currently supported is 128. 
+
+   $state2 = zgmp_randinit_set($state1);
+    This is the Math::GMPz interface to the gmp library function
+   'gmp_randinit_set'.
+    $state2 is blessed into package Math::GMPz::Random and will be
+    automatically cleaned up when it goes out of scope.
+    Initialize $state2 with a copy of the algorithm and state from
+    $state1.
+
+   $state = zgmp_randinit_default_nobless();
+   $state = zgmp_randinit_mt_nobless();
+   $state = zgmp_randinit_lc_2exp_nobless($mpz, $ui, $m2exp);
+   $state2 = zgmp_randinit_set_nobless($state1);
+    As for the above comparable function, but $state is not blessed into
+    any package. (Generally not useful - but they're available if you
+    want them.)
+
+   zgmp_randseed($state, $mpz);
+   zgmp_randseed_ui($state, $ui);
+    These are the Math::GMPz interfaces to the gmp library functions
+   'gmp_randseed' and 'gmp_randseed_ui'.
+    Seed an initialised (but not yet seeded) $state with $mpz/$ui. 
+
+   $ui = zgmp_urandomb_ui($state, $bits);
+    This is the Math::GMPz interface to the gmp library function
+    'gmp_urandomb_ui'.
+    Return a uniformly distributed random number of $bits bits, ie. in
+    the range 0 to 2 ** ($bits - 1) inclusive. $bits must be less than or
+    equal to the number of bits in an unsigned long. 
+
+   $ui2 = zgmp_urandomm_ui($state, $ui1);
+    This is the Math::GMPz interface to the gmp library function
+    'gmp_urandomm_ui'.
+    Return a uniformly distributed random number in the range 0 to
+    $ui1 - 1, inclusive.   
+
+   Rmpz_urandomm(@r, $state, $mpz, $how_many);
     Generate $how_many uniform random integers in the range
     0 to $op-1, inclusive.
 
@@ -1188,7 +1321,12 @@ __END__
     numbers have proven to be more likely to trigger corner-case bugs.
     The random number will be in the range 0 to 2**($bits-1), inclusive.
 
-   rand_clear($state);                       
+   zgmp_randclear($state);
+   rand_clear($state);
+    Destroys $state, as also does Math::GMPz::Random::DESTROY - three
+    identical functions.
+    Use only if $state is an unblessed object - ie if it was initialised
+    using rand_init() or one of the zgmp_randinit*_nobless functions.                     
 
    #########################
 
@@ -1356,6 +1494,10 @@ __END__
     Now (unlike the GMP counterpart), it is limited to taking 2
     arguments - the format string, and the variable to be formatted.
     That is, you can format only one variable at a time.
+    If there is no variable to be formatted, then the final arg
+    can be omitted - a suitable dummy arg will be passed to the XS
+    code for you. ie the following will work:
+     Rmpz_printf("hello world\n");
     Returns the number of characters written, or -1 if an error
     occurred.  
 
@@ -1364,6 +1506,10 @@ __END__
     This function (unlike the GMP counterpart) is limited to taking
     3 arguments - the filehandle, the format string, and the variable
     to be formatted. That is, you can format only one variable at a time.
+    If there is no variable to be formatted, then the final arg
+    can be omitted - a suitable dummy arg will be passed to the XS
+    code for you. ie the following will work:
+     Rmpz_printf($fh, "hello world\n");
     Returns the number of characters written, or -1 if an error
     occurred.
 
@@ -1371,9 +1517,13 @@ __END__
 
     This function (unlike the GMP counterpart) is limited to taking
     3 arguments - the buffer, the format string, and the variable
-    to be formatted. $buffer must be large enough to accommodate the
-    formatted string, and is truncated to the length of that formatted
-    string. If you prefer to have the resultant string returned (rather
+    to be formatted. If there is no variable to be formatted, then the
+    final arg can be omitted - a suitable dummy arg will be passed to
+    the XS code for you. ie the following will work:
+     Rmpz_sprintf($buffer, "hello world\n");
+    $buffer must be large enough to accommodate the formatted string,
+    and is truncated to the length of that formatted string.
+    If you prefer to have the resultant string returned (rather
     than stored in $buffer), use Rmpz_sprintf_ret instead - which will
     also leave the length of $buffer unaltered.
     Returns the number of characters written, or -1 if an error
@@ -1385,6 +1535,36 @@ __END__
     storing it in $buffer. $buffer needs to be large enough to 
     accommodate the formatted string. The length of $buffer will be
     unaltered.
+
+   $si = Rmpz_snprintf($buffer, $bytes, $format_string, $var);
+
+    Form a null-terminated string in $buffer. No more than $bytes 
+    bytes will be written. To get the full output, $bytes must be
+    enough for the string and null-terminator. $buffer must be large
+    enough to accommodate the string and null-terminator, and is
+    truncated to the length of that string (and null-terminator).
+    The return value is the total number of characters which ought
+    to have been produced, excluding the terminating null.
+    If $si >= $bytes then the actual output has been truncated to
+    the first $bytes-1 characters, and a null appended.
+    This function (unlike the GMP counterpart) is limited to taking
+    4 arguments - the buffer, the maximum number of bytes to be
+    returned, the format string, and the variable to be formatted.
+    If there is no variable to be formatted, then the final arg can
+    be omitted - a suitable dummy arg will be passed to the XS code
+    for you. ie the following will work:
+     Rmpz_snprintf($buffer, 12, "hello world");
+    If you prefer to have the resultant string returned (rather
+    than stored in $buffer), use Rmpz_snprintf_ret instead - which will
+    also leave the length of $buffer unaltered.
+
+   $string = Rmpz_snprintf_ret($buffer, $bytes, $format_string, $var);
+
+    As for Rmpz_snprintf, but returns the formatted string, as well as
+    storing it in $buffer. $buffer needs to be large enough to 
+    accommodate the formatted string. The length of $buffer will be
+    unaltered. The length of $string (as reported by perl's length
+    function) will be no greater than $bytes.
 
    ###################
     
@@ -1399,7 +1579,7 @@ __END__
 
     This program is free software; you may redistribute it and/or 
     modify it under the same terms as Perl itself.
-    Copyright 2006-2008, Sisyphus
+    Copyright 2006-2008, 2009, 2010, Sisyphus
 
 =head1 AUTHOR
 
