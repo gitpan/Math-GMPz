@@ -428,6 +428,10 @@ void Rmpz_mul_2exp(mpz_t * dest, mpz_t * src1, SV * b) {
      mpz_mul_2exp(*dest, *src1, SvUV(b));
 }
 
+void Rmpz_div_2exp(mpz_t * dest, mpz_t * src1, SV * b) {
+     mpz_div_2exp(*dest, *src1, SvUV(b));
+}
+
 void Rmpz_neg(mpz_t * dest, mpz_t * src) {
      mpz_neg(*dest, *src );
 }
@@ -476,6 +480,10 @@ void Rmpz_fdiv_q( mpz_t * q, mpz_t *  n, mpz_t * d) {
      mpz_fdiv_q(*q, *n, *d);
 }
 
+void Rmpz_div( mpz_t * q, mpz_t *  n, mpz_t * d) {
+     mpz_div(*q, *n, *d);
+}
+
 /* % mpz-t (modulus) operator */
 void Rmpz_fdiv_r( mpz_t * mod, mpz_t *  n, mpz_t * d) {
      mpz_fdiv_r(*mod, *n, *d);
@@ -485,8 +493,16 @@ void Rmpz_fdiv_qr( mpz_t * q, mpz_t * r, mpz_t *  n, mpz_t * d) {
      mpz_fdiv_qr(*q, *r, *n, *d);
 }
 
+void Rmpz_divmod( mpz_t * q, mpz_t * r, mpz_t *  n, mpz_t * d) {
+     mpz_divmod(*q, *r, *n, *d);
+}
+
 SV * Rmpz_fdiv_q_ui( mpz_t * q, mpz_t *  n, SV * d) {
      return newSVuv(mpz_fdiv_q_ui(*q, *n, SvUV(d)));
+}
+
+SV * Rmpz_div_ui( mpz_t * q, mpz_t *  n, SV * d) {
+     return newSVuv(mpz_div_ui(*q, *n, SvUV(d)));
 }
 
 SV * Rmpz_fdiv_r_ui( mpz_t * q, mpz_t *  n, SV * d) {
@@ -495,6 +511,10 @@ SV * Rmpz_fdiv_r_ui( mpz_t * q, mpz_t *  n, SV * d) {
 
 SV * Rmpz_fdiv_qr_ui( mpz_t * q, mpz_t * r, mpz_t *  n, SV * d) {
      return newSVuv(mpz_fdiv_qr_ui(*q, *r, *n, SvUV(d)));
+}
+
+SV * Rmpz_divmod_ui( mpz_t * q, mpz_t * r, mpz_t *  n, SV * d) {
+     return newSVuv(mpz_divmod_ui(*q, *r, *n, SvUV(d)));
 }
 
 /* % int (modulus) operator */
@@ -508,6 +528,10 @@ void Rmpz_fdiv_q_2exp( mpz_t * q, mpz_t *  n, SV * b) {
 
 void Rmpz_fdiv_r_2exp( mpz_t * r, mpz_t *  n, SV * b) {
      mpz_fdiv_r_2exp(*r, *n, SvUV(b));
+}
+
+void Rmpz_mod_2exp( mpz_t * r, mpz_t *  n, SV * b) {
+     mpz_mod_2exp(*r, *n, SvUV(b));
 }
 
 void Rmpz_tdiv_q( mpz_t * q, mpz_t *  n, mpz_t * d) {
@@ -3966,6 +3990,30 @@ SV * ___GMP_CFLAGS() {
 #endif
 }
 
+#if __GNU_MP_VERSION >= 5
+#ifndef __MPIR_VERSION
+void Rmpz_powm_sec(mpz_t * dest, mpz_t * base, mpz_t * exp, mpz_t * mod) {
+     mpz_powm_sec(*dest, *base, *exp, *mod);
+}
+#else
+void Rmpz_powm_sec(mpz_t * dest, mpz_t * base, mpz_t * exp, mpz_t * mod) {
+     croak("Rmpz_powm_sec not implemented by the mpir library");
+}
+#endif
+#else
+void Rmpz_powm_sec(mpz_t * dest, mpz_t * base, mpz_t * exp, mpz_t * mod) {
+     croak("Rmpz_powm_sec not implemented - gmp-5 or later needed, this is gmp-%d", __GNU_MP_VERSION);
+}
+#endif
+
+int _using_mpir() {
+#ifdef __MPIR_VERSION
+return 1;
+#else
+return 0;
+#endif
+}
+
 MODULE = Math::GMPz	PACKAGE = Math::GMPz	
 
 PROTOTYPES: DISABLE
@@ -4522,6 +4570,24 @@ Rmpz_mul_2exp (dest, src1, b)
 	return; /* assume stack size is correct */
 
 void
+Rmpz_div_2exp (dest, src1, b)
+	mpz_t *	dest
+	mpz_t *	src1
+	SV *	b
+	PREINIT:
+	I32* temp;
+	PPCODE:
+	temp = PL_markstack_ptr++;
+	Rmpz_div_2exp(dest, src1, b);
+	if (PL_markstack_ptr != temp) {
+          /* truly void, because dXSARGS not invoked */
+	  PL_markstack_ptr = temp;
+	  XSRETURN_EMPTY; /* return empty stack */
+        }
+        /* must have used dXSARGS; list context implied */
+	return; /* assume stack size is correct */
+
+void
 Rmpz_neg (dest, src)
 	mpz_t *	dest
 	mpz_t *	src
@@ -4689,6 +4755,24 @@ Rmpz_fdiv_q (q, n, d)
 	return; /* assume stack size is correct */
 
 void
+Rmpz_div (q, n, d)
+	mpz_t *	q
+	mpz_t *	n
+	mpz_t *	d
+	PREINIT:
+	I32* temp;
+	PPCODE:
+	temp = PL_markstack_ptr++;
+	Rmpz_div(q, n, d);
+	if (PL_markstack_ptr != temp) {
+          /* truly void, because dXSARGS not invoked */
+	  PL_markstack_ptr = temp;
+	  XSRETURN_EMPTY; /* return empty stack */
+        }
+        /* must have used dXSARGS; list context implied */
+	return; /* assume stack size is correct */
+
+void
 Rmpz_fdiv_r (mod, n, d)
 	mpz_t *	mod
 	mpz_t *	n
@@ -4725,8 +4809,33 @@ Rmpz_fdiv_qr (q, r, n, d)
         /* must have used dXSARGS; list context implied */
 	return; /* assume stack size is correct */
 
+void
+Rmpz_divmod (q, r, n, d)
+	mpz_t *	q
+	mpz_t *	r
+	mpz_t *	n
+	mpz_t *	d
+	PREINIT:
+	I32* temp;
+	PPCODE:
+	temp = PL_markstack_ptr++;
+	Rmpz_divmod(q, r, n, d);
+	if (PL_markstack_ptr != temp) {
+          /* truly void, because dXSARGS not invoked */
+	  PL_markstack_ptr = temp;
+	  XSRETURN_EMPTY; /* return empty stack */
+        }
+        /* must have used dXSARGS; list context implied */
+	return; /* assume stack size is correct */
+
 SV *
 Rmpz_fdiv_q_ui (q, n, d)
+	mpz_t *	q
+	mpz_t *	n
+	SV *	d
+
+SV *
+Rmpz_div_ui (q, n, d)
 	mpz_t *	q
 	mpz_t *	n
 	SV *	d
@@ -4739,6 +4848,13 @@ Rmpz_fdiv_r_ui (q, n, d)
 
 SV *
 Rmpz_fdiv_qr_ui (q, r, n, d)
+	mpz_t *	q
+	mpz_t *	r
+	mpz_t *	n
+	SV *	d
+
+SV *
+Rmpz_divmod_ui (q, r, n, d)
 	mpz_t *	q
 	mpz_t *	r
 	mpz_t *	n
@@ -4777,6 +4893,24 @@ Rmpz_fdiv_r_2exp (r, n, b)
 	PPCODE:
 	temp = PL_markstack_ptr++;
 	Rmpz_fdiv_r_2exp(r, n, b);
+	if (PL_markstack_ptr != temp) {
+          /* truly void, because dXSARGS not invoked */
+	  PL_markstack_ptr = temp;
+	  XSRETURN_EMPTY; /* return empty stack */
+        }
+        /* must have used dXSARGS; list context implied */
+	return; /* assume stack size is correct */
+
+void
+Rmpz_mod_2exp (r, n, b)
+	mpz_t *	r
+	mpz_t *	n
+	SV *	b
+	PREINIT:
+	I32* temp;
+	PPCODE:
+	temp = PL_markstack_ptr++;
+	Rmpz_mod_2exp(r, n, b);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;
@@ -6375,4 +6509,26 @@ ___GMP_CC ()
 
 SV *
 ___GMP_CFLAGS ()
+
+void
+Rmpz_powm_sec (dest, base, exp, mod)
+	mpz_t *	dest
+	mpz_t *	base
+	mpz_t *	exp
+	mpz_t *	mod
+	PREINIT:
+	I32* temp;
+	PPCODE:
+	temp = PL_markstack_ptr++;
+	Rmpz_powm_sec(dest, base, exp, mod);
+	if (PL_markstack_ptr != temp) {
+          /* truly void, because dXSARGS not invoked */
+	  PL_markstack_ptr = temp;
+	  XSRETURN_EMPTY; /* return empty stack */
+        }
+        /* must have used dXSARGS; list context implied */
+	return; /* assume stack size is correct */
+
+int
+_using_mpir ()
 

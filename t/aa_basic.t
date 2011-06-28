@@ -9,8 +9,8 @@ warn "# Using gmp library version ", Math::GMPz::gmp_v(), "\n";
 warn "# CC is ", Math::GMPz::__GMP_CC, "\n" if defined Math::GMPz::__GMP_CC;
 warn "# CFLAGS are ", Math::GMPz::__GMP_CFLAGS, "\n" if defined Math::GMPz::__GMP_CFLAGS;
 
-if($Math::GMPz::VERSION eq '0.31') {print "ok 1\n"}
-else {print "not ok 1 $Math::GMPz::VERSION\n"}
+if($Math::GMPz::VERSION eq '0.32' && $Math::GMPz::Random::VERSION eq '0.32') {print "ok 1\n"}
+else {print "not ok 1 $Math::GMPz::VERSION $Math::GMPz::Random::VERSION\n"}
 
 my @version = split /\./, Math::GMPz::gmp_v();
 

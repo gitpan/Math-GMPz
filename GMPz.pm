@@ -67,7 +67,8 @@ Rmpz_bin_uiui Rmpz_cdiv_q Rmpz_cdiv_q_2exp Rmpz_cdiv_q_ui Rmpz_cdiv_qr
 Rmpz_cdiv_qr_ui Rmpz_cdiv_r Rmpz_cdiv_r_2exp Rmpz_cdiv_r_ui Rmpz_cdiv_ui 
 Rmpz_clear Rmpz_clrbit Rmpz_cmp Rmpz_cmp_d Rmpz_cmp_si Rmpz_cmp_ui Rmpz_cmpabs
 Rmpz_cmpabs_d Rmpz_cmpabs_ui Rmpz_com Rmpz_combit Rmpz_congruent_2exp_p 
-Rmpz_congruent_p Rmpz_congruent_ui_p Rmpz_divexact Rmpz_divexact_ui 
+Rmpz_congruent_p Rmpz_congruent_ui_p Rmpz_div Rmpz_divmod Rmpz_div_ui
+Rmpz_divmod_ui Rmpz_div_2exp Rmpz_mod_2exp Rmpz_divexact Rmpz_divexact_ui 
 Rmpz_divisible_2exp_p Rmpz_divisible_p Rmpz_divisible_ui_p Rmpz_even_p 
 Rmpz_export Rmpz_fac_ui Rmpz_fdiv_q Rmpz_fdiv_q_2exp Rmpz_fdiv_q_ui 
 Rmpz_fdiv_qr Rmpz_fdiv_qr_ui Rmpz_fdiv_r Rmpz_fdiv_r_2exp Rmpz_fdiv_r_ui 
@@ -86,7 +87,7 @@ Rmpz_lcm_ui Rmpz_legendre Rmpz_lucnum2_ui Rmpz_lucnum_ui Rmpz_mod Rmpz_mod_ui
 Rmpz_mul Rmpz_mul_2exp Rmpz_mul_si Rmpz_mul_ui Rmpz_neg Rmpz_nextprime 
 Rmpz_odd_p Rmpz_out_str Rmpz_out_raw
 Rmpz_perfect_power_p Rmpz_perfect_square_p 
-Rmpz_popcount Rmpz_pow_ui Rmpz_powm Rmpz_powm_ui Rmpz_printf 
+Rmpz_popcount Rmpz_pow_ui Rmpz_powm Rmpz_powm_sec Rmpz_powm_ui Rmpz_printf 
 Rmpz_probab_prime_p Rmpz_realloc2 Rmpz_remove Rmpz_root Rmpz_rootrem 
 Rmpz_rrandomb Rmpz_scan0 Rmpz_scan1 Rmpz_set Rmpz_set_d Rmpz_set_f Rmpz_set_q
 Rmpz_set_si Rmpz_set_str Rmpz_set_ui Rmpz_setbit Rmpz_sgn Rmpz_si_kronecker 
@@ -103,7 +104,7 @@ zgmp_randinit_set zgmp_randinit_default_nobless zgmp_randinit_mt_nobless
 zgmp_randinit_lc_2exp_nobless zgmp_randinit_lc_2exp_size_nobless zgmp_randinit_set_nobless
 zgmp_urandomb_ui zgmp_urandomm_ui
     );
-    $Math::GMPz::VERSION = '0.31';
+    $Math::GMPz::VERSION = '0.32';
 
     DynaLoader::bootstrap Math::GMPz $Math::GMPz::VERSION;
 
@@ -113,7 +114,8 @@ Rmpz_bin_uiui Rmpz_cdiv_q Rmpz_cdiv_q_2exp Rmpz_cdiv_q_ui Rmpz_cdiv_qr
 Rmpz_cdiv_qr_ui Rmpz_cdiv_r Rmpz_cdiv_r_2exp Rmpz_cdiv_r_ui Rmpz_cdiv_ui 
 Rmpz_clear Rmpz_clrbit Rmpz_cmp Rmpz_cmp_d Rmpz_cmp_si Rmpz_cmp_ui Rmpz_cmpabs
 Rmpz_cmpabs_d Rmpz_cmpabs_ui Rmpz_com Rmpz_combit Rmpz_congruent_2exp_p 
-Rmpz_congruent_p Rmpz_congruent_ui_p Rmpz_divexact Rmpz_divexact_ui 
+Rmpz_congruent_p Rmpz_congruent_ui_p Rmpz_div Rmpz_divmod Rmpz_div_ui
+Rmpz_divmod_ui Rmpz_div_2exp Rmpz_mod_2exp Rmpz_divexact Rmpz_divexact_ui 
 Rmpz_divisible_2exp_p Rmpz_divisible_p Rmpz_divisible_ui_p Rmpz_even_p 
 Rmpz_export Rmpz_fac_ui Rmpz_fdiv_q Rmpz_fdiv_q_2exp Rmpz_fdiv_q_ui 
 Rmpz_fdiv_qr Rmpz_fdiv_qr_ui Rmpz_fdiv_r Rmpz_fdiv_r_2exp Rmpz_fdiv_r_ui 
@@ -132,7 +134,7 @@ Rmpz_lcm_ui Rmpz_legendre Rmpz_lucnum2_ui Rmpz_lucnum_ui Rmpz_mod Rmpz_mod_ui
 Rmpz_mul Rmpz_mul_2exp Rmpz_mul_si Rmpz_mul_ui Rmpz_neg Rmpz_nextprime 
 Rmpz_odd_p Rmpz_out_str Rmpz_out_raw
 Rmpz_perfect_power_p Rmpz_perfect_square_p 
-Rmpz_popcount Rmpz_pow_ui Rmpz_powm Rmpz_powm_ui Rmpz_printf 
+Rmpz_popcount Rmpz_pow_ui Rmpz_powm Rmpz_powm_sec Rmpz_powm_ui Rmpz_printf 
 Rmpz_probab_prime_p Rmpz_realloc2 Rmpz_remove Rmpz_root Rmpz_rootrem 
 Rmpz_rrandomb Rmpz_scan0 Rmpz_scan1 Rmpz_set Rmpz_set_d Rmpz_set_f Rmpz_set_q
 Rmpz_set_si Rmpz_set_str Rmpz_set_ui Rmpz_setbit Rmpz_sgn Rmpz_si_kronecker 
@@ -665,9 +667,9 @@ __END__
 
    "$str" simply means a string of symbols that represent a number,
    eg "1234567890987654321234567" which might be a base 10 number,
-   or "zsa34760sdfgq123r5" which would have to represent a base 36
-   number (because "z" is a valid digit only in base 36). Valid
-   bases for GMP numbers are 2 to 62 (inclusive).
+   or "zsa34760sdfgq123r5" which would have to represent at least
+   a base 36 number (because "z" is a valid digit only in bases 36
+   and higher). Valid bases for GMP numbers are 0 and 2..62 .
 
    #####################
 
@@ -750,8 +752,9 @@ __END__
     represents a numeric value. If $arg is a string, an optional
     additional argument that specifies the base of the number can be
     supplied to new(). If base is 0 (or not supplied) then the leading
-    characters are used: 0x or 0X for hex, 0b or 0B for binary, 0 for
-    octal, or decimal otherwise. 
+    characters of the string are used: 0x or 0X for hex, 0b or 0B for
+    binary, 0 for octal, or decimal otherwise. Legal values for the 
+    base are 0 and 2..62 .
 
    $rop = Rmpz_init_set($op);
    $rop = Rmpz_init_set_nobless($op);
@@ -826,8 +829,12 @@ __END__
     $rop -= 2nd arg * 3rd arg.
 
    Rmpz_mul_2exp($rop, $op, $ui);
-    Set $rop to $op times 2 raised to $ui.  This operation can
+    Set $rop to $op * (2 ** $ui).  This operation can
     also be defined as a left shift by $ui bits.
+
+   Rmpz_div_2exp($rop, $op, $ui); # Same as Rmpz_fdiv_q_2exp
+    Set $rop to $op / (2 ** $ui).  This operation can
+    also be defined as a right shift by $ui bits.
 
    Rmpz_neg($rop, $op);
     $rop = -$op.
@@ -851,6 +858,7 @@ __END__
           will have the same sign as the number. 
           The `t' stands for "truncate".
 
+   Rmpz_div($rop, $op1, $op2); # Same as Rmpz_fdiv_q
    Rmpz_cdiv_q($rop, $op1, $op2);
    Rmpz_fdiv_q($rop, $op1, $op2);
    Rmpz_tdiv_q($rop, $op1, $op2); 
@@ -861,12 +869,14 @@ __END__
    Rmpz_tdiv_r($rop, $op1, $op2);
     $rop = $op1 % $op2.
 
+   Rmpz_divmod($rop1, $rop2m $op1, $op2); # Same as Rmpz_fdiv_qr
    Rmpz_cdiv_qr($rop1, $rop2, $op1, $op2);
    Rmpz_fdiv_qr($rop1, $rop2, $op1, $op2);
    Rmpz_tdiv_qr($rop1, $rop1, $op1, $op2);
     $rop1 = $op1 / $op2.
     $rop2 = $op1 % $op2.
 
+   $ul = Rmpz_div_ui($rop, $op, $ui); # Same as Rmpz_fdiv_q_ui
    $ul = Rmpz_cdiv_q_ui($rop, $op, $ui);
    $ul = Rmpz_fdiv_q_ui($rop, $op, $ui);
    $ul = Rmpz_tdiv_q_ui($rop, $op, $ui);
@@ -879,6 +889,7 @@ __END__
     $rop = $op % $ui.
     $ul = $op % $ui.
 
+   $ul = Rmpz_divmod_ui($rop1, $rop2, $op1, $ui); # Same as Rmpz_fdiv_qr_ui
    $ul = Rmpz_cdiv_qr_ui($rop1, $rop2, $op, $ui);
    $ul = Rmpz_fdiv_qr_ui($rop1, $rop2, $op, $ui);
    $ul = Rmpz_tdiv_qr_ui($rop1, $rop2, $op, $ui);
@@ -897,6 +908,7 @@ __END__
     $rop = $op / (2 ** $ui). ie $rop is $op right-shifted
     by $ui bits.
 
+   Rmpz_mod_2exp($rop, $op, $ui); # Same as Rmpz_fdiv_r_2exp
    Rmpz_cdiv_r_2exp($rop, $op, $ui); 
    Rmpz_fdiv_r_2exp($rop, $op, $ui);
    Rmpz_tdiv_r_2exp($rop, $op, $ui); 
@@ -935,7 +947,10 @@ __END__
    INTEGER EXPONENTIATION
 
    Rmpz_powm($rop, $op1, $op2, $op3);
+   Rmpz_powm_sec($rop, $op1, $op2, $op3); # gmp-5.0 and later only
     $rop = ($op1 ** $op2 ) % $op3 
+    In the case of Rmpz_powm_sec, $op2 must be > 0, and $op3 must
+    be odd.
 
    Rmpz_powm_ui($rop, $op1, $ui, $op2);
     $rop = ($op1 ** $ui) % $op2 
@@ -1453,26 +1468,30 @@ __END__
    OTHER
 
    $GMP_version = Math::GMPz::gmp_v;
-    Returns the version of the GMP library (eg 4.1.3). The function
-    is not exportable. 
+    Returns the version of the GMP library (eg 4.2.3) being used by
+    Math::GMPz. The function is not exportable.  
 
    $GMP_cc = Math::GMPz::__GMP_CC;
    $GMP_cflags = Math::GMPz::__GMP_CFLAGS;
-    These functions are not exportable.
     If Math::GMPz has been built against gmp-4.2.3 or later,
     returns respectively the CC and CFLAGS settings that were used
-    to compile the gmp library.
+    to compile the gmp library against which Math::GMPz was built.
+    (Values are as specified in the gmp.h that was used to build
+    Math::GMPz.)
     Returns undef if Math::GMPz has been built against an earlier
     version of the gmp library.
+    (These functions are in @EXPORT_OK and are therefore exportable
+    by request. They are not listed under the ":mpz" tag.)   
     
 
    $major = Math::GMPz::__GNU_MP_VERSION;
    $minor = Math::GMPz::__GNU_MP_VERSION_MINOR;
    $patchlevel = Math::GMPz::__GNU_MP_VERSION_PATCHLEVEL;
     Returns respectively the major, minor, and patchlevel numbers
-    for the GMP library version used by Math::GMPz. (These 
-    functions are in @EXPORT_OK and are therefore exportable by
-    request.) 
+    for the GMP library version used to build Math::GMPz. Values are
+    as specified in the gmp.h that was used to build Math::GMPz.
+    (These functions are in @EXPORT_OK and are therefore exportable
+    by request. They are not listed under the ":mpz" tag.)  
 
    ################
 
@@ -1579,7 +1598,7 @@ __END__
 
     This program is free software; you may redistribute it and/or 
     modify it under the same terms as Perl itself.
-    Copyright 2006-2008, 2009, 2010, Sisyphus
+    Copyright 2006-2008, 2009, 2010, 2011 Sisyphus
 
 =head1 AUTHOR
 

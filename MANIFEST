@@ -6,6 +6,7 @@ GMPz.xs
 Random/t/gmp_random.t
 README
 t/aa_basic.t
+t/aliases.t
 t/alloc.t
 t/arith.t
 t/bits.t

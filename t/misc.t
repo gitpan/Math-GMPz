@@ -28,7 +28,11 @@ if(!Rmpz_fits_ushort_p($q)
    &&
    !Rmpz_fits_sshort_p($q))
      {print "ok 3\n"}
-else {print "not ok 3\n"}
+else {
+   warn "\n$q fits ushort: ", Rmpz_fits_ushort_p($q), "\n";
+   warn "$q fits sshort: ", Rmpz_fits_sshort_p($q), "\n";
+   print "not ok 3\n";
+}
 
 if(Rmpz_even_p($q)
    &&

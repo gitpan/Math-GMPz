@@ -3,7 +3,7 @@ use warnings;
 use Math::GMPz qw(:mpz);
 
 #$| = 1;
-print "1..10\n";
+print "1..11\n";
 
 print "# Using gmp version ", Math::GMPz::gmp_v(), "\n";
 
@@ -74,3 +74,16 @@ Rmpz_set_ui($z, 90);
 Rmpz_rootrem($p, $q, $z, 4);
 if($p == 3 && $q == 9) {print "ok 10\n"}
 else {print "not ok 10\n$p $q\n"}
+
+if(Math::GMPz::__GNU_MP_VERSION > 4 && !Math::GMPz::_using_mpir()) {
+  Rmpz_powm_sec($z, $x, $y, $y);
+  if(Rmpz_get_str($z, 10) eq '729387446576188')
+       {print "ok 11\n"}
+  else {print "not ok 11\n"}
+}
+else {
+  eval{Rmpz_powm_sec($z, $x, $y, $y);};
+  if($@ =~ /Rmpz_powm_sec not implemented/)
+       {print "ok 11\n"}
+  else {print "not ok 11\n"}
+}
