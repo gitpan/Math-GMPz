@@ -1,3 +1,7 @@
+0.33
+ - Remove 'not' from overloads. Apparently achieved nothing anyway, and 5.16
+   warns that it's invalid.
+
 0.32
  - Add Rmpz_powm_sec (gmp-5 only, and not available when building against mpir).
  - In the documentation, elaborate on the way that Math::GMPz::get_v() and 

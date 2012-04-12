@@ -55,7 +55,6 @@ use overload
     '=='   => \&overload_equiv,
     '!='   => \&overload_not_equiv,
     '!'    => \&overload_not,
-    'not'  => \&overload_not,
     '='    => \&overload_copy,
     'abs'  => \&overload_abs;
 
@@ -104,7 +103,7 @@ zgmp_randinit_set zgmp_randinit_default_nobless zgmp_randinit_mt_nobless
 zgmp_randinit_lc_2exp_nobless zgmp_randinit_lc_2exp_size_nobless zgmp_randinit_set_nobless
 zgmp_urandomb_ui zgmp_urandomm_ui
     );
-    $Math::GMPz::VERSION = '0.32';
+    $Math::GMPz::VERSION = '0.33';
 
     DynaLoader::bootstrap Math::GMPz $Math::GMPz::VERSION;
 
@@ -1408,7 +1407,7 @@ __END__
     & | ^ ~
     &= |= ^= 
     < <= > >= == != <=>
-    ! not abs
+    ! abs
 
     Division uses 'tdiv' (see 'Integer Division', above).
     Check that '~', '%', and '%=' are working as you expect

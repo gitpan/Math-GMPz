@@ -20,6 +20,14 @@
 #define SvUOK SvIsUV
 #endif
 
+#ifndef Newx
+#  define Newx(v,n,t) New(0,v,n,t)
+#endif
+
+#ifndef Newxz
+#  define Newxz(v,n,t) Newz(0,v,n,t)
+#endif
+
 SV * Rmpz_init_set_str_nobless(SV * num, SV * base) {
      mpz_t * mpz_t_obj;
      unsigned long b = SvUV(base);
@@ -56,7 +64,7 @@ SV * Rmpz_init2_nobless(SV * bits) {
 
 }
 
-SV * Rmpz_init_nobless() {
+SV * Rmpz_init_nobless(void) {
      mpz_t * mpz_t_obj;
      SV * obj_ref, * obj;
 
@@ -132,7 +140,7 @@ SV * Rmpz_init_set_d_nobless(SV * p) {
      return obj_ref;
 }
 
-SV * Rmpz_init() {
+SV * Rmpz_init(void) {
      mpz_t * mpz_t_obj;
      SV * obj_ref, * obj;
 
@@ -3639,7 +3647,7 @@ return ret;
 
 }
 
-SV * gmp_v() {
+SV * gmp_v(void) {
      return newSVpv(gmp_version, 0);
 }
 
@@ -3919,7 +3927,7 @@ void rand_clear(SV * p) {
      Safefree(INT2PTR(gmp_randstate_t *, SvIV(SvRV(p))));
      }
 
-int _has_longlong() {
+int _has_longlong(void) {
 #ifdef USE_64_BIT_INT
     return 1;
 #else
@@ -3927,7 +3935,7 @@ int _has_longlong() {
 #endif
 }
 
-int _has_longdouble() {
+int _has_longdouble(void) {
 #ifdef USE_LONG_DOUBLE
     return 1;
 #else
@@ -3936,7 +3944,7 @@ int _has_longdouble() {
 }
 
 /* Has inttypes.h been included ? */
-int _has_inttypes() {
+int _has_inttypes(void) {
 #ifdef _MSC_VER
 return 0;
 #else
@@ -3960,19 +3968,19 @@ SV * Rmpz_out_raw(FILE * stream, mpz_t * a) {
      return newSVuv(ret);
 }
 
-SV * ___GNU_MP_VERSION() {
+SV * ___GNU_MP_VERSION(void) {
      return newSVuv(__GNU_MP_VERSION);
 }
 
-SV * ___GNU_MP_VERSION_MINOR() {
+SV * ___GNU_MP_VERSION_MINOR(void) {
      return newSVuv(__GNU_MP_VERSION_MINOR);
 }
 
-SV * ___GNU_MP_VERSION_PATCHLEVEL() {
+SV * ___GNU_MP_VERSION_PATCHLEVEL(void) {
      return newSVuv(__GNU_MP_VERSION_PATCHLEVEL);
 }
 
-SV * ___GMP_CC() {
+SV * ___GMP_CC(void) {
 #ifdef __GMP_CC
      char * ret = __GMP_CC;
      return newSVpv(ret, 0);
@@ -3981,7 +3989,7 @@ SV * ___GMP_CC() {
 #endif
 }
 
-SV * ___GMP_CFLAGS() {
+SV * ___GMP_CFLAGS(void) {
 #ifdef __GMP_CFLAGS
      char * ret = __GMP_CFLAGS;
      return newSVpv(ret, 0);
@@ -4006,7 +4014,7 @@ void Rmpz_powm_sec(mpz_t * dest, mpz_t * base, mpz_t * exp, mpz_t * mod) {
 }
 #endif
 
-int _using_mpir() {
+int _using_mpir(void) {
 #ifdef __MPIR_VERSION
 return 1;
 #else
@@ -4030,6 +4038,7 @@ Rmpz_init2_nobless (bits)
 
 SV *
 Rmpz_init_nobless ()
+		
 
 SV *
 Rmpz_init_set_nobless (p)
@@ -4049,6 +4058,7 @@ Rmpz_init_set_d_nobless (p)
 
 SV *
 Rmpz_init ()
+		
 
 SV *
 Rmpz_init_set (p)
@@ -6379,6 +6389,7 @@ eratosthenes_string (x_arg)
 
 SV *
 gmp_v ()
+		
 
 SV *
 wrap_gmp_printf (a, b)
@@ -6478,12 +6489,15 @@ rand_clear (p)
 
 int
 _has_longlong ()
+		
 
 int
 _has_longdouble ()
+		
 
 int
 _has_inttypes ()
+		
 
 SV *
 Rmpz_inp_raw (a, stream)
@@ -6497,18 +6511,23 @@ Rmpz_out_raw (stream, a)
 
 SV *
 ___GNU_MP_VERSION ()
+		
 
 SV *
 ___GNU_MP_VERSION_MINOR ()
+		
 
 SV *
 ___GNU_MP_VERSION_PATCHLEVEL ()
+		
 
 SV *
 ___GMP_CC ()
+		
 
 SV *
 ___GMP_CFLAGS ()
+		
 
 void
 Rmpz_powm_sec (dest, base, exp, mod)
@@ -6531,4 +6550,5 @@ Rmpz_powm_sec (dest, base, exp, mod)
 
 int
 _using_mpir ()
+		
 
