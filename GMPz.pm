@@ -103,9 +103,12 @@ zgmp_randinit_set zgmp_randinit_default_nobless zgmp_randinit_mt_nobless
 zgmp_randinit_lc_2exp_nobless zgmp_randinit_lc_2exp_size_nobless zgmp_randinit_set_nobless
 zgmp_urandomb_ui zgmp_urandomm_ui
     );
-    $Math::GMPz::VERSION = '0.33';
+    our $VERSION = '0.34';
+    $VERSION = eval $VERSION;
 
-    DynaLoader::bootstrap Math::GMPz $Math::GMPz::VERSION;
+    DynaLoader::bootstrap Math::GMPz $VERSION;
+
+    $Math::GMPz::NULL = _Rmpz_NULL();
 
     %Math::GMPz::EXPORT_TAGS =(mpz => [qw(
 Rmpz_abs Rmpz_add Rmpz_add_ui Rmpz_addmul Rmpz_addmul_ui Rmpz_and Rmpz_bin_ui
@@ -670,6 +673,8 @@ __END__
    a base 36 number (because "z" is a valid digit only in bases 36
    and higher). Valid bases for GMP numbers are 0 and 2..62 .
 
+   "$NULL" is $Math::GMPz::NULL (the NULL mpz type).
+
    #####################
 
    INITIALIZING INTEGERS
@@ -1011,20 +1016,24 @@ __END__
     The result is always positive even if one or both input
     operands are negative.
 
-   $ui = Rmpz_gcd_ui($rop, $op, $ui); 
-    Compute the greatest common divisor of $op1 and $ui.
-    Store the result in $rop. If the result is small enough
-    to fit in an `unsigned long int', it is returned.  If 
-    the result does not fit, 0 is returned, and the result 
-    is equal to the argument OP1.  Note that the result 
-    will always fit if OP2 is non-zero.
+   $ui2 = Rmpz_gcd_ui($rop, $op, $ui1);  # GCD in $ui2 & $rop
+   $ui2 = Rmpz_gcd_ui($NULL, $op, $ui1); # GCD in $ui2 only
+    Compute the greatest common divisor of $op and $ui1.
+    Store the result in $rop (iff $rop is not $Math::GMPz::NULL).
+    If the result is small enough to fit in an `unsigned long
+    int', it is returned.  If the result does not fit, 0 is
+    returned, and the result is equal to the argument $op.
+    Note that the result will always fit if $ui1 is non-zero.
 
    Rmpz_gcdext($rop1, $rop2, $rop3, $op1, $op2);
+   Rmpz_gcdext($rop1, $rop2, $NULL, $op1, $op2);
     Set $rop1 to the greatest common divisor of $op1 and $op2,
     and in addition set $rop2 and $rop3 to coefficients
     satisfying $op1*$rop2 + $op2*$rop3 = $rop1. $rop1 is
     always positive, even if one or both of $op1 and $op2 
     are negative.
+    If $rop3 is $Math::GMPz::NULL then that value is not
+    computed.
 
    Rmpz_lcm($rop, $op1, $op2); 
    Rmpz_lcm_ui($rop, $op, $ui);

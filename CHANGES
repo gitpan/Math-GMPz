@@ -1,3 +1,7 @@
+0.34
+ - Fix error in Rmpz_gcd_ui. (Should've been returning SV*. Thanks Dana Jacobsen.)
+ - Create the NULL mpz_t ($Math::GMPz::NULL)
+
 0.33
  - Remove 'not' from overloads. Apparently achieved nothing anyway, and 5.16
    warns that it's invalid.

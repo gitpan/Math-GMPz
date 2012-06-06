@@ -668,8 +668,11 @@ void Rmpz_gcd(mpz_t * gcd, mpz_t * src1, mpz_t * src2) {
      mpz_gcd(*gcd, *src1, *src2);
 }
 
-void Rmpz_gcd_ui(mpz_t * gcd, mpz_t * n, SV * d) {
-     mpz_gcd_ui(*gcd, *n, SvUV(d));
+/* First arg can be either (the unblessed) $Math::GMPz::NULL or a
+ * (blessed) Math::GMPz object.
+ */
+SV * Rmpz_gcd_ui(mpz_t * gcd, mpz_t * n, SV * d) {
+     return newSVuv(mpz_gcd_ui(*gcd, *n, SvUV(d)));
 }
 
 void Rmpz_gcdext(mpz_t * g, mpz_t * s, mpz_t * t, mpz_t * a, mpz_t * b) {
@@ -4022,6 +4025,19 @@ return 0;
 #endif
 }
 
+SV * _Rmpz_NULL(void) {
+     mpz_t * mpz_t_obj;
+     SV * obj_ref, * obj;
+
+     mpz_t_obj = NULL;
+     obj_ref = newSV(0);
+     obj = newSVrv(obj_ref, NULL);
+
+     sv_setiv(obj, INT2PTR(IV, mpz_t_obj));
+     SvREADONLY_on(obj);
+     return obj_ref;
+}
+
 MODULE = Math::GMPz	PACKAGE = Math::GMPz	
 
 PROTOTYPES: DISABLE
@@ -5300,23 +5316,11 @@ Rmpz_gcd (gcd, src1, src2)
         /* must have used dXSARGS; list context implied */
 	return; /* assume stack size is correct */
 
-void
+SV *
 Rmpz_gcd_ui (gcd, n, d)
 	mpz_t *	gcd
 	mpz_t *	n
 	SV *	d
-	PREINIT:
-	I32* temp;
-	PPCODE:
-	temp = PL_markstack_ptr++;
-	Rmpz_gcd_ui(gcd, n, d);
-	if (PL_markstack_ptr != temp) {
-          /* truly void, because dXSARGS not invoked */
-	  PL_markstack_ptr = temp;
-	  XSRETURN_EMPTY; /* return empty stack */
-        }
-        /* must have used dXSARGS; list context implied */
-	return; /* assume stack size is correct */
 
 void
 Rmpz_gcdext (g, s, t, a, b)
@@ -6550,5 +6554,9 @@ Rmpz_powm_sec (dest, base, exp, mod)
 
 int
 _using_mpir ()
+		
+
+SV *
+_Rmpz_NULL ()
 		
 

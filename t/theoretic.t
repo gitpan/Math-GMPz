@@ -1,9 +1,10 @@
 use strict;
 use warnings;
 use Math::GMPz qw(:mpz);
+use Math::BigInt;
 
 #$| = 1;
-print "1..23\n";
+print "1..29\n";
 
 print "# Using gmp version ", Math::GMPz::gmp_v(), "\n";
 
@@ -40,8 +41,8 @@ if(Rmpz_get_str($z, 10) eq '1')
      {print "ok 3\n"}
 else {print "not ok 3\n"}
 
-Rmpz_gcd_ui($z, $q, $ul);
-if(Rmpz_get_str($z, 10) eq '1')
+$ret = Rmpz_gcd_ui($z, $q, $ul);
+if(Rmpz_get_str($z, 10) eq '1' && $ret == 1)
      {print "ok 4\n"}
 else {print "not ok 4\n"}
 
@@ -59,6 +60,8 @@ Rmpz_add($z, $q, $r);
 if(Rmpz_get_str($z, 22) eq Rmpz_get_str($g, 22))
      {print "ok 5\n"}
 else {print "not ok 5\n"}
+
+my ($g_copy, $x_copy, $y_copy, $q_copy) = ($g, $x, $y, $q);
 
 Rmpz_lcm($z, $x, $y);
 if(Rmpz_get_str($z, 10) eq '18028670985685207461102483753490')
@@ -157,3 +160,48 @@ if(Rmpz_get_str($q, 10) eq '792070839848372253127'
    Rmpz_get_str($r, 10) eq '489526700523968661124')
      {print "ok 23\n"}
 else {print "not ok 23\n"}
+
+$ret = Rmpz_gcd_ui($z, $q, 0);
+if($ret == 0 && $z == $q) {print "ok 24\n"}
+else {
+  warn "\$ret: $ret\n\$z: $z\n\$q: $q\n";
+  print "not ok 24\n";
+}
+
+$ret = Rmpz_gcd_ui($Math::GMPz::NULL, $q, 0);
+if($ret == 0) {print "ok 25\n"}
+else {
+  warn "\$ret: $ret\n";
+  print "not ok 25\n";
+}
+
+Rmpz_set_ui($q, 24);
+$ret = Rmpz_gcd_ui($z, $q, 0);
+if($ret == 24 && $z == 24) {print "ok 26\n"}
+else {
+  warn "\$ret: $ret\n\$z: $z\n\$q: $q\n";
+  print "not ok 26\n";
+}
+
+$ret = Rmpz_gcd_ui($Math::GMPz::NULL, $q, 0);
+if($ret == 24) {print "ok 27\n"}
+else {
+  warn "\$ret: $ret\n";
+  print "not ok 27\n";
+}
+
+$ret = Rmpz_gcd_ui($Math::GMPz::NULL, $q, 17);
+if($ret == 1) {print "ok 28\n"}
+else {
+  warn "\$ret: $ret\n";
+  print "not ok 28\n";
+}
+
+Rmpz_gcdext($g, $s, $Math::GMPz::NULL, $x_copy, $y_copy);
+Rmpz_mul($q, $s, $x_copy);
+if($g == $g_copy && $q == $q_copy) {print "ok 29\n"}
+else {
+  warn
+  print "not ok 29\n";
+}
+
