@@ -103,7 +103,7 @@ zgmp_randinit_set zgmp_randinit_default_nobless zgmp_randinit_mt_nobless
 zgmp_randinit_lc_2exp_nobless zgmp_randinit_lc_2exp_size_nobless zgmp_randinit_set_nobless
 zgmp_urandomb_ui zgmp_urandomm_ui
     );
-    our $VERSION = '0.34';
+    our $VERSION = '0.35';
     $VERSION = eval $VERSION;
 
     DynaLoader::bootstrap Math::GMPz $VERSION;
@@ -1409,6 +1409,10 @@ __END__
 
    OPERATOR OVERLOADING
 
+    Overloading works with numbers, strings, Math::GMPz objects
+    and, to a limited extent, Math::MPFR objects (iff version 3.13
+    or later of Math::MPFR has been installed).
+
    The following operators are overloaded:
     + - * / %
     += -= *= /= %=
@@ -1421,6 +1425,14 @@ __END__
     Division uses 'tdiv' (see 'Integer Division', above).
     Check that '~', '%', and '%=' are working as you expect
     (especially in relation to negative values).
+
+    Atempting to use the overloaded operators with objects that
+    have been blessed into some package other than 'Math::GMPz'
+    or 'Math::MPFR' (limited applications) will not work.
+    Math::MPFR objects can be used only with '+', '-', '*', '/'
+    and '**' operators, and will work only if Math::MPFR is at
+    version 3.13 or later - in which case the operation will
+    return a Math::MPFR object.
 
     In those situations where the overload subroutine operates on 2
     perl variables, then obviously one of those perl variables is
@@ -1451,7 +1463,8 @@ __END__
        number, the subroutine croaks with an appropriate error
        message.
 
-    5. If the variable is a Math::GMPz object then the value of that
+    5. If the variable is a Math::GMPz object (or, for operators
+       specified above, a Math::MPFR object) then the value of that
        object is used.
 
     6. If none of the above is true, then the second variable is

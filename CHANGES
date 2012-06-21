@@ -1,3 +1,7 @@
+0.35
+ - Add Math::GMPz::V
+ - Add cross-class overloading (with Math::MPFR objects only).
+
 0.34
  - Fix error in Rmpz_gcd_ui. (Should've been returning SV*. Thanks Dana Jacobsen.)
  - Create the NULL mpz_t ($Math::GMPz::NULL)
