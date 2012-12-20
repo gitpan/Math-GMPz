@@ -69,7 +69,8 @@ Rmpz_cmpabs_d Rmpz_cmpabs_ui Rmpz_com Rmpz_combit Rmpz_congruent_2exp_p
 Rmpz_congruent_p Rmpz_congruent_ui_p Rmpz_div Rmpz_divmod Rmpz_div_ui
 Rmpz_divmod_ui Rmpz_div_2exp Rmpz_mod_2exp Rmpz_divexact Rmpz_divexact_ui 
 Rmpz_divisible_2exp_p Rmpz_divisible_p Rmpz_divisible_ui_p Rmpz_even_p 
-Rmpz_export Rmpz_fac_ui Rmpz_fdiv_q Rmpz_fdiv_q_2exp Rmpz_fdiv_q_ui 
+Rmpz_export Rmpz_fac_ui Rmpz_2fac_ui Rmpz_mfac_uiui Rmpz_primorial_ui
+Rmpz_fdiv_q Rmpz_fdiv_q_2exp Rmpz_fdiv_q_ui 
 Rmpz_fdiv_qr Rmpz_fdiv_qr_ui Rmpz_fdiv_r Rmpz_fdiv_r_2exp Rmpz_fdiv_r_ui 
 Rmpz_fdiv_ui Rmpz_fib2_ui Rmpz_fib_ui Rmpz_fits_sint_p Rmpz_fits_slong_p 
 Rmpz_fits_sshort_p Rmpz_fits_uint_p Rmpz_fits_ulong_p Rmpz_fits_ushort_p
@@ -103,7 +104,7 @@ zgmp_randinit_set zgmp_randinit_default_nobless zgmp_randinit_mt_nobless
 zgmp_randinit_lc_2exp_nobless zgmp_randinit_lc_2exp_size_nobless zgmp_randinit_set_nobless
 zgmp_urandomb_ui zgmp_urandomm_ui
     );
-    our $VERSION = '0.35';
+    our $VERSION = '0.36';
     $VERSION = eval $VERSION;
 
     DynaLoader::bootstrap Math::GMPz $VERSION;
@@ -119,7 +120,8 @@ Rmpz_cmpabs_d Rmpz_cmpabs_ui Rmpz_com Rmpz_combit Rmpz_congruent_2exp_p
 Rmpz_congruent_p Rmpz_congruent_ui_p Rmpz_div Rmpz_divmod Rmpz_div_ui
 Rmpz_divmod_ui Rmpz_div_2exp Rmpz_mod_2exp Rmpz_divexact Rmpz_divexact_ui 
 Rmpz_divisible_2exp_p Rmpz_divisible_p Rmpz_divisible_ui_p Rmpz_even_p 
-Rmpz_export Rmpz_fac_ui Rmpz_fdiv_q Rmpz_fdiv_q_2exp Rmpz_fdiv_q_ui 
+Rmpz_export Rmpz_fac_ui Rmpz_2fac_ui Rmpz_mfac_uiui Rmpz_primorial_ui
+Rmpz_fdiv_q Rmpz_fdiv_q_2exp Rmpz_fdiv_q_ui 
 Rmpz_fdiv_qr Rmpz_fdiv_qr_ui Rmpz_fdiv_r Rmpz_fdiv_r_2exp Rmpz_fdiv_r_ui 
 Rmpz_fdiv_ui Rmpz_fib2_ui Rmpz_fib_ui Rmpz_fits_sint_p Rmpz_fits_slong_p 
 Rmpz_fits_sshort_p Rmpz_fits_uint_p Rmpz_fits_ulong_p Rmpz_fits_ushort_p
@@ -1076,6 +1078,19 @@ __END__
 
    Rmpz_fac_ui($rop, $ui); 
     Set $rop to the factorial of $ui.
+
+   Rmpz_2fac_ui($rop, $ui); # Available only with gmp-5.1.0
+                            # or later
+    Set $rop to the double-factorial (n!!) of $ui.
+
+   Rmpz_mfac_uiui($rop, $ui1, $u2); # Available only with
+                                    # gmp-5.1.0 or later 
+    Set $rop to the $ui2-multi-factorial of $ui1, $ui2.
+
+   Rmpz_primorial_ui($rop, $ui); # Available only with gmp-5.1.0
+                                 # or later
+    Set $rop to the primorial of $ui, i.e. the product of all
+    positive prime numbers smaller than or equal to $ui.
 
    Rmpz_bin_ui($rop, $op, $ui); 
    Rmpz_bin_uiui($rop, $ui, $ui); 

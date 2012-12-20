@@ -18,6 +18,7 @@ t/alloc.t
 t/arith.t
 t/bits.t
 t/cmp.t
+t/fac.t
 t/imp_exp.t
 t/misc.t
 t/power.t

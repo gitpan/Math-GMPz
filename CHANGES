@@ -1,3 +1,6 @@
+0.36
+ - Add Rmpz_2fac_ui, Rmpz_mfac_uiui and Rmpz_primorial_ui (all new in gmp-5.1.0).
+
 0.35
  - Add Math::GMPz::V
  - Add cross-class overloading (with Math::MPFR objects only).

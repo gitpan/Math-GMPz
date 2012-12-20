@@ -727,6 +727,36 @@ void Rmpz_fac_ui(mpz_t * fac, SV * b) {
      mpz_fac_ui(*fac, SvUV(b));
 }
 
+#if __GNU_MP_VERSION > 5 || (__GNU_MP_VERSION == 5 && __GNU_MP_VERSION_MINOR >= 1)
+
+void Rmpz_2fac_ui(mpz_t * fac, SV * b) {
+     mpz_2fac_ui(*fac, SvUV(b));
+}
+
+void Rmpz_mfac_uiui(mpz_t * fac, SV * b, SV * c) {
+     mpz_mfac_uiui(*fac, SvUV(b), SvUV(c));
+}
+
+void Rmpz_primorial_ui(mpz_t * fac, SV * b) {
+     mpz_primorial_ui(*fac, SvUV(b));
+}
+
+#else
+
+void Rmpz_2fac_ui(mpz_t * fac, SV * b) {
+     croak("Rmpz_2fac_ui not implemented - gmp-5.1.0 (or later) is needed; we have only gmp-%s", gmp_version);
+}
+
+void Rmpz_mfac_uiui(mpz_t * fac, SV * b, SV * c) {
+     croak("Rmpz_mfac_uiui not implemented - gmp-5.1.0 (or later) is needed; we have only gmp-%s", gmp_version);
+}
+
+void Rmpz_primorial_ui(mpz_t * fac, SV * b) {
+     croak("Rmpz_primorial_ui not implemented - gmp-5.1.0 (or later) is needed; we have only gmp-%s", gmp_version);
+}
+
+#endif
+
 void Rmpz_bin_ui(mpz_t * dest, mpz_t * n, SV * d) {
      mpz_bin_ui(*dest, *n, SvUV(d));
 }
@@ -5588,6 +5618,58 @@ Rmpz_fac_ui (fac, b)
 	PPCODE:
 	temp = PL_markstack_ptr++;
 	Rmpz_fac_ui(fac, b);
+	if (PL_markstack_ptr != temp) {
+          /* truly void, because dXSARGS not invoked */
+	  PL_markstack_ptr = temp;
+	  XSRETURN_EMPTY; /* return empty stack */
+        }
+        /* must have used dXSARGS; list context implied */
+	return; /* assume stack size is correct */
+
+void
+Rmpz_2fac_ui (fac, b)
+	mpz_t *	fac
+	SV *	b
+	PREINIT:
+	I32* temp;
+	PPCODE:
+	temp = PL_markstack_ptr++;
+	Rmpz_2fac_ui(fac, b);
+	if (PL_markstack_ptr != temp) {
+          /* truly void, because dXSARGS not invoked */
+	  PL_markstack_ptr = temp;
+	  XSRETURN_EMPTY; /* return empty stack */
+        }
+        /* must have used dXSARGS; list context implied */
+	return; /* assume stack size is correct */
+
+void
+Rmpz_mfac_uiui (fac, b, c)
+	mpz_t *	fac
+	SV *	b
+	SV *	c
+	PREINIT:
+	I32* temp;
+	PPCODE:
+	temp = PL_markstack_ptr++;
+	Rmpz_mfac_uiui(fac, b, c);
+	if (PL_markstack_ptr != temp) {
+          /* truly void, because dXSARGS not invoked */
+	  PL_markstack_ptr = temp;
+	  XSRETURN_EMPTY; /* return empty stack */
+        }
+        /* must have used dXSARGS; list context implied */
+	return; /* assume stack size is correct */
+
+void
+Rmpz_primorial_ui (fac, b)
+	mpz_t *	fac
+	SV *	b
+	PREINIT:
+	I32* temp;
+	PPCODE:
+	temp = PL_markstack_ptr++;
+	Rmpz_primorial_ui(fac, b);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;
