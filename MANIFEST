@@ -11,8 +11,8 @@ Random/Random.pm
 Random/Makefile.PL
 Random/t/gmp_random.t
 README
-t/aa_basic.t
-t/aa_v.t
+t/_1aaa_v.t
+t/_1basic.t
 t/aliases.t
 t/alloc.t
 t/arith.t
@@ -24,8 +24,6 @@ t/misc.t
 t/power.t
 t/primes.t
 t/random.t
-t/supp2.t
-t/supp1.t
 t/theoretic.t
 t/div2.t
 t/cdiv.t

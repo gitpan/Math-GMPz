@@ -1,3 +1,11 @@
+0.37
+ - Alter test 3i in new.t to allow for the possibility that perl has been bult
+   with -Duselongdouble.
+ - Remove some of the undocumented (cruddy & irrelevant) functions from GMPz.xs,
+   and remove t/supp1.t and t/supp2.t (which tested those functions).
+ - Alter the way that strEQ gets hold of HvNAME(SvSTASH(SvRV(sv))) - so that -Wall
+   doesn't emit "null argument" warnings. (Thanks Daniel Kahn Gillmor.)
+
 0.36
  - Add Rmpz_2fac_ui, Rmpz_mfac_uiui and Rmpz_primorial_ui (all new in gmp-5.1.0).
 

@@ -1062,6 +1062,2687 @@ int Rrm_gmp(mpz_t * num, SV * base){
    return 1; 
 }
 
+SV * _Rmpz_out_str(mpz_t * p, SV * base) {
+     unsigned long ret;
+     if((SvIV(base) > -2 && SvIV(base) < 2) || SvIV(base) < -36 || SvIV(base) > 62)
+       croak("2nd argument supplied to Rmpz_out_str is out of allowable range (must be in range -36..-2, 2..62)");
+     ret = mpz_out_str(NULL, SvUV(base), *p);
+     fflush(stdout);
+     return newSVuv(ret);
+}
+
+SV * _Rmpz_out_strS(mpz_t * p, SV * base, SV * suff) {
+     unsigned long ret;
+     if((SvIV(base) > -2 && SvIV(base) < 2) || SvIV(base) < -36 || SvIV(base) > 62)
+       croak("2nd argument supplied to Rmpz_out_str is out of allowable range (must be in range -36..-2, 2..62)");
+     ret = mpz_out_str(NULL, SvUV(base), *p);
+     printf("%s", SvPV_nolen(suff));
+     fflush(stdout);
+     return newSVuv(ret);
+}
+
+SV * _Rmpz_out_strP(SV * pre, mpz_t * p, SV * base) {
+     unsigned long ret;
+     if((SvIV(base) > -2 && SvIV(base) < 2) || SvIV(base) < -36 || SvIV(base) > 62)
+       croak("3rd argument supplied to Rmpz_out_str is out of allowable range (must be in range -36..-2, 2..62)");
+     printf("%s", SvPV_nolen(pre));
+     ret = mpz_out_str(NULL, SvUV(base), *p);
+     fflush(stdout);
+     return newSVuv(ret);
+}
+
+SV * _Rmpz_out_strPS(SV * pre, mpz_t * p, SV * base, SV * suff) {
+     unsigned long ret;
+     if((SvIV(base) > -2 && SvIV(base) < 2) || SvIV(base) < -36 || SvIV(base) > 62)
+       croak("3rd argument supplied to Rmpz_out_str is out of allowable range (must be in range -36..-2, 2..62)");
+     printf("%s", SvPV_nolen(pre));
+     ret = mpz_out_str(NULL, SvUV(base), *p);
+     printf("%s", SvPV_nolen(suff));
+     fflush(stdout);
+     return newSVuv(ret);
+}
+
+SV * _TRmpz_out_str(FILE * stream, SV * base, mpz_t * p) {
+     size_t ret;
+     if((SvIV(base) > -2 && SvIV(base) < 2) || SvIV(base) < -36 || SvIV(base) > 62)
+       croak("2nd argument supplied to TRmpz_out_str is out of allowable range (must be in range -36..-2, 2..62)");
+     ret = mpz_out_str(stream, (int)SvIV(base), *p);
+     fflush(stream);
+     return newSVuv(ret);
+}
+
+SV * _TRmpz_out_strS(FILE * stream, SV * base, mpz_t * p, SV * suff) {
+     size_t ret;
+     if((SvIV(base) > -2 && SvIV(base) < 2) || SvIV(base) < -36 || SvIV(base) > 62)
+       croak("2nd argument supplied to TRmpz_out_str is out of allowable range (must be in range -36..-2, 2..62)");
+     ret = mpz_out_str(stream, (int)SvIV(base), *p);
+     fflush(stream);
+     fprintf(stream, "%s", SvPV_nolen(suff));
+     fflush(stream);
+     return newSVuv(ret);
+}
+
+SV * _TRmpz_out_strP(SV * pre, FILE * stream, SV * base, mpz_t * p) {
+     size_t ret;
+     if((SvIV(base) > -2 && SvIV(base) < 2) || SvIV(base) < -36 || SvIV(base) > 62)
+       croak("3rd argument supplied to TRmpz_out_str is out of allowable range (must be in range -36..-2, 2..62)");
+     fprintf(stream, "%s", SvPV_nolen(pre));
+     fflush(stream);
+     ret = mpz_out_str(stream, (int)SvIV(base), *p);
+     fflush(stream);
+     return newSVuv(ret);
+}
+
+SV * _TRmpz_out_strPS(SV * pre, FILE * stream, SV * base, mpz_t * p, SV * suff) {
+     size_t ret;
+     if((SvIV(base) > -2 && SvIV(base) < 2) || SvIV(base) < -36 || SvIV(base) > 62)
+       croak("3rd argument supplied to TRmpz_out_str is out of allowable range (must be in range -36..-2, 2..62)");
+     fprintf(stream, "%s", SvPV_nolen(pre));
+     fflush(stream);
+     ret = mpz_out_str(stream, (int)SvIV(base), *p);
+     fflush(stream);
+     fprintf(stream, "%s", SvPV_nolen(suff));
+     fflush(stream);
+     return newSVuv(ret);
+}
+
+SV * Rmpz_inp_str(mpz_t * p, SV * base) {
+     size_t ret;
+     if(SvUV(base) == 1 || SvUV(base) > 62)
+       croak("2nd argument supplied to Rmpz_inp_str is out of allowable range (must be in range 0, 2..62)");
+     ret = mpz_inp_str(*p, NULL, SvUV(base));
+     /* fflush(stdin); */
+     return newSVuv(ret);
+}
+
+SV * TRmpz_inp_str(mpz_t * p, FILE * stream, SV * base) {
+     size_t ret;
+     if(SvUV(base) == 1 || SvUV(base) > 62)
+       croak("4th argument supplied to TRmpz_inp_str is out of allowable range (must be in range 0, 2..62)");
+     ret = mpz_inp_str(*p, stream, (int)SvIV(base));
+     /* fflush(stream); */
+     return newSVuv(ret);
+}
+
+void eratosthenes(SV * x_arg) {
+dXSARGS;
+
+unsigned short *v, set[16] = {65534,65533,65531,65527,65519,65503,65471,65407,65279,65023,64511,63487,61439,57343,49151,32767};
+unsigned long leap, i, size, b, imax, k, x = SvUV(x_arg);
+
+if(x & 1) croak("max_num argument must be even in eratosthenes function");
+
+imax = sqrt(x - 1) / 2;
+
+b = (x + 1) / 2;
+
+if(!(b % 16)) size = b / 16;
+else size = (b / 16) + 1;
+
+Newz(2, v, size, unsigned short);
+if(v == NULL) croak("2: Unable to allocate memory in eratosthenes function");
+
+for(i = 1; i < size; ++i) v[i] = 65535;
+v[0] = 65534;
+
+for(i = 0; i <= imax; ++i) {
+    
+    if(v[i / 16] & (1 << (i % 16))) {
+       leap = (2 * i) + 1;
+       k = 2 * i * (i + 1);
+       while(k < b) {
+             v[k / 16] &= set[k % 16];
+             k += leap;
+             }
+       }
+}
+
+size = 1;
+sp = mark;
+XPUSHs(sv_2mortal(newSVuv(2)));
+
+for(i = 0; i < b; ++i) {
+    if(v[i / 16] & (1 << (i % 16))) {
+      XPUSHs(sv_2mortal(newSVuv(2 * i + 1)));
+      ++size;
+      }
+   }
+
+Safefree(v);
+
+PUTBACK;
+XSRETURN(size);
+
+}
+
+
+int trial_div_ul(mpz_t * num, SV * x_arg) {
+
+unsigned short *v, set[16] = {65534,65533,65531,65527,65519,65503,65471,65407,65279,65023,64511,63487,61439,57343,49151,32767};
+unsigned long leap, i, size, b, imax, k, x = SvUV(x_arg);
+
+if(x & 1) croak("Second argument supplied to trial_div_ul() must be even");
+
+imax = sqrt(x - 1) / 2;
+
+b = (x + 1) / 2;
+
+if(!(b % 16)) size = b / 16;
+else size = (b / 16) + 1;
+
+Newz(2, v, size, unsigned short);
+if(v == NULL) croak("2: Unable to allocate memory in trial_div_ul() function");
+
+for(i = 1; i < size; ++i) v[i] = 65535;
+v[0] = 65534;
+
+for(i = 0; i <= imax; ++i) {
+    
+    if(v[i / 16] & (1 << (i % 16))) {
+       leap = (2 * i) + 1;
+       k = 2 * i * (i + 1);
+       while(k < b) {
+             v[k / 16] &= set[k % 16];
+             k += leap;
+             }
+       }
+}
+
+if(mpz_divisible_ui_p(*num, 2)) {
+   Safefree(v);
+   return 2;
+   }
+
+for(i = 0; i < b; ++i) {
+    if(v[i / 16] & (1 << (i % 16))) {
+      if(mpz_divisible_ui_p(*num, 2 * i + 1)) {
+         Safefree(v);
+         return (2 * i + 1);
+         }
+      }
+   }
+
+Safefree(v);
+
+return 1;
+
+}
+
+/* Next 2 functions became available with GMP-4.2 */
+
+void Rmpz_rootrem(mpz_t * root, mpz_t * rem, mpz_t * u, SV * d) { 
+     mpz_rootrem(*root, *rem, *u, (unsigned long)SvUV(d));
+}
+
+void Rmpz_combit(mpz_t * num, SV * bitpos) {
+     mpz_combit(*num, (unsigned long)SvUV(bitpos));
+}
+
+/* Finish typemapping - typemap 1st arg only */
+
+SV * overload_mul(SV * a, SV * b, SV * third) {
+     mpz_t * mpz_t_obj;
+     SV * obj_ref, * obj;
+     const char *h;
+
+     if(sv_isobject(b)) h = HvNAME(SvSTASH(SvRV(b)));
+
+#ifdef USE_LONG_DOUBLE
+     char buffer[50];
+#endif
+
+     if(!sv_isobject(b) || strNE(h, "Math::MPFR")) {
+       New(1, mpz_t_obj, 1, mpz_t);
+       if(mpz_t_obj == NULL) croak("Failed to allocate memory in overload_mul function");
+       obj_ref = newSV(0);
+       obj = newSVrv(obj_ref, "Math::GMPz");
+       mpz_init(*mpz_t_obj);
+       sv_setiv(obj, INT2PTR(IV, mpz_t_obj));
+       SvREADONLY_on(obj);
+     }
+
+#ifdef USE_64_BIT_INT
+     if(SvIOK(b)) {
+       if(mpz_set_str(*mpz_t_obj, SvPV_nolen(b), 0))
+         croak(" Invalid string supplied to Math::GMPz::overload_mul");
+       mpz_mul(*mpz_t_obj, *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *mpz_t_obj);
+       return obj_ref;
+     }
+#else
+
+     if(SvUOK(b)) {
+       mpz_mul_ui(*mpz_t_obj, *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), SvUV(b));
+       return obj_ref;
+     }
+
+     if(SvIOK(b)) {
+       mpz_mul_si(*mpz_t_obj, *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), SvIV(b));
+       return obj_ref;
+     }
+#endif
+
+     if(SvNOK(b)) {
+#ifdef USE_LONG_DOUBLE
+       long double ld = (long double)SvNV(b) >= 0 ? floorl((long double)SvNV(b)) : ceill((long double)SvNV(b));
+       sprintf(buffer, "%.0Lf", ld);
+       mpz_set_str(*mpz_t_obj, buffer, 10);
+#else
+       mpz_set_d(*mpz_t_obj, SvNV(b));
+#endif
+       mpz_mul(*mpz_t_obj, *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *mpz_t_obj);
+       return obj_ref;
+     }
+
+     if(SvPOK(b)) {
+       if(mpz_set_str(*mpz_t_obj, SvPV_nolen(b), 0))
+         croak(" Invalid string supplied to Math::GMPz::overload_mul");
+       mpz_mul(*mpz_t_obj, *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *mpz_t_obj);
+       return obj_ref;
+     }
+
+     if(sv_isobject(b)) {
+       if(strEQ(h, "Math::GMPz")) {
+         mpz_mul(*mpz_t_obj, *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(b)))));
+         return obj_ref;
+       }
+       if(strEQ(h, "Math::MPFR")) {
+         dSP;
+         SV * ret;
+         int count;
+
+         ENTER;
+
+         PUSHMARK(SP);
+         XPUSHs(b);
+         XPUSHs(a);
+         XPUSHs(sv_2mortal(newSViv(1)));
+         PUTBACK;
+
+         count = call_pv("Math::MPFR::overload_mul", G_SCALAR);
+
+         SPAGAIN;
+
+         if (count != 1)
+           croak("Error in Math::GMPz::overload_mul callback to Math::MPFR::overload_mul\n");
+
+         ret = POPs;
+
+         /* Avoid "Attempt to free unreferenced scalar" warning */
+         SvREFCNT_inc(ret);
+         LEAVE;
+         return ret;
+       }
+     }
+
+     croak("Invalid argument supplied to Math::GMPz::overload_mul");
+}
+
+SV * overload_add(SV * a, SV * b, SV * third) {
+     mpz_t * mpz_t_obj;
+     SV * obj_ref, * obj;
+     const char *h;
+
+     if(sv_isobject(b)) h = HvNAME(SvSTASH(SvRV(b)));
+
+#ifdef USE_LONG_DOUBLE
+     char buffer[50];
+#endif
+
+     if(!sv_isobject(b) || strNE(h, "Math::MPFR")) {
+       New(1, mpz_t_obj, 1, mpz_t);
+       if(mpz_t_obj == NULL) croak("Failed to allocate memory in overload_add function");
+       obj_ref = newSV(0);
+       obj = newSVrv(obj_ref, "Math::GMPz");
+       mpz_init(*mpz_t_obj);
+       sv_setiv(obj, INT2PTR(IV, mpz_t_obj));
+       SvREADONLY_on(obj);
+     }
+
+#ifdef USE_64_BIT_INT
+     if(SvIOK(b)) {
+       if(mpz_set_str(*mpz_t_obj, SvPV_nolen(b), 0))
+         croak(" Invalid string supplied to Math::GMPz::overload_add");
+       mpz_add(*mpz_t_obj, *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *mpz_t_obj);
+       return obj_ref;
+     }
+#else
+     if(SvUOK(b)) {
+       mpz_add_ui(*mpz_t_obj, *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), SvUV(b));
+       return obj_ref;
+     }
+
+     if(SvIOK(b)) {
+       if(SvIV(b) >= 0) {
+         mpz_add_ui(*mpz_t_obj, *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), SvIV(b));
+         return obj_ref;
+       }
+       mpz_sub_ui(*mpz_t_obj, *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), SvIV(b) * -1);
+       return obj_ref;
+     }
+#endif
+
+     if(SvNOK(b)) {
+#ifdef USE_LONG_DOUBLE
+       long double ld = (long double)SvNV(b) >= 0 ? floorl((long double)SvNV(b)) : ceill((long double)SvNV(b));
+       sprintf(buffer, "%.0Lf", ld);
+       mpz_set_str(*mpz_t_obj, buffer, 10);
+#else
+       mpz_set_d(*mpz_t_obj, SvNV(b));
+#endif
+       mpz_add(*mpz_t_obj, *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *mpz_t_obj);
+       return obj_ref;
+     }
+
+     if(SvPOK(b)) {
+       if(mpz_set_str(*mpz_t_obj, SvPV_nolen(b), 0))
+         croak(" Invalid string supplied to Math::GMPz::overload_add");
+       mpz_add(*mpz_t_obj, *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *mpz_t_obj);
+       return obj_ref;
+     }
+
+     if(sv_isobject(b)) {
+       if(strEQ(h, "Math::GMPz")) {
+         mpz_add(*mpz_t_obj, *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(b)))));
+         return obj_ref;
+       }
+       if(strEQ(h, "Math::MPFR")) {
+         dSP;
+         SV * ret;
+         int count;
+
+         ENTER;
+
+         PUSHMARK(SP);
+         XPUSHs(b);
+         XPUSHs(a);
+         XPUSHs(sv_2mortal(newSViv(1)));
+         PUTBACK;
+
+         count = call_pv("Math::MPFR::overload_add", G_SCALAR);
+
+         SPAGAIN;
+
+         if (count != 1)
+           croak("Error in Math::GMPz::overload_add callback to Math::MPFR::overload_add\n");
+
+         ret = POPs;
+
+         /* Avoid "Attempt to free unreferenced scalar" warning */
+         SvREFCNT_inc(ret);
+         LEAVE;
+         return ret;
+       }
+     }
+
+     croak("Invalid argument supplied to Math::GMPz::overload_add function");
+
+}
+
+SV * overload_sub(SV * a, SV * b, SV * third) {
+     mpz_t * mpz_t_obj;
+     SV * obj_ref, * obj;
+     const char *h;
+
+     if(sv_isobject(b)) h = HvNAME(SvSTASH(SvRV(b)));
+
+#ifdef USE_LONG_DOUBLE
+     char buffer[50];
+#endif
+
+     if(!sv_isobject(b) || strNE(h, "Math::MPFR")) {
+       New(1, mpz_t_obj, 1, mpz_t);
+       if(mpz_t_obj == NULL) croak("Failed to allocate memory in overload_sub function");
+       obj_ref = newSV(0);
+       obj = newSVrv(obj_ref, "Math::GMPz");
+       mpz_init(*mpz_t_obj);
+       sv_setiv(obj, INT2PTR(IV, mpz_t_obj));
+       SvREADONLY_on(obj);
+     }
+
+
+#ifdef USE_64_BIT_INT
+     if(SvIOK(b)) {
+       if(mpz_set_str(*mpz_t_obj, SvPV_nolen(b), 0))
+         croak(" Invalid string supplied to Math::GMPz::overload_sub");
+       if(third == &PL_sv_yes) mpz_sub(*mpz_t_obj, *mpz_t_obj, *(INT2PTR(mpz_t *, SvIV(SvRV(a)))));
+       else mpz_sub(*mpz_t_obj, *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *mpz_t_obj);
+       return obj_ref;
+     }
+#else
+     if(SvUOK(b)) {
+       if(third == &PL_sv_yes) {
+         mpz_ui_sub(*mpz_t_obj, SvUV(b), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))));
+         return obj_ref;
+       }
+       mpz_sub_ui(*mpz_t_obj, *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), SvUV(b));
+       return obj_ref;
+     }
+
+     if(SvIOK(b)) {
+       if(SvIV(b) >= 0) {
+         if(third == &PL_sv_yes) {
+           mpz_ui_sub(*mpz_t_obj, SvIV(b), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))));
+           return obj_ref;
+           }
+         mpz_sub_ui(*mpz_t_obj, *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), SvIV(b));
+         return obj_ref;
+       }
+       mpz_add_ui(*mpz_t_obj, *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), SvIV(b) * -1);
+       if(third == &PL_sv_yes) mpz_neg(*mpz_t_obj, *mpz_t_obj);
+       return obj_ref;
+     }
+#endif
+
+     if(SvNOK(b)) {
+#ifdef USE_LONG_DOUBLE
+       long double ld = (long double)SvNV(b) >= 0 ? floorl((long double)SvNV(b)) : ceill((long double)SvNV(b));
+       sprintf(buffer, "%.0Lf", ld);
+       mpz_set_str(*mpz_t_obj, buffer, 10);
+#else
+       mpz_set_d(*mpz_t_obj, SvNV(b));
+#endif
+       if(third == &PL_sv_yes) mpz_sub(*mpz_t_obj, *mpz_t_obj, *(INT2PTR(mpz_t *, SvIV(SvRV(a)))));
+       else mpz_sub(*mpz_t_obj, *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *mpz_t_obj);
+       return obj_ref;
+     }
+
+     if(SvPOK(b)) {
+       if(mpz_set_str(*mpz_t_obj, SvPV_nolen(b), 0))
+         croak(" Invalid string supplied to Math::GMPz::overload_sub");
+       if(third == &PL_sv_yes) mpz_sub(*mpz_t_obj, *mpz_t_obj, *(INT2PTR(mpz_t *, SvIV(SvRV(a)))));
+       else mpz_sub(*mpz_t_obj, *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *mpz_t_obj);
+       return obj_ref;
+     }
+     if(sv_isobject(b)) {
+       if(strEQ(h, "Math::GMPz")) {
+         mpz_sub(*mpz_t_obj, *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(b)))));
+         return obj_ref;
+       }
+       if(strEQ(h, "Math::MPFR")) {
+         dSP;
+         SV * ret;
+         int count;
+
+         ENTER;
+
+         PUSHMARK(SP);
+         XPUSHs(b);
+         XPUSHs(a);
+         XPUSHs(sv_2mortal(&PL_sv_yes));
+         PUTBACK;
+
+         count = call_pv("Math::MPFR::overload_sub", G_SCALAR);
+
+         SPAGAIN;
+
+         if (count != 1)
+           croak("Error in Math::GMPz::overload_sub callback to Math::MPFR::overload_sub\n");
+
+         ret = POPs;
+
+         /* Avoid "Attempt to free unreferenced scalar" warning */
+         SvREFCNT_inc(ret);
+         LEAVE;
+         return ret;
+       }
+     }
+
+     croak("Invalid argument supplied to Math::GMPz::overload_sub function");
+
+}
+
+SV * overload_div(SV * a, SV * b, SV * third) {
+     mpz_t * mpz_t_obj;
+     SV * obj_ref, * obj;
+     const char *h;
+
+     if(sv_isobject(b)) h = HvNAME(SvSTASH(SvRV(b)));
+
+#ifdef USE_LONG_DOUBLE
+     char buffer[50];
+#endif
+
+     if(!sv_isobject(b) || strNE(h, "Math::MPFR")) {
+       New(1, mpz_t_obj, 1, mpz_t);
+       if(mpz_t_obj == NULL) croak("Failed to allocate memory in overload_div function");
+       obj_ref = newSV(0);
+       obj = newSVrv(obj_ref, "Math::GMPz");
+       mpz_init(*mpz_t_obj);
+       sv_setiv(obj, INT2PTR(IV, mpz_t_obj));
+       SvREADONLY_on(obj);
+     }
+
+
+
+#ifdef USE_64_BIT_INT
+     if(SvIOK(b)) {
+       if(mpz_set_str(*mpz_t_obj, SvPV_nolen(b), 0))
+          croak(" Invalid string supplied to Math::GMPz::overload_div");
+       if(third == &PL_sv_yes) mpz_tdiv_q(*mpz_t_obj, *mpz_t_obj, *(INT2PTR(mpz_t *, SvIV(SvRV(a)))));
+       else mpz_tdiv_q(*mpz_t_obj, *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *mpz_t_obj);
+       return obj_ref;
+     }
+#else
+     if(SvUOK(b)) {
+       if(third == &PL_sv_yes) {
+         mpz_set_ui(*mpz_t_obj, SvUV(b));
+         mpz_tdiv_q(*mpz_t_obj, *mpz_t_obj, *(INT2PTR(mpz_t *, SvIV(SvRV(a)))));
+         return obj_ref;
+       }
+       mpz_tdiv_q_ui(*mpz_t_obj, *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), SvUV(b));
+       return obj_ref;
+     }
+
+     if(SvIOK(b)) {
+       if(SvIV(b) >= 0) {
+         if(third == &PL_sv_yes) {
+           mpz_set_si(*mpz_t_obj, SvIV(b));
+           mpz_tdiv_q(*mpz_t_obj, *mpz_t_obj, *(INT2PTR(mpz_t *, SvIV(SvRV(a)))));
+           return obj_ref;
+         }
+         mpz_tdiv_q_ui(*mpz_t_obj, *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), SvIV(b));
+         return obj_ref;
+       }
+       if(third == &PL_sv_yes) {
+         mpz_set_si(*mpz_t_obj, SvIV(b));
+         mpz_tdiv_q(*mpz_t_obj, *mpz_t_obj, *(INT2PTR(mpz_t *, SvIV(SvRV(a)))));
+         return obj_ref;
+     }
+       mpz_tdiv_q_ui(*mpz_t_obj, *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), SvIV(b) * -1);
+       mpz_neg(*mpz_t_obj, *mpz_t_obj);
+       return obj_ref;
+     }
+#endif
+
+     if(SvNOK(b)) {
+#ifdef USE_LONG_DOUBLE
+       long double ld = (long double)SvNV(b) >= 0 ? floorl((long double)SvNV(b)) : ceill((long double)SvNV(b));
+       sprintf(buffer, "%.0Lf", ld);
+       mpz_set_str(*mpz_t_obj, buffer, 10);
+#else
+       mpz_set_d(*mpz_t_obj, SvNV(b));
+#endif
+       if(third == &PL_sv_yes) mpz_tdiv_q(*mpz_t_obj, *mpz_t_obj, *(INT2PTR(mpz_t *, SvIV(SvRV(a)))));
+       else mpz_tdiv_q(*mpz_t_obj, *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *mpz_t_obj);
+       return obj_ref;
+     }
+
+     if(SvPOK(b)) {
+       if(mpz_set_str(*mpz_t_obj, SvPV_nolen(b), 0))
+          croak(" Invalid string supplied to Math::GMPz::overload_div");
+       if(third == &PL_sv_yes) mpz_tdiv_q(*mpz_t_obj, *mpz_t_obj, *(INT2PTR(mpz_t *, SvIV(SvRV(a)))));
+       else mpz_tdiv_q(*mpz_t_obj, *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *mpz_t_obj);
+       return obj_ref;
+     }
+
+     if(sv_isobject(b)) {
+       if(strEQ(h, "Math::GMPz")) {
+         mpz_tdiv_q(*mpz_t_obj, *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(b)))));
+         return obj_ref;
+       }
+       if(strEQ(h, "Math::MPFR")) {
+         dSP;
+         SV * ret;
+         int count;
+
+         ENTER;
+
+         PUSHMARK(SP);
+         XPUSHs(b);
+         XPUSHs(a);
+         XPUSHs(sv_2mortal(&PL_sv_yes));
+         PUTBACK;
+
+         count = call_pv("Math::MPFR::overload_div", G_SCALAR);
+
+         SPAGAIN;
+
+         if (count != 1)
+           croak("Error in Math::GMPz::overload_div callback to Math::MPFR::overload_div\n");
+
+         ret = POPs;
+
+         /* Avoid "Attempt to free unreferenced scalar" warning */
+         SvREFCNT_inc(ret);
+         LEAVE;
+         return ret;
+       }
+     }
+
+     croak("Invalid argument supplied to Math::GMPz::overload_div function");
+
+}
+
+SV * overload_mod (mpz_t * a, SV * b, SV * third) {
+     mpz_t *mpz_t_obj;
+     SV * obj_ref, * obj;
+#ifdef USE_LONG_DOUBLE
+     char buffer[50];
+#endif
+
+     New(1, mpz_t_obj, 1, mpz_t);
+     if(mpz_t_obj == NULL) croak("Failed to allocate memory in overload_mod function");
+     obj_ref = newSV(0);
+     obj = newSVrv(obj_ref, "Math::GMPz");
+     mpz_init(*mpz_t_obj);
+     sv_setiv(obj, INT2PTR(IV, mpz_t_obj));
+     SvREADONLY_on(obj);
+
+#ifdef USE_64_BIT_INT
+     if(SvIOK(b)) {
+       if(mpz_set_str(*mpz_t_obj, SvPV_nolen(b), 0))
+          croak(" Invalid string supplied to Math::GMPz::overload_mod");
+       if(third == &PL_sv_yes) {
+         mpz_mod(*mpz_t_obj, *mpz_t_obj, *a);  
+         return obj_ref;   
+         }
+       mpz_mod(*mpz_t_obj, *a, *mpz_t_obj);  
+       return obj_ref;
+       }
+#else
+     if(SvUOK(b)) {
+       if(third == &PL_sv_yes) {
+         mpz_set_ui(*mpz_t_obj, SvUV(b));
+         mpz_mod(*mpz_t_obj, *mpz_t_obj, *a);  
+         return obj_ref;       
+         }
+       mpz_mod_ui(*mpz_t_obj, *a, SvUV(b));
+       return obj_ref;
+       }
+
+     if(SvIOK(b)) {
+       mpz_set_si(*mpz_t_obj, SvIV(b));
+       if(third == &PL_sv_yes) {
+         mpz_mod(*mpz_t_obj, *mpz_t_obj, *a);  
+         return obj_ref;   
+         }
+       mpz_mod(*mpz_t_obj, *a, *mpz_t_obj);  
+       return obj_ref;
+       } 
+#endif  
+
+     if(SvNOK(b)) {
+#ifdef USE_LONG_DOUBLE
+       long double ld = (long double)SvNV(b) >= 0 ? floorl((long double)SvNV(b)) : ceill((long double)SvNV(b));
+       sprintf(buffer, "%.0Lf", ld);
+       mpz_set_str(*mpz_t_obj, buffer, 10);
+#else
+       mpz_set_d(*mpz_t_obj, SvNV(b));
+#endif
+       if(third == &PL_sv_yes) {
+         mpz_mod(*mpz_t_obj, *mpz_t_obj, *a);  
+         return obj_ref;   
+         }
+       mpz_mod(*mpz_t_obj, *a, *mpz_t_obj);  
+       return obj_ref;   
+       }
+
+     if(SvPOK(b)) {
+       if(mpz_set_str(*mpz_t_obj, SvPV_nolen(b), 0))
+          croak(" Invalid string supplied to Math::GMPz::overload_mod");
+       if(third == &PL_sv_yes) {
+         mpz_mod(*mpz_t_obj, *mpz_t_obj, *a);  
+         return obj_ref;   
+         }
+       mpz_mod(*mpz_t_obj, *a, *mpz_t_obj);  
+       return obj_ref;
+       }
+
+     if(sv_isobject(b)) {
+       const char *h = HvNAME(SvSTASH(SvRV(b)));
+       if(strEQ(h, "Math::GMPz")) {
+         mpz_mod(*mpz_t_obj, *a, *(INT2PTR(mpz_t *, SvIV(SvRV(b)))));
+         return obj_ref;
+         }
+       }
+
+     croak("Invalid argument supplied to Math::GMPz::overload_mod function");
+}
+
+SV * overload_string(mpz_t * p, SV * second, SV * third) {
+     char * out;
+     SV * outsv;
+
+     New(2, out, mpz_sizeinbase(*p, 10) + 3, char);
+     if(out == NULL) croak("Failed to allocate memory in overload_string function");
+
+     mpz_get_str(out, 10, *p);
+     outsv = newSVpv(out, 0);
+     Safefree(out);
+     return outsv;
+}
+
+SV * overload_copy(mpz_t * p, SV * second, SV * third) {
+     mpz_t * mpz_t_obj;
+     SV * obj_ref, * obj;
+
+     New(1, mpz_t_obj, 1, mpz_t);
+     if(mpz_t_obj == NULL) croak("Failed to allocate memory in overload_copy function");
+     obj_ref = newSV(0);
+     obj = newSVrv(obj_ref, "Math::GMPz");
+
+     mpz_init_set(*mpz_t_obj, *p);
+     sv_setiv(obj, INT2PTR(IV, mpz_t_obj));
+     SvREADONLY_on(obj);
+     return obj_ref;
+}
+
+SV * overload_abs(mpz_t * p, SV * second, SV * third) {
+     mpz_t * mpz_t_obj;
+     SV * obj_ref, * obj;
+
+     New(1, mpz_t_obj, 1, mpz_t);
+     if(mpz_t_obj == NULL) croak("Failed to allocate memory in overload_abs function");
+     obj_ref = newSV(0);
+     obj = newSVrv(obj_ref, "Math::GMPz");
+     mpz_init(*mpz_t_obj);
+
+     mpz_abs(*mpz_t_obj, *p);
+     sv_setiv(obj, INT2PTR(IV, mpz_t_obj));
+     SvREADONLY_on(obj);
+     return obj_ref;
+}
+
+SV * overload_lshift(mpz_t * a, SV * b, SV * third) {
+     mpz_t * mpz_t_obj;
+     SV * obj_ref, * obj;
+
+     New(1, mpz_t_obj, 1, mpz_t);
+     if(mpz_t_obj == NULL) croak("Failed to allocate memory in overload_lshift function");
+     obj_ref = newSV(0);
+     obj = newSVrv(obj_ref, "Math::GMPz");
+     mpz_init(*mpz_t_obj);
+
+     if(SvUOK(b)) {
+       mpz_mul_2exp(*mpz_t_obj, *a, SvUV(b));
+       sv_setiv(obj, INT2PTR(IV, mpz_t_obj));
+       SvREADONLY_on(obj);
+       return obj_ref;
+       }
+
+     if(SvIOK(b)) {
+       if(SvIV(b) < 0) croak("Invalid argument supplied to Math::GMPz::overload_lshift");
+       mpz_mul_2exp(*mpz_t_obj, *a, SvUV(b));
+       sv_setiv(obj, INT2PTR(IV, mpz_t_obj));
+       SvREADONLY_on(obj);
+       return obj_ref;
+       }
+
+     croak("Invalid argument supplied to Math::GMPz::overload_lshift");
+}
+
+SV * overload_rshift(mpz_t * a, SV * b, SV * third) {
+     mpz_t * mpz_t_obj;
+     SV * obj_ref, * obj;
+
+     New(1, mpz_t_obj, 1, mpz_t);
+     if(mpz_t_obj == NULL) croak("Failed to allocate memory in overload_rshift function");
+     obj_ref = newSV(0);
+     obj = newSVrv(obj_ref, "Math::GMPz");
+     mpz_init(*mpz_t_obj);
+
+     if(SvUOK(b)) {
+       mpz_tdiv_q_2exp(*mpz_t_obj, *a, SvUV(b));
+       sv_setiv(obj, INT2PTR(IV, mpz_t_obj));
+       SvREADONLY_on(obj);
+       return obj_ref;
+       }
+
+     if(SvIOK(b)) {
+       if(SvIV(b) < 0) croak("Invalid argument supplied to Math::GMPz::overload_rshift");
+       mpz_tdiv_q_2exp(*mpz_t_obj, *a, SvUV(b));
+       sv_setiv(obj, INT2PTR(IV, mpz_t_obj));
+       SvREADONLY_on(obj);
+       return obj_ref;
+       }
+
+     croak("Invalid argument supplied to Math::GMPz::overload_rshift");
+}
+
+SV * overload_pow(SV * a, SV * b, SV * third) {
+     mpz_t * mpz_t_obj;
+     SV * obj_ref, * obj;
+
+     if(third == &PL_sv_yes)
+       croak("Invalid third argument (&PL_sv_yes) supplied to Math::GMPz::overload_pow function");
+
+     if(!sv_isobject(b)) {
+       New(1, mpz_t_obj, 1, mpz_t);
+       if(mpz_t_obj == NULL) croak("Failed to allocate memory in overload_pow function");
+       obj_ref = newSV(0);
+       obj = newSVrv(obj_ref, "Math::GMPz");
+       mpz_init(*mpz_t_obj);
+       sv_setiv(obj, INT2PTR(IV, mpz_t_obj));
+       SvREADONLY_on(obj);
+     }
+
+     if(SvUOK(b)) {
+       mpz_pow_ui(*mpz_t_obj, *(INT2PTR(mpz_t *, SvIV(SvRV(a)))) , SvUV(b));
+       return obj_ref;
+       }
+
+     if(SvIOK(b)) {
+       if(SvIV(b) < 0) croak("Invalid argument supplied to Math::GMPz::overload_pow");
+       mpz_pow_ui(*mpz_t_obj, *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), SvUV(b));
+       return obj_ref;
+       }
+
+     if(sv_isobject(b)) {
+       const char *h = HvNAME(SvSTASH(SvRV(b)));
+       if(strEQ(h, "Math::MPFR")) {
+         dSP;
+         SV * ret;
+         int count;
+
+         ENTER;
+
+         PUSHMARK(SP);
+         XPUSHs(b);
+         XPUSHs(a);
+         XPUSHs(sv_2mortal(&PL_sv_yes));
+         PUTBACK;
+
+         count = call_pv("Math::MPFR::overload_pow", G_SCALAR);
+
+         SPAGAIN;
+
+         if (count != 1)
+           croak("Error in Math::GMPq:overload_pow callback to Math::MPFR::overload_pow\n");
+
+         ret = POPs;
+
+         /* Avoid "Attempt to free unreferenced scalar" warning */
+         SvREFCNT_inc(ret);
+         LEAVE;
+         return ret;
+       }
+     }
+
+     croak("Invalid argument supplied to Math::GMPz::overload_pow. It takes only signed/unsigned long or Math::MPFR object as exponent");
+}
+
+SV * overload_sqrt(mpz_t * p, SV * second, SV * third) {
+     mpz_t * mpz_t_obj;
+     SV * obj_ref, * obj;
+
+     New(1, mpz_t_obj, 1, mpz_t);
+     if(mpz_t_obj == NULL) croak("Failed to allocate memory in overload_sqrt function");
+     obj_ref = newSV(0);
+     obj = newSVrv(obj_ref, "Math::GMPz");
+     mpz_init(*mpz_t_obj);
+
+     if(mpz_cmp_ui(*p, 0) < 0) croak("Negative value supplied as argument to overload_sqrt");
+     mpz_sqrt(*mpz_t_obj, *p);
+     sv_setiv(obj, INT2PTR(IV, mpz_t_obj));
+     SvREADONLY_on(obj);
+     return obj_ref;
+}
+
+SV * overload_and(mpz_t * a, SV * b, SV * third) {
+     mpz_t * mpz_t_obj;
+     SV * obj_ref, * obj;
+#ifdef USE_LONG_DOUBLE
+     char buffer[50];
+#endif
+
+     New(1, mpz_t_obj, 1, mpz_t);
+     if(mpz_t_obj == NULL) croak("Failed to allocate memory in overload_and function");
+     obj_ref = newSV(0);
+     obj = newSVrv(obj_ref, "Math::GMPz");
+     mpz_init(*mpz_t_obj);
+     sv_setiv(obj, INT2PTR(IV, mpz_t_obj));
+     SvREADONLY_on(obj);
+
+#ifdef USE_64_BIT_INT
+     if(SvIOK(b)) {
+       if(mpz_set_str(*mpz_t_obj, SvPV_nolen(b), 0))
+         croak("Invalid string supplied to Math::GMPz::overload_and");
+       mpz_and(*mpz_t_obj, *a, *mpz_t_obj);
+       return obj_ref;
+       }
+#else
+     if(SvUOK(b)) {
+       mpz_set_ui(*mpz_t_obj, SvUV(b));
+       mpz_and(*mpz_t_obj, *a, *mpz_t_obj);
+       return obj_ref;
+       }
+
+     if(SvIOK(b)) {
+       mpz_set_si(*mpz_t_obj, SvIV(b));
+       mpz_and(*mpz_t_obj, *a, *mpz_t_obj);
+       return obj_ref;
+       }
+#endif
+
+
+     if(SvNOK(b)) {
+#ifdef USE_LONG_DOUBLE
+       long double ld = (long double)SvNV(b) >= 0 ? floorl((long double)SvNV(b)) : ceill((long double)SvNV(b));
+       sprintf(buffer, "%.0Lf", ld);
+       mpz_set_str(*mpz_t_obj, buffer, 10);
+#endif
+
+       mpz_set_d(*mpz_t_obj, SvNV(b));
+       mpz_and(*mpz_t_obj, *a, *mpz_t_obj);
+       return obj_ref;
+       }
+
+     if(SvPOK(b)) {
+       if(mpz_set_str(*mpz_t_obj, SvPV_nolen(b), 0))
+         croak("Invalid string supplied to Math::GMPz::overload_and");
+       mpz_and(*mpz_t_obj, *a, *mpz_t_obj);
+       return obj_ref;
+       }
+
+     if(sv_isobject(b)) {
+       const char *h = HvNAME(SvSTASH(SvRV(b)));
+       if(strEQ(h, "Math::GMPz")) {
+         mpz_and(*mpz_t_obj, *a, *(INT2PTR(mpz_t *, SvIV(SvRV(b)))));
+         return obj_ref;
+         }
+       }
+
+     croak("Invalid argument supplied to Math::GMPz::overload_and");
+}
+
+SV * overload_ior(mpz_t * a, SV * b, SV * third) {
+     mpz_t * mpz_t_obj;
+     SV * obj_ref, * obj;
+#ifdef USE_LONG_DOUBLE
+     char buffer[50];
+#endif
+
+     New(1, mpz_t_obj, 1, mpz_t);
+     if(mpz_t_obj == NULL) croak("Failed to allocate memory in overload_ior function");
+     obj_ref = newSV(0);
+     obj = newSVrv(obj_ref, "Math::GMPz");
+     mpz_init(*mpz_t_obj);
+     sv_setiv(obj, INT2PTR(IV, mpz_t_obj));
+     SvREADONLY_on(obj);
+
+#ifdef USE_64_BIT_INT
+     if(SvIOK(b)) {
+       if(mpz_set_str(*mpz_t_obj, SvPV_nolen(b), 0))
+         croak("Invalid string supplied to Math::GMPz::overload_ior");
+       mpz_ior(*mpz_t_obj, *a, *mpz_t_obj);
+       return obj_ref;
+       }
+#else
+     if(SvUOK(b)) {
+       mpz_set_ui(*mpz_t_obj, SvUV(b));
+       mpz_ior(*mpz_t_obj, *a, *mpz_t_obj);
+       return obj_ref;
+       }
+
+     if(SvIOK(b)) {
+       mpz_set_si(*mpz_t_obj, SvIV(b));
+       mpz_ior(*mpz_t_obj, *a, *mpz_t_obj);
+       return obj_ref;
+       }
+#endif
+
+     if(SvNOK(b)) {
+#ifdef USE_LONG_DOUBLE
+       long double ld = (long double)SvNV(b) >= 0 ? floorl((long double)SvNV(b)) : ceill((long double)SvNV(b));
+       sprintf(buffer, "%.0Lf", ld);
+       mpz_set_str(*mpz_t_obj, buffer, 10);
+#else
+       mpz_set_d(*mpz_t_obj, SvNV(b));
+#endif
+       mpz_ior(*mpz_t_obj, *a, *mpz_t_obj);
+       return obj_ref;
+       }
+
+     if(SvPOK(b)) {
+       if(mpz_set_str(*mpz_t_obj, SvPV_nolen(b), 0))
+         croak("Invalid string supplied to Math::GMPz::overload_ior");
+       mpz_ior(*mpz_t_obj, *a, *mpz_t_obj);
+       return obj_ref;
+       }
+
+     if(sv_isobject(b)) {
+       const char *h = HvNAME(SvSTASH(SvRV(b)));
+       if(strEQ(h, "Math::GMPz")) {
+         mpz_ior(*mpz_t_obj, *a, *(INT2PTR(mpz_t *, SvIV(SvRV(b)))));
+         return obj_ref;
+         }
+       }
+
+     croak("Invalid argument supplied to Math::GMPz::overload_ior");
+}
+
+SV * overload_xor(mpz_t * a, SV * b, SV * third) {
+     mpz_t * mpz_t_obj;
+     SV * obj_ref, * obj;
+#ifdef USE_LONG_DOUBLE
+     char buffer[50];
+#endif
+
+     New(1, mpz_t_obj, 1, mpz_t);
+     if(mpz_t_obj == NULL) croak("Failed to allocate memory in overload_xor function");
+     obj_ref = newSV(0);
+     obj = newSVrv(obj_ref, "Math::GMPz");
+     mpz_init(*mpz_t_obj);
+     sv_setiv(obj, INT2PTR(IV, mpz_t_obj));
+     SvREADONLY_on(obj);
+
+#ifdef USE_64_BIT_INT
+     if(SvIOK(b)) {
+       if(mpz_set_str(*mpz_t_obj, SvPV_nolen(b), 0))
+         croak("Invalid string supplied to Math::GMPz::overload_xor");
+       mpz_xor(*mpz_t_obj, *a, *mpz_t_obj);
+       return obj_ref;
+       }
+#else
+     if(SvUOK(b)) {
+       mpz_set_ui(*mpz_t_obj, SvUV(b));
+       mpz_xor(*mpz_t_obj, *a, *mpz_t_obj);
+       return obj_ref;
+       }
+
+     if(SvIOK(b)) {
+       mpz_set_si(*mpz_t_obj, SvIV(b));
+       mpz_xor(*mpz_t_obj, *a, *mpz_t_obj);
+       return obj_ref;
+       }
+#endif
+
+     if(SvNOK(b)) {
+#ifdef USE_LONG_DOUBLE
+       long double ld = (long double)SvNV(b) >= 0 ? floorl((long double)SvNV(b)) : ceill((long double)SvNV(b));
+       sprintf(buffer, "%.0Lf", ld);
+       mpz_set_str(*mpz_t_obj, buffer, 10);
+#else
+       mpz_set_d(*mpz_t_obj, SvNV(b));
+#endif
+       mpz_xor(*mpz_t_obj, *a, *mpz_t_obj);
+       return obj_ref;
+       }
+
+     if(SvPOK(b)) {
+       if(mpz_set_str(*mpz_t_obj, SvPV_nolen(b), 0))
+         croak("Invalid string supplied to Math::GMPz::overload_xor");
+       mpz_xor(*mpz_t_obj, *a, *mpz_t_obj);
+       return obj_ref;
+       }
+
+     if(sv_isobject(b)) {
+       const char *h = HvNAME(SvSTASH(SvRV(b)));
+       if(strEQ(h, "Math::GMPz")) {
+         mpz_xor(*mpz_t_obj, *a, *(INT2PTR(mpz_t *, SvIV(SvRV(b)))));
+         return obj_ref;
+         }
+       }
+
+     croak("Invalid argument supplied to Math::GMPz::overload_xor");
+}
+
+SV * overload_com(mpz_t * p, SV * second, SV * third) {
+     mpz_t * mpz_t_obj;
+     SV * obj_ref, * obj;
+
+     New(1, mpz_t_obj, 1, mpz_t);
+     if(mpz_t_obj == NULL) croak("Failed to allocate memory in overload_com function");
+     obj_ref = newSV(0);
+     obj = newSVrv(obj_ref, "Math::GMPz");
+     mpz_init(*mpz_t_obj);
+
+     mpz_com(*mpz_t_obj, *p);
+     sv_setiv(obj, INT2PTR(IV, mpz_t_obj));
+     SvREADONLY_on(obj);
+     return obj_ref;
+}
+
+SV * overload_gt(mpz_t * a, SV * b, SV * third) {
+     int ret;
+     mpz_t t;
+#ifdef USE_LONG_DOUBLE
+     char buffer[50];
+#endif
+
+#ifdef USE_64_BIT_INT
+     if(SvIOK(b)) {
+       if(mpz_init_set_str(t, SvPV_nolen(b), 0))
+         croak("Invalid string supplied to Math::GMPz::overload_gt");
+       ret = mpz_cmp(*a, t);
+       mpz_clear(t);
+       if(third == &PL_sv_yes) ret *= -1;
+       if(ret > 0) return newSViv(1);
+       return newSViv(0);
+       }
+#else
+     if(SvUOK(b)) {
+       ret = mpz_cmp_ui(*a, SvUV(b));
+       if(third == &PL_sv_yes) ret *= -1;
+       if(ret > 0) return newSViv(1);
+       return newSViv(0);
+       }
+     if(SvIOK(b)) {
+       ret = mpz_cmp_si(*a, SvIV(b));
+       if(third == &PL_sv_yes) ret *= -1;
+       if(ret > 0) return newSViv(1);
+       return newSViv(0);
+       }
+#endif
+
+     if(SvNOK(b)) {
+#ifdef USE_LONG_DOUBLE
+       long double ld = (long double)SvNV(b) >= 0 ? floorl((long double)SvNV(b)) : ceill((long double)SvNV(b));
+       sprintf(buffer, "%.0Lf", ld);
+       mpz_init_set_str(t, buffer, 10);
+       ret = mpz_cmp(*a, t);
+       mpz_clear(t); 
+#else
+       ret = mpz_cmp_d(*a, SvNV(b));
+#endif
+       if(third == &PL_sv_yes) ret *= -1;
+       if(ret > 0) return newSViv(1);
+       return newSViv(0);
+       }
+
+     if(SvPOK(b)) {
+       if(mpz_init_set_str(t, SvPV_nolen(b), 0))
+         croak("Invalid string supplied to Math::GMPz::overload_gt");
+       ret = mpz_cmp(*a, t);
+       mpz_clear(t);
+       if(third == &PL_sv_yes) ret *= -1;
+       if(ret > 0) return newSViv(1);
+       return newSViv(0);
+       }
+
+     if(sv_isobject(b)) {
+       const char *h = HvNAME(SvSTASH(SvRV(b)));
+       if(strEQ(h, "Math::GMPz")) {
+         ret = mpz_cmp(*a, *(INT2PTR(mpz_t *, SvIV(SvRV(b)))));
+         if(ret > 0) return newSViv(1);
+         return newSViv(0);
+         }
+       }
+
+     croak("Invalid argument supplied to Math::GMPz::overload_gt");
+}
+
+SV * overload_gte(mpz_t * a, SV * b, SV * third) {
+     int ret;
+     mpz_t t;
+#ifdef USE_LONG_DOUBLE
+     char buffer[50];
+#endif
+
+#ifdef USE_64_BIT_INT
+     if(SvIOK(b)) {
+       if(mpz_init_set_str(t, SvPV_nolen(b), 0))
+         croak("Invalid string supplied to Math::GMPz::overload_gte");
+       ret = mpz_cmp(*a, t);
+       mpz_clear(t);
+       if(third == &PL_sv_yes) ret *= -1;
+       if(ret >= 0) return newSViv(1);
+       return newSViv(0);
+       }
+#else
+     if(SvUOK(b)) {
+       ret = mpz_cmp_ui(*a, SvUV(b));
+       if(third == &PL_sv_yes) ret *= -1;
+       if(ret >= 0) return newSViv(1);
+       return newSViv(0);
+       }
+
+     if(SvIOK(b)) {
+       ret = mpz_cmp_si(*a, SvIV(b));
+       if(third == &PL_sv_yes) ret *= -1;
+       if(ret >= 0) return newSViv(1);
+       return newSViv(0);
+       }
+#endif
+
+     if(SvNOK(b)) {
+#ifdef USE_LONG_DOUBLE
+       long double ld = (long double)SvNV(b) >= 0 ? floorl((long double)SvNV(b)) : ceill((long double)SvNV(b));
+       sprintf(buffer, "%.0Lf", ld);
+       mpz_init_set_str(t, buffer, 10);
+       ret = mpz_cmp(*a, t);
+       mpz_clear(t); 
+#else
+       ret = mpz_cmp_d(*a, SvNV(b));
+#endif
+       if(third == &PL_sv_yes) ret *= -1;
+       if(ret >= 0) return newSViv(1);
+       return newSViv(0);
+       }
+
+     if(SvPOK(b)) {
+       if(mpz_init_set_str(t, SvPV_nolen(b), 0))
+         croak("Invalid string supplied to Math::GMPz::overload_gte");
+       ret = mpz_cmp(*a, t);
+       mpz_clear(t);
+       if(third == &PL_sv_yes) ret *= -1;
+       if(ret >= 0) return newSViv(1);
+       return newSViv(0);
+       }
+
+     if(sv_isobject(b)) {
+       const char *h = HvNAME(SvSTASH(SvRV(b)));
+       if(strEQ(h, "Math::GMPz")) {
+         ret = mpz_cmp(*a, *(INT2PTR(mpz_t *, SvIV(SvRV(b)))));
+         if(ret >= 0) return newSViv(1);
+         return newSViv(0);
+         }
+       }
+
+     croak("Invalid argument supplied to Math::GMPz::overload_gte");
+}
+
+SV * overload_lt(mpz_t * a, SV * b, SV * third) {
+     int ret;
+     mpz_t t;
+#ifdef USE_LONG_DOUBLE
+     char buffer[50];
+#endif
+
+#ifdef USE_64_BIT_INT
+     if(SvIOK(b)) {
+       if(mpz_init_set_str(t, SvPV_nolen(b), 0))
+         croak("Invalid string supplied to Math::GMPz::overload_lt");
+       ret = mpz_cmp(*a, t);
+       mpz_clear(t);
+       if(third == &PL_sv_yes) ret *= -1;
+       if(ret < 0) return newSViv(1);
+       return newSViv(0);
+       }
+#else
+     if(SvUOK(b)) {
+       ret = mpz_cmp_ui(*a, SvUV(b));
+       if(third == &PL_sv_yes) ret *= -1;
+       if(ret < 0) return newSViv(1);
+       return newSViv(0);
+       }
+
+     if(SvIOK(b)) {
+       ret = mpz_cmp_si(*a, SvIV(b));
+       if(third == &PL_sv_yes) ret *= -1;
+       if(ret < 0) return newSViv(1);
+       return newSViv(0);
+       }
+#endif
+
+     if(SvNOK(b)) {
+#ifdef USE_LONG_DOUBLE
+       long double ld = (long double)SvNV(b) >= 0 ? floorl((long double)SvNV(b)) : ceill((long double)SvNV(b));
+       sprintf(buffer, "%.0Lf", ld);
+       mpz_init_set_str(t, buffer, 10);
+       ret = mpz_cmp(*a, t);
+       mpz_clear(t); 
+#else
+       ret = mpz_cmp_d(*a, SvNV(b));
+#endif
+       if(third == &PL_sv_yes) ret *= -1;
+       if(ret < 0) return newSViv(1);
+       return newSViv(0);
+       }
+
+     if(SvPOK(b)) {
+       if(mpz_init_set_str(t, SvPV_nolen(b), 0))
+         croak("Invalid string supplied to Math::GMPz::overload_lt");
+       ret = mpz_cmp(*a, t);
+       mpz_clear(t);
+       if(third == &PL_sv_yes) ret *= -1;
+       if(ret < 0) return newSViv(1);
+       return newSViv(0);
+       }
+
+     if(sv_isobject(b)) {
+       const char *h = HvNAME(SvSTASH(SvRV(b)));
+       if(strEQ(h, "Math::GMPz")) {
+         ret = mpz_cmp(*a, *(INT2PTR(mpz_t *, SvIV(SvRV(b)))));
+         if(ret < 0) return newSViv(1);
+         return newSViv(0);
+         }
+       }
+
+     croak("Invalid argument supplied to Math::GMPz::overload_lt");
+}
+
+SV * overload_lte(mpz_t * a, SV * b, SV * third) {
+     int ret;
+     mpz_t t;
+#ifdef USE_LONG_DOUBLE
+     char buffer[50];
+#endif
+
+#ifdef USE_64_BIT_INT
+     if(SvIOK(b)) {
+       if(mpz_init_set_str(t, SvPV_nolen(b), 0))
+         croak("Invalid string supplied to Math::GMPz::overload_lte");
+       ret = mpz_cmp(*a, t);
+       mpz_clear(t);
+       if(third == &PL_sv_yes) ret *= -1;
+       if(ret <= 0) return newSViv(1);
+       return newSViv(0);
+       }
+#else
+     if(SvUOK(b)) {
+       ret = mpz_cmp_ui(*a, SvUV(b));
+       if(third == &PL_sv_yes) ret *= -1;
+       if(ret <= 0) return newSViv(1);
+       return newSViv(0);
+       }
+
+     if(SvIOK(b)) {
+       ret = mpz_cmp_si(*a, SvIV(b));
+       if(third == &PL_sv_yes) ret *= -1;
+       if(ret <= 0) return newSViv(1);
+       return newSViv(0);
+       }
+#endif
+
+     if(SvNOK(b)) {
+#ifdef USE_LONG_DOUBLE
+       long double ld = (long double)SvNV(b) >= 0 ? floorl((long double)SvNV(b)) : ceill((long double)SvNV(b));
+       sprintf(buffer, "%.0Lf", ld);
+       mpz_init_set_str(t, buffer, 10);
+       ret = mpz_cmp(*a, t);
+       mpz_clear(t); 
+#else
+       ret = mpz_cmp_d(*a, SvNV(b));
+#endif
+       if(third == &PL_sv_yes) ret *= -1;
+       if(ret <= 0) return newSViv(1);
+       return newSViv(0);
+       }
+
+     if(SvPOK(b)) {
+       if(mpz_init_set_str(t, SvPV_nolen(b), 0))
+         croak("Invalid string supplied to Math::GMPz::overload_lte");
+       ret = mpz_cmp(*a, t);
+       mpz_clear(t);
+       if(third == &PL_sv_yes) ret *= -1;
+       if(ret <= 0) return newSViv(1);
+       return newSViv(0);
+       }
+
+     if(sv_isobject(b)) {
+       const char *h = HvNAME(SvSTASH(SvRV(b)));
+       if(strEQ(h, "Math::GMPz")) {
+         ret = mpz_cmp(*a, *(INT2PTR(mpz_t *, SvIV(SvRV(b)))));
+         if(ret <= 0) return newSViv(1);
+         return newSViv(0);
+         }
+       }
+
+     croak("Invalid argument supplied to Math::GMPz::overload_lte");
+}
+
+SV * overload_spaceship(mpz_t * a, SV * b, SV * third) {
+     int ret;
+     mpz_t t;
+#ifdef USE_LONG_DOUBLE
+     char buffer[50];
+#endif
+
+#ifdef USE_64_BIT_INT
+     if(SvIOK(b)) {
+       if(mpz_init_set_str(t, SvPV_nolen(b), 0))
+         croak("Invalid string supplied to Math::GMPz::overload_spaceship");
+       ret = mpz_cmp(*a, t);
+       mpz_clear(t);
+       if(third == &PL_sv_yes) ret *= -1;
+       return newSViv(ret);
+       }
+#else
+     if(SvUOK(b)) {
+       ret = mpz_cmp_ui(*a, SvUV(b));
+       if(third == &PL_sv_yes) ret *= -1;
+       return newSViv(ret);
+       }
+
+     if(SvIOK(b)) {
+       ret = mpz_cmp_si(*a, SvIV(b));
+       if(third == &PL_sv_yes) ret *= -1;
+       return newSViv(ret);
+       }
+#endif
+
+     if(SvNOK(b)) {
+#ifdef USE_LONG_DOUBLE
+       long double ld = (long double)SvNV(b) >= 0 ? floorl((long double)SvNV(b)) : ceill((long double)SvNV(b));
+       sprintf(buffer, "%.0Lf", ld);
+       mpz_init_set_str(t, buffer, 10);
+       ret = mpz_cmp(*a, t);
+       mpz_clear(t); 
+#else
+       ret = mpz_cmp_d(*a, SvNV(b));
+#endif
+       if(third == &PL_sv_yes) ret *= -1;
+       return newSViv(ret);
+       }
+
+     if(SvPOK(b)) {
+       if(mpz_init_set_str(t, SvPV_nolen(b), 0))
+         croak("Invalid string supplied to Math::GMPz::overload_spaceship");
+       ret = mpz_cmp(*a, t);
+       mpz_clear(t);
+       if(third == &PL_sv_yes) ret *= -1;
+       return newSViv(ret);
+       }
+
+     if(sv_isobject(b)) {
+       const char *h = HvNAME(SvSTASH(SvRV(b)));
+       if(strEQ(h, "Math::GMPz")) {
+         ret = mpz_cmp(*a, *(INT2PTR(mpz_t *, SvIV(SvRV(b)))));
+         return newSViv(ret);
+         }
+       }
+
+     croak("Invalid argument supplied to Math::GMPz::overload_spaceship");
+}
+
+SV * overload_equiv(mpz_t * a, SV * b, SV * third) {
+     int ret;
+     mpz_t t;
+#ifdef USE_LONG_DOUBLE
+     char buffer[50];
+#endif
+
+#ifdef USE_64_BIT_INT
+     if(SvIOK(b)) {
+       if(mpz_init_set_str(t, SvPV_nolen(b), 0))
+         croak("Invalid string supplied to Math::GMPz::overload_equiv");
+       ret = mpz_cmp(*a, t);
+       mpz_clear(t);
+       if(ret == 0) return newSViv(1);
+       return newSViv(0);
+       }
+#else
+     if(SvUOK(b)) {
+       ret = mpz_cmp_ui(*a, SvUV(b));
+       if(ret == 0) return newSViv(1);
+       return newSViv(0);
+       }
+
+     if(SvIOK(b)) {
+       ret = mpz_cmp_si(*a, SvIV(b));
+       if(ret == 0) return newSViv(1);
+       return newSViv(0);
+       }
+#endif
+
+     if(SvNOK(b)) {
+#ifdef USE_LONG_DOUBLE
+       long double ld = (long double)SvNV(b) >= 0 ? floorl((long double)SvNV(b)) : ceill((long double)SvNV(b));
+       sprintf(buffer, "%.0Lf", ld);
+       mpz_init_set_str(t, buffer, 10);
+       ret = mpz_cmp(*a, t);
+       mpz_clear(t); 
+#else
+       ret = mpz_cmp_d(*a, SvNV(b));
+#endif
+       if(ret == 0) return newSViv(1);
+       return newSViv(0);
+       }
+
+     if(SvPOK(b)) {
+       if(mpz_init_set_str(t, SvPV_nolen(b), 0))
+         croak("Invalid string supplied to Math::GMPz::overload_equiv");
+       ret = mpz_cmp(*a, t);
+       mpz_clear(t);
+       if(ret == 0) return newSViv(1);
+       return newSViv(0);
+       }
+
+     if(sv_isobject(b)) {
+       const char *h = HvNAME(SvSTASH(SvRV(b)));
+       if(strEQ(h, "Math::GMPz")) {
+         ret = mpz_cmp(*a, *(INT2PTR(mpz_t *, SvIV(SvRV(b)))));
+         if(ret == 0) return newSViv(1);
+         return newSViv(0);
+         }
+       }
+
+     croak("Invalid argument supplied to Math::GMPz::overload_equiv");
+}
+
+SV * overload_not_equiv(mpz_t * a, SV * b, SV * third) {
+     int ret;
+     mpz_t t;
+#ifdef USE_LONG_DOUBLE
+     char buffer[50];
+#endif
+
+#ifdef USE_64_BIT_INT
+     if(SvIOK(b)) {
+       if(mpz_init_set_str(t, SvPV_nolen(b), 0))
+         croak("Invalid string supplied to Math::GMPz::overload_not_equiv");
+       ret = mpz_cmp(*a, t);
+       mpz_clear(t);
+       if(third == &PL_sv_yes) ret *= -1;
+       if(ret != 0) return newSViv(1);
+       return newSViv(0);
+       }
+#else
+     if(SvUOK(b)) {
+       ret = mpz_cmp_ui(*a, SvUV(b));
+       if(third == &PL_sv_yes) ret *= -1;
+       if(ret != 0) return newSViv(1);
+       return newSViv(0);
+       }
+
+     if(SvIOK(b)) {
+       ret = mpz_cmp_si(*a, SvIV(b));
+       if(third == &PL_sv_yes) ret *= -1;
+       if(ret != 0) return newSViv(1);
+       return newSViv(0);
+       }
+#endif
+
+     if(SvNOK(b)) {
+#ifdef USE_LONG_DOUBLE
+       long double ld = (long double)SvNV(b) >= 0 ? floorl((long double)SvNV(b)) : ceill((long double)SvNV(b));
+       sprintf(buffer, "%.0Lf", ld);
+       mpz_init_set_str(t, buffer, 10);
+       ret = mpz_cmp(*a, t);
+       mpz_clear(t); 
+#else
+       ret = mpz_cmp_d(*a, SvNV(b));
+#endif
+       if(third == &PL_sv_yes) ret *= -1;
+       if(ret != 0) return newSViv(1);
+       return newSViv(0);
+       }
+
+     if(SvPOK(b)) {
+       if(mpz_init_set_str(t, SvPV_nolen(b), 0))
+         croak("Invalid string supplied to Math::GMPz::overload_not_equiv");
+       ret = mpz_cmp(*a, t);
+       mpz_clear(t);
+       if(third == &PL_sv_yes) ret *= -1;
+       if(ret != 0) return newSViv(1);
+       return newSViv(0);
+       }
+
+     if(sv_isobject(b)) {
+       const char *h = HvNAME(SvSTASH(SvRV(b)));
+       if(strEQ(h, "Math::GMPz")) {
+         ret = mpz_cmp(*a, *(INT2PTR(mpz_t *, SvIV(SvRV(b)))));
+         if(ret != 0) return newSViv(1);
+         return newSViv(0);
+         }
+       }
+
+     croak("Invalid argument supplied to Math::GMPz::overload_not_equiv");
+}
+
+SV * overload_not(mpz_t * a, SV * second, SV * third) {
+     if(mpz_cmp_ui(*a, 0)) return newSViv(0);
+     return newSViv(1);
+}
+
+/* Finish typemapping */
+
+SV * overload_xor_eq(SV * a, SV * b, SV * third) {
+     mpz_t t;
+#ifdef USE_LONG_DOUBLE
+     char buffer[50];
+#endif
+
+     SvREFCNT_inc(a);
+
+#ifdef USE_64_BIT_INT
+     if(SvIOK(b)) {
+       if(mpz_init_set_str(t, SvPV_nolen(b), 0)) {
+         SvREFCNT_dec(a);
+         croak("Invalid string supplied to Math::GMPz::overload_xor_eq");
+         }
+       mpz_xor(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), t);
+       mpz_clear(t);
+       return a;
+       }
+#else
+     if(SvUOK(b)) {
+       mpz_init_set_ui(t, SvUV(b));
+       mpz_xor(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), t);
+       mpz_clear(t);
+       return a;
+       }
+
+     if(SvIOK(b)) {
+       mpz_init_set_si(t, SvIV(b));
+       mpz_xor(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), t);
+       mpz_clear(t);
+       return a;
+       }
+#endif
+
+     if(SvNOK(b)) {
+#ifdef USE_LONG_DOUBLE
+       long double ld = (long double)SvNV(b) >= 0 ? floorl((long double)SvNV(b)) : ceill((long double)SvNV(b));
+       sprintf(buffer, "%.0Lf", ld);
+       mpz_init_set_str(t, buffer, 10);
+#else
+       mpz_init_set_d(t, SvNV(b));
+#endif
+       mpz_xor(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), t);
+       mpz_clear(t);
+       return a;
+       }
+
+     if(SvPOK(b)) {
+       if(mpz_init_set_str(t, SvPV_nolen(b), 0)) {
+         SvREFCNT_dec(a);
+         croak("Invalid string supplied to Math::GMPz::overload_xor_eq");
+         }
+       mpz_xor(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), t);
+       mpz_clear(t);
+       return a;
+       }
+
+
+     if(sv_isobject(b)) {
+       const char *h = HvNAME(SvSTASH(SvRV(b)));
+       if(strEQ(h, "Math::GMPz")) {
+         mpz_xor(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(b)))));
+         return a;
+         }
+       }
+
+     SvREFCNT_dec(a);
+     croak("Invalid argument supplied to Math::GMPz::overload_xor_eq");
+}
+
+SV * overload_ior_eq(SV * a, SV * b, SV * third) {
+     mpz_t t;
+#ifdef USE_LONG_DOUBLE
+     char buffer[50];
+#endif
+
+     SvREFCNT_inc(a);
+
+#ifdef USE_64_BIT_INT
+     if(SvIOK(b)) {
+       if(mpz_init_set_str(t, SvPV_nolen(b), 0)) {
+         SvREFCNT_dec(a);
+         croak("Invalid string supplied to Math::GMPz::overload_ior_eq");
+         }
+       mpz_ior(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), t);
+       mpz_clear(t);
+       return a;
+       }
+#else
+     if(SvUOK(b)) {
+       mpz_init_set_ui(t, SvUV(b));
+       mpz_ior(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), t);
+       mpz_clear(t);
+       return a;
+       }
+
+     if(SvIOK(b)) {
+       mpz_init_set_si(t, SvIV(b));
+       mpz_ior(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), t);
+       mpz_clear(t);
+       return a;
+       }
+#endif
+
+     if(SvNOK(b)) {
+#ifdef USE_LONG_DOUBLE
+       long double ld = (long double)SvNV(b) >= 0 ? floorl((long double)SvNV(b)) : ceill((long double)SvNV(b));
+       sprintf(buffer, "%.0Lf", ld);
+       mpz_init_set_str(t, buffer, 10);
+#else
+       mpz_init_set_d(t, SvNV(b));
+#endif
+       mpz_ior(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), t);
+       mpz_clear(t);
+       return a;
+       }
+
+     if(SvPOK(b)) {
+       if(mpz_init_set_str(t, SvPV_nolen(b), 0)) {
+         SvREFCNT_dec(a);
+         croak("Invalid string supplied to Math::GMPz::overload_ior_eq");
+         }
+       mpz_ior(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), t);
+       mpz_clear(t);
+       return a;
+       }
+
+     if(sv_isobject(b)) {
+       const char *h = HvNAME(SvSTASH(SvRV(b)));
+       if(strEQ(h, "Math::GMPz")) {
+         mpz_ior(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(b)))));
+         return a;
+         }
+       }
+
+     SvREFCNT_dec(a);
+     croak("Invalid argument supplied to Math::GMPz::overload_ior_eq");
+}
+
+SV * overload_and_eq(SV * a, SV * b, SV * third) {
+     mpz_t t;
+#ifdef USE_LONG_DOUBLE
+     char buffer[50];
+#endif
+
+     SvREFCNT_inc(a);
+
+#ifdef USE_64_BIT_INT
+     if(SvIOK(b)) {
+       if(mpz_init_set_str(t, SvPV_nolen(b), 0)) {
+         SvREFCNT_dec(a);
+         croak("Invalid string supplied to Math::GMPz::overload_and_eq");
+         }
+       mpz_and(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), t);
+       mpz_clear(t);
+       return a;
+       }
+#else
+     if(SvUOK(b)) {
+       mpz_init_set_ui(t, SvUV(b));
+       mpz_and(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), t);
+       mpz_clear(t);
+       return a;
+       }
+
+     if(SvIOK(b)) {
+       mpz_init_set_si(t, SvIV(b));
+       mpz_and(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), t);
+       mpz_clear(t);
+       return a;
+       }
+#endif
+
+     if(SvNOK(b)) {
+#ifdef USE_LONG_DOUBLE
+       long double ld = (long double)SvNV(b) >= 0 ? floorl((long double)SvNV(b)) : ceill((long double)SvNV(b));
+       sprintf(buffer, "%.0Lf", ld);
+       mpz_init_set_str(t, buffer, 10);
+#else
+       mpz_init_set_d(t, SvNV(b));
+#endif
+       mpz_and(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), t);
+       mpz_clear(t);
+       return a;
+       }
+
+     if(SvPOK(b)) {
+       if(mpz_init_set_str(t, SvPV_nolen(b), 0)) {
+         SvREFCNT_dec(a);
+         croak("Invalid string supplied to Math::GMPz::overload_and_eq");
+         }
+       mpz_and(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), t);
+       mpz_clear(t);
+       return a;
+       }
+
+     if(sv_isobject(b)) {
+       const char *h = HvNAME(SvSTASH(SvRV(b)));
+       if(strEQ(h, "Math::GMPz")) {
+         mpz_and(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(b)))));
+         return a;
+         }
+       }
+
+     SvREFCNT_dec(a);
+     croak("Invalid argument supplied to Math::GMPz::overload_and_eq");
+}
+
+SV * overload_pow_eq(SV * a, SV * b, SV * third) {
+     SvREFCNT_inc(a);
+
+     if(SvUOK(b)) {
+       mpz_pow_ui(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), SvUV(b));
+       return a;
+       }
+
+     if(SvIOK(b)) {
+       if(SvIV(b) < 0) croak("Invalid argument supplied to Math::GMPz::overload_pow_eq");
+       mpz_pow_ui(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), SvUV(b));
+       return a;
+       }
+
+     SvREFCNT_dec(a);
+     croak("Invalid argument supplied to Math::GMPz::overload_pow_eq");
+}
+
+SV * overload_rshift_eq(SV * a, SV * b, SV * third) {
+
+     SvREFCNT_inc(a);
+
+     if(SvUOK(b)) {
+       mpz_tdiv_q_2exp(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), SvUV(b));
+       return a;
+       }
+
+     if(SvIOK(b)) {
+       if(SvIV(b) < 0) croak("Invalid argument supplied to Math::GMPz::overload_rshift_eq");
+       mpz_tdiv_q_2exp(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), SvIV(b));
+       return a;
+       }
+
+     SvREFCNT_dec(a);
+     croak("Invalid argument supplied to Math::GMPz::overload_rshift_eq");
+}
+
+SV * overload_lshift_eq(SV * a, SV * b, SV * third) {
+
+     SvREFCNT_inc(a);
+
+     if(SvUOK(b)) {
+       mpz_mul_2exp(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), SvUV(b));
+       return a;
+       }
+
+     if(SvIOK(b)) {
+       if(SvIV(b) < 0) croak("Invalid argument supplied to Math::GMPz::overload_lshift_eq");
+       mpz_mul_2exp(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), SvIV(b));
+       return a;
+       }
+
+     SvREFCNT_dec(a);
+     croak("Invalid argument supplied to Math::GMPz::overload_lshift_eq");
+}
+
+SV * overload_inc(SV * p, SV * second, SV * third) {
+     SvREFCNT_inc(p);
+     mpz_add_ui(*(INT2PTR(mpz_t *, SvIV(SvRV(p)))), *(INT2PTR(mpz_t *, SvIV(SvRV(p)))), 1);
+     return p;
+}
+
+SV * overload_dec(SV * p, SV * second, SV * third) {
+     SvREFCNT_inc(p);
+     mpz_sub_ui(*(INT2PTR(mpz_t *, SvIV(SvRV(p)))), *(INT2PTR(mpz_t *, SvIV(SvRV(p)))), 1);
+     return p;
+}
+
+SV * overload_mod_eq(SV * a, SV * b, SV * third) {
+     mpz_t t;
+#ifdef USE_LONG_DOUBLE
+     char buffer[50];
+#endif
+
+     SvREFCNT_inc(a);
+
+#ifdef USE_64_BIT_INT
+     if(SvIOK(b)) {
+       if(mpz_init_set_str(t, SvPV_nolen(b), 0)) {
+         SvREFCNT_dec(a);
+         croak("Invalid string supplied to Math::GMPz::overload_mod_eq");
+         }
+       mpz_mod(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), t);
+       mpz_clear(t);
+       return a;
+       }
+#else
+     if(SvUOK(b)) {
+       mpz_mod_ui(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), SvUV(b));
+       return a;
+       }
+
+     if(SvIOK(b)) {
+       if(SvIV(b) > 0) {
+         mpz_mod_ui(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), SvUV(b));
+         return a;
+         }
+       mpz_init_set_si(t, SvNV(b));
+       mpz_mod(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), t);
+       mpz_clear(t);
+       return a;
+       }
+#endif
+
+     if(SvNOK(b)) {
+#ifdef USE_LONG_DOUBLE
+       long double ld = (long double)SvNV(b) >= 0 ? floorl((long double)SvNV(b)) : ceill((long double)SvNV(b));
+       sprintf(buffer, "%.0Lf", ld);
+       mpz_init_set_str(t, buffer, 10);
+#else
+       mpz_init_set_d(t, SvNV(b));
+#endif
+       mpz_mod(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), t);
+       mpz_clear(t);
+       return a;
+       }
+
+     if(SvPOK(b)) {
+       if(mpz_init_set_str(t, SvPV_nolen(b), 0)) {
+         SvREFCNT_dec(a);
+         croak("Invalid string supplied to Math::GMPz::overload_mod_eq");
+         }
+       mpz_mod(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), t);
+       mpz_clear(t);
+       return a;
+       }
+
+     if(sv_isobject(b)) {
+       const char *h = HvNAME(SvSTASH(SvRV(b)));
+       if(strEQ(h, "Math::GMPz")) {
+         mpz_mod(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(b)))));
+         return a;
+         }
+       }
+
+     SvREFCNT_dec(a);
+     croak("Invalid argument supplied to Math::GMPz::overload_mod_eq");
+}
+
+SV * get_refcnt(SV * s) {
+     return newSVuv(SvREFCNT(s));
+}
+
+SV * overload_div_eq(SV * a, SV * b, SV * third) {
+     mpz_t t;
+#ifdef USE_LONG_DOUBLE
+     char buffer[50];
+#endif
+
+     SvREFCNT_inc(a);
+
+#ifdef USE_64_BIT_INT
+     if(SvIOK(b)) {
+       if(mpz_init_set_str(t, SvPV_nolen(b), 0)) {
+         SvREFCNT_dec(a);
+         croak("Invalid string supplied to Math::GMPz::overload_div_eq");
+         }
+       mpz_tdiv_q(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), t);
+       mpz_clear(t);
+       return a;
+       }
+#else
+     if(SvUOK(b)) {
+       mpz_tdiv_q_ui(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), SvUV(b));
+       return a;
+       }
+
+     if(SvIOK(b)) {
+       if(SvIV(b) >= 0) {
+         mpz_tdiv_q_ui(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), SvIV(b));
+         return a;
+         }
+       mpz_tdiv_q_ui(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), SvIV(b) * -1);
+       mpz_neg(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))));
+       return a;
+       }
+#endif
+
+     if(SvNOK(b)) {
+#ifdef USE_LONG_DOUBLE
+       long double ld = (long double)SvNV(b) >= 0 ? floorl((long double)SvNV(b)) : ceill((long double)SvNV(b));
+       sprintf(buffer, "%.0Lf", ld);
+       mpz_init_set_str(t, buffer, 10);
+#else
+       mpz_init_set_d(t, SvNV(b));
+#endif
+       mpz_tdiv_q(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), t);
+       mpz_clear(t);
+       return a;
+       }
+
+     if(SvPOK(b)) {
+       if(mpz_init_set_str(t, SvPV_nolen(b), 0)) {
+         SvREFCNT_dec(a);
+         croak("Invalid string supplied to Math::GMPz::overload_div_eq");
+         }
+       mpz_tdiv_q(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), t);
+       mpz_clear(t);
+       return a;
+       }
+
+     if(sv_isobject(b)) {
+       const char *h = HvNAME(SvSTASH(SvRV(b)));
+       if(strEQ(h, "Math::GMPz")) {
+         mpz_tdiv_q(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(b)))));
+         return a;
+         }
+       }
+
+     SvREFCNT_dec(a);
+     croak("Invalid argument supplied to Math::GMPz::overload_div_eq function");
+
+}
+
+SV * overload_sub_eq(SV * a, SV * b, SV * third) {
+     mpz_t t;
+#ifdef USE_LONG_DOUBLE
+     char buffer[50];
+#endif
+
+     SvREFCNT_inc(a);
+
+#ifdef USE_64_BIT_INT
+     if(SvIOK(b)) {
+       if(mpz_init_set_str(t, SvPV_nolen(b), 0)) {
+         SvREFCNT_dec(a);
+         croak("Invalid string supplied to Math::GMPz::overload_sub_eq");
+         }
+       mpz_sub(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), t);
+       mpz_clear(t);
+       return a;
+       }
+#else
+     if(SvUOK(b)) {
+       mpz_sub_ui(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), SvUV(b));
+       return a;
+       }
+
+     if(SvIOK(b)) {
+       if(SvIV(b) >= 0) {
+         mpz_sub_ui(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), SvIV(b));
+         return a;
+         }
+       mpz_add_ui(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), SvIV(b) * -1);
+       return a;
+       }
+#endif
+
+     if(SvNOK(b)) {
+#ifdef USE_LONG_DOUBLE
+       long double ld = (long double)SvNV(b) >= 0 ? floorl((long double)SvNV(b)) : ceill((long double)SvNV(b));
+       sprintf(buffer, "%.0Lf", ld);
+       mpz_init_set_str(t, buffer, 10);
+#else
+       mpz_init_set_d(t, SvNV(b));
+#endif
+       mpz_sub(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), t);
+       mpz_clear(t);
+       return a;
+       }
+
+     if(SvPOK(b)) {
+       if(mpz_init_set_str(t, SvPV_nolen(b), 0)) {
+         SvREFCNT_dec(a);
+         croak("Invalid string supplied to Math::GMPz::overload_sub_eq");
+         }
+       mpz_sub(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), t);
+       mpz_clear(t);
+       return a;
+       }
+
+     if(sv_isobject(b)) {
+       const char *h = HvNAME(SvSTASH(SvRV(b)));
+       if(strEQ(h, "Math::GMPz")) {
+         mpz_sub(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(b)))));
+         return a;
+         }
+       }
+
+     SvREFCNT_dec(a);
+     croak("Invalid argument supplied to Math::GMPz::overload_sub_eq function");
+
+}
+
+SV * overload_add_eq(SV * a, SV * b, SV * third) {
+     mpz_t t;
+#ifdef USE_LONG_DOUBLE
+     char buffer[50];
+#endif
+
+     SvREFCNT_inc(a);
+
+#ifdef USE_64_BIT_INT
+     if(SvIOK(b)) {
+       if(mpz_init_set_str(t, SvPV_nolen(b), 0)) {
+         SvREFCNT_dec(a);
+         croak("Invalid string supplied to Math::GMPz::overload_add_eq");
+         }
+       mpz_add(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), t);
+       mpz_clear(t);
+       return a;
+       }
+#else
+     if(SvUOK(b)) {
+       mpz_add_ui(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), SvUV(b));
+       return a;
+       }
+
+     if(SvIOK(b)) {
+       if(SvIV(b) >= 0) {
+         mpz_add_ui(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), SvIV(b));
+         return a;
+         }
+       mpz_sub_ui(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), SvIV(b) * -1);
+       return a;
+       }
+#endif
+
+     if(SvNOK(b)) {
+#ifdef USE_LONG_DOUBLE
+       long double ld = (long double)SvNV(b) >= 0 ? floorl((long double)SvNV(b)) : ceill((long double)SvNV(b));
+       sprintf(buffer, "%.0Lf", ld);
+       mpz_init_set_str(t, buffer, 10);
+#else
+       mpz_init_set_d(t, SvNV(b));
+#endif
+       mpz_add(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), t);
+       mpz_clear(t);
+       return a;
+       }
+
+     if(SvPOK(b)) {
+       if(mpz_init_set_str(t, SvPV_nolen(b), 0)) {
+         SvREFCNT_dec(a);
+         croak("Invalid string supplied to Math::GMPz::overload_add_eq");
+         }
+       mpz_add(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), t);
+       mpz_clear(t);
+       return a;
+       }
+
+
+     if(sv_isobject(b)) {
+       const char *h = HvNAME(SvSTASH(SvRV(b)));
+       if(strEQ(h, "Math::GMPz")) {
+         mpz_add(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(b)))));
+         return a;
+         }
+       }
+
+     SvREFCNT_dec(a);
+     croak("Invalid argument supplied to Math::GMPz::overload_add_eq function");
+
+}
+
+SV * overload_mul_eq(SV * a, SV * b, SV * third) {
+     mpz_t t;
+#ifdef USE_LONG_DOUBLE
+     char buffer[50];
+#endif
+
+     SvREFCNT_inc(a);
+
+#ifdef USE_64_BIT_INT
+     if(SvIOK(b)) {
+       if(mpz_init_set_str(t, SvPV_nolen(b), 0)) {
+         SvREFCNT_dec(a);      
+         croak(" Invalid string supplied to Math::GMPz::overload_mul_eq");
+         }
+       mpz_mul(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), t);
+       mpz_clear(t);
+       return a;
+       }
+#else
+     if(SvUOK(b)) {
+       mpz_mul_ui(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), SvUV(b));
+       return a;
+       }
+
+     if(SvIOK(b)) {
+       mpz_mul_si(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), SvIV(b));
+       return a;
+       }
+#endif
+
+     if(SvNOK(b)) {
+#ifdef USE_LONG_DOUBLE
+       long double ld = (long double)SvNV(b) >= 0 ? floorl((long double)SvNV(b)) : ceill((long double)SvNV(b));
+       sprintf(buffer, "%.0Lf", ld);
+       mpz_init_set_str(t, buffer, 10);
+#else
+       mpz_init_set_d(t, SvNV(b));
+#endif
+       mpz_mul(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), t);
+       mpz_clear(t);
+       return a;
+       }
+
+     if(SvPOK(b)) {
+       if(mpz_init_set_str(t, SvPV_nolen(b), 0)) {
+         SvREFCNT_dec(a);      
+         croak(" Invalid string supplied to Math::GMPz::overload_mul_eq");
+         }
+       mpz_mul(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), t);
+       mpz_clear(t);
+       return a;
+       }
+
+     if(sv_isobject(b)) {
+       const char *h = HvNAME(SvSTASH(SvRV(b)));
+       if(strEQ(h, "Math::GMPz")) {
+         mpz_mul(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(b)))));
+         return a;
+         }
+       }
+
+     SvREFCNT_dec(a);
+     croak("Invalid argument supplied to Math::GMPz::overload_mul_eq");
+}
+
+SV * eratosthenes_string(SV * x_arg) {
+
+unsigned char *v, set[8] = {254,253,251,247,239,223,191,127};
+unsigned long leap, i, size, b, imax, k, x = (unsigned long)SvUV(x_arg);
+SV * ret;
+
+if(x & 1) croak("max_num argument must be even in eratosthenes_string()");
+
+imax = sqrt(x - 1) / 2;
+
+b = (x + 1) / 2;
+
+if(!(b % 8)) size = b / 8;
+else size = (b / 8) + 1;
+
+ret = NEWSV(0, size);
+
+for(i = 1; i < size; ++i) SvPVX(ret)[i] = 255;
+SvPVX(ret)[0] = 254;
+
+for(i = 0; i <= imax; ++i) {
+    
+    if(SvPVX(ret)[i / 8] & (1 << (i % 8))) {
+       leap = (2 * i) + 1;
+       k = 2 * i * (i + 1);
+       while(k < b) {
+             SvPVX(ret)[k / 8] &= set[k % 8];
+             k += leap;
+             }
+       }
+}
+
+SvPOK_on(ret);
+SvCUR_set(ret, size);
+*SvEND(ret) = 0;
+
+return ret;
+
+}
+
+SV * gmp_v(void) {
+     return newSVpv(gmp_version, 0);
+}
+
+SV * wrap_gmp_printf(SV * a, SV * b) {
+     int ret;
+     if(sv_isobject(b)) {
+       const char *h = HvNAME(SvSTASH(SvRV(b))); 
+       if(strEQ(h, "Math::GMPz") ||
+         strEQ(h, "Math::GMP") ||
+         strEQ(h, "GMP::Mpz")) {
+         ret = gmp_printf(SvPV_nolen(a), *(INT2PTR(mpz_t *, SvIV(SvRV(b)))));
+         fflush(stdout);
+         return newSViv(ret);
+       }
+       if(strEQ(h, "Math::GMPq") ||
+         strEQ(h, "GMP::Mpq")) {
+         ret = gmp_printf(SvPV_nolen(a), *(INT2PTR(mpq_t *, SvIV(SvRV(b)))));
+         fflush(stdout);
+         return newSViv(ret);
+       }
+       if(strEQ(h, "Math::GMPf") ||
+         strEQ(h, "GMP::Mpf")) {
+         ret = gmp_printf(SvPV_nolen(a), *(INT2PTR(mpf_t *, SvIV(SvRV(b)))));
+         fflush(stdout);
+         return newSViv(ret);
+       }
+   
+       croak("Unrecognised object supplied as argument to Rmpz_printf");
+     } 
+
+     if(SvUOK(b)) {
+       ret = gmp_printf(SvPV_nolen(a), SvUV(b));
+       fflush(stdout);
+       return newSViv(ret);
+     }
+     if(SvIOK(b)) {
+       ret = gmp_printf(SvPV_nolen(a), SvIV(b));
+       fflush(stdout);
+       return newSViv(ret);
+     }
+     if(SvNOK(b)) {
+       ret = gmp_printf(SvPV_nolen(a), SvNV(b));
+       fflush(stdout);
+       return newSViv(ret);
+     }
+     if(SvPOK(b)) {
+       ret = gmp_printf(SvPV_nolen(a), SvPV_nolen(b));
+       fflush(stdout);
+       return newSViv(ret);
+     }
+  
+     croak("Unrecognised type supplied as argument to Rmpz_printf");
+}
+
+SV * wrap_gmp_fprintf(FILE * stream, SV * a, SV * b) {
+     int ret;
+     if(sv_isobject(b)) {
+       const char *h = HvNAME(SvSTASH(SvRV(b)));
+       if(strEQ(h, "Math::GMPz") ||
+         strEQ(h, "Math::GMP") ||
+         strEQ(h, "GMP::Mpz")) {
+         ret = gmp_fprintf(stream, SvPV_nolen(a), *(INT2PTR(mpz_t *, SvIV(SvRV(b)))));
+         fflush(stream);
+         return newSViv(ret);
+       }
+       if(strEQ(h, "Math::GMPq") ||
+         strEQ(h, "GMP::Mpq")) {
+         ret = gmp_fprintf(stream, SvPV_nolen(a), *(INT2PTR(mpq_t *, SvIV(SvRV(b)))));
+         fflush(stream);
+         return newSViv(ret);
+       }
+       if(strEQ(h, "Math::GMPf") ||
+         strEQ(h, "GMP::Mpf")) {
+         ret = gmp_fprintf(stream, SvPV_nolen(a), *(INT2PTR(mpf_t *, SvIV(SvRV(b)))));
+         fflush(stream);
+         return newSViv(ret);
+       }
+ 
+       else croak("Unrecognised object supplied as argument to Rmpz_fprintf");
+     } 
+
+     if(SvUOK(b)) {
+       ret = gmp_fprintf(stream, SvPV_nolen(a), SvUV(b));
+       fflush(stream);
+       return newSViv(ret);
+     }
+     if(SvIOK(b)) {
+       ret = gmp_fprintf(stream, SvPV_nolen(a), SvIV(b));
+       fflush(stream);
+       return newSViv(ret);
+     }
+     if(SvNOK(b)) {
+       ret = gmp_fprintf(stream, SvPV_nolen(a), SvNV(b));
+       fflush(stream);
+       return newSViv(ret);
+     }
+     if(SvPOK(b)) {
+       ret = gmp_fprintf(stream, SvPV_nolen(a), SvPV_nolen(b));
+       fflush(stream);
+       return newSViv(ret);
+     }
+
+     croak("Unrecognised type supplied as argument to Rmpz_fprintf");
+}
+
+SV * wrap_gmp_sprintf(char * stream, SV * a, SV * b) {
+     int ret;
+     if(sv_isobject(b)) {
+       const char *h = HvNAME(SvSTASH(SvRV(b))); 
+       if(strEQ(h, "Math::GMPz") ||
+         strEQ(h, "Math::GMP") ||
+         strEQ(h, "GMP::Mpz")) {
+         ret = gmp_sprintf(stream, SvPV_nolen(a), *(INT2PTR(mpz_t *, SvIV(SvRV(b)))));
+         return newSViv(ret);
+       }
+
+       if(strEQ(h, "Math::GMPq") ||
+         strEQ(h, "GMP::Mpq")) {
+         ret = gmp_sprintf(stream, SvPV_nolen(a), *(INT2PTR(mpq_t *, SvIV(SvRV(b)))));
+         return newSViv(ret);
+       }
+
+       if(strEQ(h, "Math::GMPf") ||
+         strEQ(h, "GMP::Mpf")) {
+         ret = gmp_sprintf(stream, SvPV_nolen(a), *(INT2PTR(mpf_t *, SvIV(SvRV(b)))));
+         return newSViv(ret);
+       }
+
+       croak("Unrecognised object supplied as argument to Rmpz_sprintf");
+     } 
+
+     if(SvUOK(b)) {
+       ret = gmp_sprintf(stream, SvPV_nolen(a), SvUV(b));
+       return newSViv(ret);
+     }
+
+     if(SvIOK(b)) {
+       ret = gmp_sprintf(stream, SvPV_nolen(a), SvIV(b));
+       return newSViv(ret);
+     }
+
+     if(SvNOK(b)) {
+       ret = gmp_sprintf(stream, SvPV_nolen(a), SvNV(b));
+       return newSViv(ret);
+     }
+
+     if(SvPOK(b)) {
+       ret = gmp_sprintf(stream, SvPV_nolen(a), SvPV_nolen(b));
+       return newSViv(ret);
+     }
+
+     croak("Unrecognised type supplied as argument to Rmpz_sprintf");
+}
+
+SV * wrap_gmp_snprintf(char * stream, SV * bytes, SV * a, SV * b) {
+     int ret;
+     if(sv_isobject(b)) {
+       const char *h = HvNAME(SvSTASH(SvRV(b))); 
+       if(strEQ(h, "Math::GMPz") ||
+         strEQ(h, "Math::GMP") ||
+         strEQ(h, "GMP::Mpz")) {
+         ret = gmp_snprintf(stream, (size_t)SvUV(bytes), SvPV_nolen(a), *(INT2PTR(mpz_t *, SvIV(SvRV(b)))));
+         return newSViv(ret);
+       }
+
+       if(strEQ(h, "Math::GMPq") ||
+         strEQ(h, "GMP::Mpq")) {
+         ret = gmp_snprintf(stream, (size_t)SvUV(bytes), SvPV_nolen(a), *(INT2PTR(mpq_t *, SvIV(SvRV(b)))));
+         return newSViv(ret);
+       }
+
+       if(strEQ(h, "Math::GMPf") ||
+         strEQ(h, "GMP::Mpf")) {
+         ret = gmp_snprintf(stream, (size_t)SvUV(bytes), SvPV_nolen(a), *(INT2PTR(mpf_t *, SvIV(SvRV(b)))));
+         return newSViv(ret);
+       }
+
+       croak("Unrecognised object supplied as argument to Rmpz_snprintf");
+     } 
+
+     if(SvUOK(b)) {
+       ret = gmp_snprintf(stream, (size_t)SvUV(bytes), SvPV_nolen(a), SvUV(b));
+       return newSViv(ret);
+     }
+
+     if(SvIOK(b)) {
+       ret = gmp_snprintf(stream, (size_t)SvUV(bytes), SvPV_nolen(a), SvIV(b));
+       return newSViv(ret);
+     }
+
+     if(SvNOK(b)) {
+       ret = gmp_snprintf(stream, (size_t)SvUV(bytes), SvPV_nolen(a), SvNV(b));
+       return newSViv(ret);
+     }
+
+     if(SvPOK(b)) {
+       ret = gmp_snprintf(stream, (size_t)SvUV(bytes), SvPV_nolen(a), SvPV_nolen(b));
+       return newSViv(ret);
+     }
+
+     croak("Unrecognised type supplied as argument to Rmpz_snprintf");
+}
+
+SV * _itsa(SV * a) {
+     if(SvUOK(a)) return newSVuv(1);
+     if(SvIOK(a)) return newSVuv(2);
+     if(SvNOK(a)) return newSVuv(3);
+     if(SvPOK(a)) return newSVuv(4);
+     if(sv_isobject(a)) {
+       const char *h = HvNAME(SvSTASH(SvRV(a)));
+       if(strEQ(h, "Math::GMPz")) return newSVuv(8);
+       if(strEQ(h, "Math::GMP")) return newSVuv(9);
+     }
+     return newSVuv(0);
+}
+
+void Rmpz_urandomb(SV * p, ...) {
+     dXSARGS;
+     unsigned long q, i, thingies;
+
+     thingies = items;
+     q = SvUV(ST(thingies - 1)); 
+
+     if((q + 3) != thingies) croak ("Wrong args supplied to mpz_urandomb function");
+
+     for(i = 0; i < q; ++i) {
+        mpz_urandomb(*(INT2PTR(mpz_t *, SvIV(SvRV(ST(i))))), *(INT2PTR(gmp_randstate_t *, SvIV(SvRV(ST(thingies - 3))))), SvUV(ST(thingies - 2)));
+        }
+
+     XSRETURN(0);
+}
+
+void Rmpz_urandomm(SV * x, ...){
+     dXSARGS;
+     unsigned long q, i, thingies;
+
+     thingies = items;
+     q = SvUV(ST(thingies - 1)); 
+
+     if((q + 3) != thingies) croak ("Wrong args supplied to mpz_urandomm function"); 
+
+     for(i = 0; i < q; ++i) {
+        mpz_urandomm(*(INT2PTR(mpz_t *, SvIV(SvRV(ST(i))))), *(INT2PTR(gmp_randstate_t *, SvIV(SvRV(ST(thingies - 3))))), *(INT2PTR(mpz_t *, SvIV(SvRV(ST(thingies - 2))))));
+        }
+     
+     XSRETURN(0);
+}
+
+void Rmpz_rrandomb(SV * x, ...) {
+     dXSARGS;
+     unsigned long q, i, thingies;
+
+     thingies = items;
+     q = SvUV(ST(thingies - 1)); 
+
+     if((q + 3) != thingies) croak ("Wrong args supplied to mpz_rrandomb function"); 
+
+     for(i = 0; i < q; ++i) {
+        mpz_rrandomb(*(INT2PTR(mpz_t *, SvIV(SvRV(ST(i))))), *(INT2PTR(gmp_randstate_t *, SvIV(SvRV(ST(thingies - 3))))), SvUV(ST(thingies - 2)));
+        }
+
+     XSRETURN(0);
+}
+
+SV * rand_init(SV * seed) {
+     gmp_randstate_t * state;
+     SV * obj_ref, * obj;
+
+     New(1, state, 1, gmp_randstate_t);
+     if(state == NULL) croak("Failed to allocate memory in rand_init function");
+     obj_ref = newSV(0);
+     obj = newSVrv(obj_ref, NULL);
+     gmp_randinit_default(*state);
+     gmp_randseed(*state, *(INT2PTR(mpz_t *, SvIV(SvRV(seed)))));
+     sv_setiv(obj, INT2PTR(IV, state));
+     SvREADONLY_on(obj);
+     return obj_ref;
+     }
+
+void rand_clear(SV * p) {
+     gmp_randclear(*(INT2PTR(gmp_randstate_t *, SvIV(SvRV(p)))));
+     Safefree(INT2PTR(gmp_randstate_t *, SvIV(SvRV(p))));
+     }
+
+int _has_longlong(void) {
+#ifdef USE_64_BIT_INT
+    return 1;
+#else
+    return 0;
+#endif
+}
+
+int _has_longdouble(void) {
+#ifdef USE_LONG_DOUBLE
+    return 1;
+#else
+    return 0;
+#endif
+}
+
+/* Has inttypes.h been included ? */
+int _has_inttypes(void) {
+#ifdef _MSC_VER
+return 0;
+#else
+#if defined USE_64_BIT_INT || defined USE_LONG_DOUBLE
+return 1;
+#else
+return 0;
+#endif
+#endif
+}
+
+SV * Rmpz_inp_raw(mpz_t * a, FILE * stream) {
+     size_t ret = mpz_inp_raw(*a, stream);
+     fflush(stream);
+     return newSVuv(ret);
+}
+
+SV * Rmpz_out_raw(FILE * stream, mpz_t * a) {
+     size_t ret = mpz_out_raw(stream, *a);
+     fflush(stream);
+     return newSVuv(ret);
+}
+
+SV * ___GNU_MP_VERSION(void) {
+     return newSVuv(__GNU_MP_VERSION);
+}
+
+SV * ___GNU_MP_VERSION_MINOR(void) {
+     return newSVuv(__GNU_MP_VERSION_MINOR);
+}
+
+SV * ___GNU_MP_VERSION_PATCHLEVEL(void) {
+     return newSVuv(__GNU_MP_VERSION_PATCHLEVEL);
+}
+
+SV * ___GMP_CC(void) {
+#ifdef __GMP_CC
+     char * ret = __GMP_CC;
+     return newSVpv(ret, 0);
+#else
+     return &PL_sv_undef;
+#endif
+}
+
+SV * ___GMP_CFLAGS(void) {
+#ifdef __GMP_CFLAGS
+     char * ret = __GMP_CFLAGS;
+     return newSVpv(ret, 0);
+#else
+     return &PL_sv_undef;
+#endif
+}
+
+#if __GNU_MP_VERSION >= 5
+#ifndef __MPIR_VERSION
+void Rmpz_powm_sec(mpz_t * dest, mpz_t * base, mpz_t * exp, mpz_t * mod) {
+     mpz_powm_sec(*dest, *base, *exp, *mod);
+}
+#else
+void Rmpz_powm_sec(mpz_t * dest, mpz_t * base, mpz_t * exp, mpz_t * mod) {
+     croak("Rmpz_powm_sec not implemented by the mpir library");
+}
+#endif
+#else
+void Rmpz_powm_sec(mpz_t * dest, mpz_t * base, mpz_t * exp, mpz_t * mod) {
+     croak("Rmpz_powm_sec not implemented - gmp-5 or later needed, this is gmp-%d", __GNU_MP_VERSION);
+}
+#endif
+
+int _using_mpir(void) {
+#ifdef __MPIR_VERSION
+return 1;
+#else
+return 0;
+#endif
+}
+
+SV * _Rmpz_NULL(void) {
+     mpz_t * mpz_t_obj;
+     SV * obj_ref, * obj;
+
+     mpz_t_obj = NULL;
+     obj_ref = newSV(0);
+     obj = newSVrv(obj_ref, NULL);
+
+     sv_setiv(obj, INT2PTR(IV, mpz_t_obj));
+     SvREADONLY_on(obj);
+     return obj_ref;
+}
+
+SV * _wrap_count(void) {
+     return newSVuv(PL_sv_count);
+}
+
 void Rprbg_ms(mpz_t * outref, mpz_t * p, mpz_t * q, mpz_t * seed, int bits_required) {
      mpz_t n, phi, pless1, qless1, mod, keep;
      unsigned long e, k, bign, r, its, i, r_shift, check;
@@ -1331,2896 +4012,6 @@ int Rpoker (mpz_t * bitstream) {
     
     return 0;        
 }
-
-int Rparity_ul(unsigned long v) {
-    v = (v >> 16) ^ v;
-    v = (v >> 8) ^ v;
-    v = (v >> 4) ^ v;
-    v = (v >> 2) ^ v;
-
-    return ((v >> 1) ^ v) & 1;
-}
-
-int Rparity_gmp(mpz_t * num) {
-
-    if(mpz_popcount(*num) & 1) return 1;
-    return 0;
-}
-
-SV * Rrotate_left_ul(SV * ulnum, SV * ulb, SV * uls) {
-     int i, r = 0, a;
-     unsigned long num = SvUV(ulnum), b = SvUV(ulb), s = SvUV(uls);
-     b -= 1;
-
-     if(s > b) croak ("rotate_left_ul() undefined for given arguments");
-     for(i = 0; i < s; ++i) {
-         if(num & (1 << (b - i))) {
-            r += 1 << (s - 1 - i);
-            }
-         }
-
-     num <<= s;
-     num += r;
-
-     a = 1 << (b + 1);
-     a -= 1;
-     num &= a;
-     return newSVuv(num);
-}
-
-void Rrotate_left_gmp(mpz_t * out, mpz_t * num, SV * bsv, SV * ssv) {
-     mpz_t r;
-     int i;
-     unsigned long s = SvUV(ssv), b = SvUV(bsv);
-
-     if(s >= b) croak ("rotate_left_gmp() undefined for given arguments");
-
-     mpz_init2(r, s);
-
-     mpz_set(*out, *num);
-
-     for(i = b - s; i < b; ++i) {
-         if(mpz_tstbit(*out, i)) {
-            mpz_setbit(r, i - (b - s));
-            mpz_clrbit(*out, i);
-            }
-         } 
-
-     mpz_mul_2exp(*out, *out, s);
-     mpz_add(*out, *out, r);
-     mpz_clear(r);
-}  
-
-SV * Rrotate_right_ul(SV * ulnum, SV * ulb, SV * uls) {
-     int i, r = 0, a, t;
-     unsigned long num = SvUV(ulnum), b = SvUV(ulb), s = SvUV(uls);
-
-     if(s >= b) croak ("rotate_right_ul() undefined for given arguments");
-
-     a = 1 << b;
-     a -= 1;
-     num &= a;
-
-     for(i = 0; i < s; ++i) {
-         t = 1 << i;
-         if(num & t) {
-            r += t;
-            }
-         }
-
-     num >>= s;
-     num += r << (b - s);
-
-     return newSVuv(num);
-}
-
-void Rrotate_right_gmp(mpz_t * out, mpz_t * num, SV * ulb, SV * uls) {
-     mpz_t r;
-     int i;
-     unsigned long b = SvUV(ulb), s = SvUV(uls);
-
-     if(s >= b) croak ("rotate_right_gmp() undefined for given arguments");
-
-     mpz_init2(r, b);
-     mpz_set(*out, *num); 
-
-     for(i = 0; i < s; ++i) {
-         if(mpz_tstbit(*out, i)) mpz_setbit(r, b - s + i);
-         }
-
-     mpz_div_2exp(*out, *out, s);
-     mpz_add(*out, *out, r);
-     mpz_clear(r);
-}
-
-void Rrsa_cert(mpz_t * n, mpz_t * d, mpz_t * e, mpz_t * p, mpz_t * q) {
-     mpz_t pless1, qless1;
-
-     mpz_init(pless1);
-     mpz_init(qless1);
-
-     mpz_mul(*n, *p, *q);
-     if(!mpz_tstbit(*e, 0))
-        mpz_add_ui(*e, *e, 1);
-
-     mpz_sub_ui(pless1, *p, 1);
-     mpz_sub_ui(qless1, *q, 1);
-     mpz_mul(pless1, pless1, qless1);
-
-     while(1) {
-           mpz_gcd(qless1, pless1, *e);
-           if(!mpz_cmp_ui(qless1, 1)) break;
-           mpz_add_ui(*e, *e, 2);           
-           }
-
-     mpz_gcdext(qless1, *d, NULL, *e, pless1);
-     if(mpz_cmp_ui(*d, 0) < 0)
-        mpz_add(*d, *d, pless1);
-
-/* Sanity Check */
-     mpz_mul(qless1, *d, *e);
-     mpz_mod(qless1, qless1, pless1);
-     if(mpz_cmp_ui(*d, 0) <= 0 ||
-        mpz_cmp(*d, pless1) >= 0 ||
-        mpz_cmp_ui(qless1, 1)) croak ("Error in RSA certificate calculation");
-         
-
-mpz_clear(pless1);
-mpz_clear(qless1);
-}
-
-void Rmers_div_q(mpz_t * q, mpz_t * n, mpz_t * d) {
-     mpz_t n_copy, add;
-     unsigned long s = mpz_sizeinbase(*d, 2);
-
-     mpz_init_set(n_copy, *n);
-     mpz_init2(add, mpz_sizeinbase(*d, 2));
-
-     mpz_set_ui(*q, 0);
-
-     while(mpz_cmp(n_copy, *d) > 0) {
-           mpz_and(add, n_copy, *d);
-           mpz_tdiv_q_2exp(n_copy, n_copy, s);
-           mpz_add(*q, *q, n_copy);
-           mpz_add(n_copy, n_copy, add);
-           }
-
-     if(!mpz_cmp(n_copy, *d))
-        mpz_add_ui(*q, *q, 1);
-
-     mpz_clear(n_copy);
-     mpz_clear(add);     
-  
-}
-
-void Rmers_div_r(mpz_t * r, mpz_t * n, mpz_t * d) {
-     mpz_t n_copy, add;
-     unsigned long s = mpz_sizeinbase(*d, 2);
-
-     mpz_init_set(n_copy, *n);
-     mpz_init2(add, mpz_sizeinbase(*d, 2));
-
-     mpz_set_ui(*r, 0);
-
-     while(mpz_cmp(n_copy, *d) > 0) {
-           mpz_and(add, n_copy, *d);
-           mpz_tdiv_q_2exp(n_copy, n_copy, s);
-           mpz_add(*r, *r, add);
-           }
-
-     mpz_add(*r, *r, n_copy);
-     mpz_tdiv_r(*r, *r, *d);
-
-     mpz_clear(n_copy);
-     mpz_clear(add);     
-  
-}
-
-void Rmers_div_r5(mpz_t * r, mpz_t * n, mpz_t * d, mpz_t * n_copy, mpz_t * add) {
-     unsigned long s = mpz_sizeinbase(*d, 2);
-
-     mpz_set(*n_copy, *n);
-     mpz_set_ui(*r, 0);
-
-     while(mpz_cmp(*n_copy, *d) > 0) {
-           mpz_and(*add, *n_copy, *d);
-           mpz_tdiv_q_2exp(*n_copy, *n_copy, s);
-           mpz_add(*r, *r, *add);
-           }
-
-     mpz_add(*r, *r, *n_copy);
-     mpz_tdiv_r(*r, *r, *d);
-
-}
-
-void Rmers_div_qr(mpz_t * q, mpz_t * r, mpz_t * n, mpz_t * d) {
-     mpz_t n_copy, n2_copy, add;
-     unsigned long s = mpz_sizeinbase(*d, 2);
-
-     mpz_init_set(n_copy, *n);
-     mpz_init_set(n2_copy, *n);
-     mpz_init2(add, mpz_sizeinbase(*d, 2));
-
-     mpz_set_ui(*q, 0);
-     mpz_set_ui(*r, 0);
-
-     while(mpz_cmp(n_copy, *d) > 0) {
-           mpz_and(add, n_copy, *d);
-           mpz_tdiv_q_2exp(n_copy, n_copy, s);
-           mpz_add(*q, *q, n_copy);
-           mpz_add(n_copy, n_copy, add);
-           }
-
-     if(!mpz_cmp(n_copy, *d))
-        mpz_add_ui(*q, *q, 1);
-
-     while(mpz_cmp(n2_copy, *d) > 0) {
-           mpz_and(add, n2_copy, *d);
-           mpz_tdiv_q_2exp(n2_copy, n2_copy, s);
-           mpz_add(*r, *r, add);
-           }
-
-     mpz_add(*r, *r, n2_copy);
-     mpz_tdiv_r(*r, *r, *d);
-
-     mpz_clear(n_copy);
-     mpz_clear(n2_copy);
-     mpz_clear(add);     
-  
-}
-
-SV * _Rmpz_out_str(mpz_t * p, SV * base) {
-     unsigned long ret;
-     if((SvIV(base) > -2 && SvIV(base) < 2) || SvIV(base) < -36 || SvIV(base) > 62)
-       croak("2nd argument supplied to Rmpz_out_str is out of allowable range (must be in range -36..-2, 2..62)");
-     ret = mpz_out_str(NULL, SvUV(base), *p);
-     fflush(stdout);
-     return newSVuv(ret);
-}
-
-SV * _Rmpz_out_strS(mpz_t * p, SV * base, SV * suff) {
-     unsigned long ret;
-     if((SvIV(base) > -2 && SvIV(base) < 2) || SvIV(base) < -36 || SvIV(base) > 62)
-       croak("2nd argument supplied to Rmpz_out_str is out of allowable range (must be in range -36..-2, 2..62)");
-     ret = mpz_out_str(NULL, SvUV(base), *p);
-     printf("%s", SvPV_nolen(suff));
-     fflush(stdout);
-     return newSVuv(ret);
-}
-
-SV * _Rmpz_out_strP(SV * pre, mpz_t * p, SV * base) {
-     unsigned long ret;
-     if((SvIV(base) > -2 && SvIV(base) < 2) || SvIV(base) < -36 || SvIV(base) > 62)
-       croak("3rd argument supplied to Rmpz_out_str is out of allowable range (must be in range -36..-2, 2..62)");
-     printf("%s", SvPV_nolen(pre));
-     ret = mpz_out_str(NULL, SvUV(base), *p);
-     fflush(stdout);
-     return newSVuv(ret);
-}
-
-SV * _Rmpz_out_strPS(SV * pre, mpz_t * p, SV * base, SV * suff) {
-     unsigned long ret;
-     if((SvIV(base) > -2 && SvIV(base) < 2) || SvIV(base) < -36 || SvIV(base) > 62)
-       croak("3rd argument supplied to Rmpz_out_str is out of allowable range (must be in range -36..-2, 2..62)");
-     printf("%s", SvPV_nolen(pre));
-     ret = mpz_out_str(NULL, SvUV(base), *p);
-     printf("%s", SvPV_nolen(suff));
-     fflush(stdout);
-     return newSVuv(ret);
-}
-
-SV * _TRmpz_out_str(FILE * stream, SV * base, mpz_t * p) {
-     size_t ret;
-     if((SvIV(base) > -2 && SvIV(base) < 2) || SvIV(base) < -36 || SvIV(base) > 62)
-       croak("2nd argument supplied to TRmpz_out_str is out of allowable range (must be in range -36..-2, 2..62)");
-     ret = mpz_out_str(stream, (int)SvIV(base), *p);
-     fflush(stream);
-     return newSVuv(ret);
-}
-
-SV * _TRmpz_out_strS(FILE * stream, SV * base, mpz_t * p, SV * suff) {
-     size_t ret;
-     if((SvIV(base) > -2 && SvIV(base) < 2) || SvIV(base) < -36 || SvIV(base) > 62)
-       croak("2nd argument supplied to TRmpz_out_str is out of allowable range (must be in range -36..-2, 2..62)");
-     ret = mpz_out_str(stream, (int)SvIV(base), *p);
-     fflush(stream);
-     fprintf(stream, "%s", SvPV_nolen(suff));
-     fflush(stream);
-     return newSVuv(ret);
-}
-
-SV * _TRmpz_out_strP(SV * pre, FILE * stream, SV * base, mpz_t * p) {
-     size_t ret;
-     if((SvIV(base) > -2 && SvIV(base) < 2) || SvIV(base) < -36 || SvIV(base) > 62)
-       croak("3rd argument supplied to TRmpz_out_str is out of allowable range (must be in range -36..-2, 2..62)");
-     fprintf(stream, "%s", SvPV_nolen(pre));
-     fflush(stream);
-     ret = mpz_out_str(stream, (int)SvIV(base), *p);
-     fflush(stream);
-     return newSVuv(ret);
-}
-
-SV * _TRmpz_out_strPS(SV * pre, FILE * stream, SV * base, mpz_t * p, SV * suff) {
-     size_t ret;
-     if((SvIV(base) > -2 && SvIV(base) < 2) || SvIV(base) < -36 || SvIV(base) > 62)
-       croak("3rd argument supplied to TRmpz_out_str is out of allowable range (must be in range -36..-2, 2..62)");
-     fprintf(stream, "%s", SvPV_nolen(pre));
-     fflush(stream);
-     ret = mpz_out_str(stream, (int)SvIV(base), *p);
-     fflush(stream);
-     fprintf(stream, "%s", SvPV_nolen(suff));
-     fflush(stream);
-     return newSVuv(ret);
-}
-
-SV * Rmpz_inp_str(mpz_t * p, SV * base) {
-     size_t ret;
-     if(SvUV(base) == 1 || SvUV(base) > 62)
-       croak("2nd argument supplied to Rmpz_inp_str is out of allowable range (must be in range 0, 2..62)");
-     ret = mpz_inp_str(*p, NULL, SvUV(base));
-     /* fflush(stdin); */
-     return newSVuv(ret);
-}
-
-SV * TRmpz_inp_str(mpz_t * p, FILE * stream, SV * base) {
-     size_t ret;
-     if(SvUV(base) == 1 || SvUV(base) > 62)
-       croak("4th argument supplied to TRmpz_inp_str is out of allowable range (must be in range 0, 2..62)");
-     ret = mpz_inp_str(*p, stream, (int)SvIV(base));
-     /* fflush(stream); */
-     return newSVuv(ret);
-}
-
-void eratosthenes(SV * x_arg) {
-dXSARGS;
-
-unsigned short *v, set[16] = {65534,65533,65531,65527,65519,65503,65471,65407,65279,65023,64511,63487,61439,57343,49151,32767};
-unsigned long leap, i, size, b, imax, k, x = SvUV(x_arg);
-
-if(x & 1) croak("max_num argument must be even in eratosthenes function");
-
-imax = sqrt(x - 1) / 2;
-
-b = (x + 1) / 2;
-
-if(!(b % 16)) size = b / 16;
-else size = (b / 16) + 1;
-
-Newz(2, v, size, unsigned short);
-if(v == NULL) croak("2: Unable to allocate memory in eratosthenes function");
-
-for(i = 1; i < size; ++i) v[i] = 65535;
-v[0] = 65534;
-
-for(i = 0; i <= imax; ++i) {
-    
-    if(v[i / 16] & (1 << (i % 16))) {
-       leap = (2 * i) + 1;
-       k = 2 * i * (i + 1);
-       while(k < b) {
-             v[k / 16] &= set[k % 16];
-             k += leap;
-             }
-       }
-}
-
-size = 1;
-sp = mark;
-XPUSHs(sv_2mortal(newSVuv(2)));
-
-for(i = 0; i < b; ++i) {
-    if(v[i / 16] & (1 << (i % 16))) {
-      XPUSHs(sv_2mortal(newSVuv(2 * i + 1)));
-      ++size;
-      }
-   }
-
-Safefree(v);
-
-PUTBACK;
-XSRETURN(size);
-
-}
-
-
-int trial_div_ul(mpz_t * num, SV * x_arg) {
-
-unsigned short *v, set[16] = {65534,65533,65531,65527,65519,65503,65471,65407,65279,65023,64511,63487,61439,57343,49151,32767};
-unsigned long leap, i, size, b, imax, k, x = SvUV(x_arg);
-
-if(x & 1) croak("Second argument supplied to trial_div_ul() must be even");
-
-imax = sqrt(x - 1) / 2;
-
-b = (x + 1) / 2;
-
-if(!(b % 16)) size = b / 16;
-else size = (b / 16) + 1;
-
-Newz(2, v, size, unsigned short);
-if(v == NULL) croak("2: Unable to allocate memory in trial_div_ul() function");
-
-for(i = 1; i < size; ++i) v[i] = 65535;
-v[0] = 65534;
-
-for(i = 0; i <= imax; ++i) {
-    
-    if(v[i / 16] & (1 << (i % 16))) {
-       leap = (2 * i) + 1;
-       k = 2 * i * (i + 1);
-       while(k < b) {
-             v[k / 16] &= set[k % 16];
-             k += leap;
-             }
-       }
-}
-
-if(mpz_divisible_ui_p(*num, 2)) {
-   Safefree(v);
-   return 2;
-   }
-
-for(i = 0; i < b; ++i) {
-    if(v[i / 16] & (1 << (i % 16))) {
-      if(mpz_divisible_ui_p(*num, 2 * i + 1)) {
-         Safefree(v);
-         return (2 * i + 1);
-         }
-      }
-   }
-
-Safefree(v);
-
-return 1;
-
-}
-
-void Rflipbit(mpz_t * flipped, mpz_t * orig) {
-     int i, len;
-
-     mpz_set_ui(*flipped, 0);
-     len = mpz_sizeinbase(*orig, 2);
-
-     for(i = 0; i < len; ++i) {
-        if(!mpz_tstbit(*orig, i)) mpz_setbit(*flipped, i);
-        }
-     }
-
-/* Next 2 functions became available with GMP-4.2 */
-
-void Rmpz_rootrem(mpz_t * root, mpz_t * rem, mpz_t * u, SV * d) { 
-     mpz_rootrem(*root, *rem, *u, (unsigned long)SvUV(d));
-}
-
-void Rmpz_combit(mpz_t * num, SV * bitpos) {
-     mpz_combit(*num, (unsigned long)SvUV(bitpos));
-}
-
-/* Finish typemapping - typemap 1st arg only */
-
-SV * overload_mul(SV * a, SV * b, SV * third) {
-     mpz_t * mpz_t_obj;
-     SV * obj_ref, * obj;
-#ifdef USE_LONG_DOUBLE
-     char buffer[50];
-#endif
-
-     if(!sv_isobject(b) || strNE(HvNAME(SvSTASH(SvRV(b))), "Math::MPFR")) {
-       New(1, mpz_t_obj, 1, mpz_t);
-       if(mpz_t_obj == NULL) croak("Failed to allocate memory in overload_mul function");
-       obj_ref = newSV(0);
-       obj = newSVrv(obj_ref, "Math::GMPz");
-       mpz_init(*mpz_t_obj);
-       sv_setiv(obj, INT2PTR(IV, mpz_t_obj));
-       SvREADONLY_on(obj);
-     }
-
-#ifdef USE_64_BIT_INT
-     if(SvIOK(b)) {
-       if(mpz_set_str(*mpz_t_obj, SvPV_nolen(b), 0))
-         croak(" Invalid string supplied to Math::GMPz::overload_mul");
-       mpz_mul(*mpz_t_obj, *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *mpz_t_obj);
-       return obj_ref;
-     }
-#else
-
-     if(SvUOK(b)) {
-       mpz_mul_ui(*mpz_t_obj, *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), SvUV(b));
-       return obj_ref;
-     }
-
-     if(SvIOK(b)) {
-       mpz_mul_si(*mpz_t_obj, *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), SvIV(b));
-       return obj_ref;
-     }
-#endif
-
-     if(SvNOK(b)) {
-#ifdef USE_LONG_DOUBLE
-       long double ld = (long double)SvNV(b) >= 0 ? floorl((long double)SvNV(b)) : ceill((long double)SvNV(b));
-       sprintf(buffer, "%.0Lf", ld);
-       mpz_set_str(*mpz_t_obj, buffer, 10);
-#else
-       mpz_set_d(*mpz_t_obj, SvNV(b));
-#endif
-       mpz_mul(*mpz_t_obj, *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *mpz_t_obj);
-       return obj_ref;
-     }
-
-     if(SvPOK(b)) {
-       if(mpz_set_str(*mpz_t_obj, SvPV_nolen(b), 0))
-         croak(" Invalid string supplied to Math::GMPz::overload_mul");
-       mpz_mul(*mpz_t_obj, *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *mpz_t_obj);
-       return obj_ref;
-     }
-
-     if(sv_isobject(b)) {
-       if(strEQ(HvNAME(SvSTASH(SvRV(b))), "Math::GMPz")) {
-         mpz_mul(*mpz_t_obj, *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(b)))));
-         return obj_ref;
-       }
-       if(strEQ(HvNAME(SvSTASH(SvRV(b))), "Math::MPFR")) {
-         dSP;
-         SV * ret;
-         int count;
-
-         ENTER;
-
-         PUSHMARK(SP);
-         XPUSHs(b);
-         XPUSHs(a);
-         XPUSHs(sv_2mortal(newSViv(1)));
-         PUTBACK;
-
-         count = call_pv("Math::MPFR::overload_mul", G_SCALAR);
-
-         SPAGAIN;
-
-         if (count != 1)
-           croak("Error in Math::GMPz::overload_mul callback to Math::MPFR::overload_mul\n");
-
-         ret = POPs;
-
-         /* Avoid "Attempt to free unreferenced scalar" warning */
-         SvREFCNT_inc(ret);
-         LEAVE;
-         return ret;
-       }
-     }
-
-     croak("Invalid argument supplied to Math::GMPz::overload_mul");
-}
-
-SV * overload_add(SV * a, SV * b, SV * third) {
-     mpz_t * mpz_t_obj;
-     SV * obj_ref, * obj;
-#ifdef USE_LONG_DOUBLE
-     char buffer[50];
-#endif
-
-     if(!sv_isobject(b) || strNE(HvNAME(SvSTASH(SvRV(b))), "Math::MPFR")) {
-       New(1, mpz_t_obj, 1, mpz_t);
-       if(mpz_t_obj == NULL) croak("Failed to allocate memory in overload_add function");
-       obj_ref = newSV(0);
-       obj = newSVrv(obj_ref, "Math::GMPz");
-       mpz_init(*mpz_t_obj);
-       sv_setiv(obj, INT2PTR(IV, mpz_t_obj));
-       SvREADONLY_on(obj);
-     }
-
-#ifdef USE_64_BIT_INT
-     if(SvIOK(b)) {
-       if(mpz_set_str(*mpz_t_obj, SvPV_nolen(b), 0))
-         croak(" Invalid string supplied to Math::GMPz::overload_add");
-       mpz_add(*mpz_t_obj, *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *mpz_t_obj);
-       return obj_ref;
-     }
-#else
-     if(SvUOK(b)) {
-       mpz_add_ui(*mpz_t_obj, *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), SvUV(b));
-       return obj_ref;
-     }
-
-     if(SvIOK(b)) {
-       if(SvIV(b) >= 0) {
-         mpz_add_ui(*mpz_t_obj, *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), SvIV(b));
-         return obj_ref;
-       }
-       mpz_sub_ui(*mpz_t_obj, *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), SvIV(b) * -1);
-       return obj_ref;
-     }
-#endif
-
-     if(SvNOK(b)) {
-#ifdef USE_LONG_DOUBLE
-       long double ld = (long double)SvNV(b) >= 0 ? floorl((long double)SvNV(b)) : ceill((long double)SvNV(b));
-       sprintf(buffer, "%.0Lf", ld);
-       mpz_set_str(*mpz_t_obj, buffer, 10);
-#else
-       mpz_set_d(*mpz_t_obj, SvNV(b));
-#endif
-       mpz_add(*mpz_t_obj, *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *mpz_t_obj);
-       return obj_ref;
-     }
-
-     if(SvPOK(b)) {
-       if(mpz_set_str(*mpz_t_obj, SvPV_nolen(b), 0))
-         croak(" Invalid string supplied to Math::GMPz::overload_add");
-       mpz_add(*mpz_t_obj, *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *mpz_t_obj);
-       return obj_ref;
-     }
-
-     if(sv_isobject(b)) {
-       if(strEQ(HvNAME(SvSTASH(SvRV(b))), "Math::GMPz")) {
-         mpz_add(*mpz_t_obj, *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(b)))));
-         return obj_ref;
-       }
-       if(strEQ(HvNAME(SvSTASH(SvRV(b))), "Math::MPFR")) {
-         dSP;
-         SV * ret;
-         int count;
-
-         ENTER;
-
-         PUSHMARK(SP);
-         XPUSHs(b);
-         XPUSHs(a);
-         XPUSHs(sv_2mortal(newSViv(1)));
-         PUTBACK;
-
-         count = call_pv("Math::MPFR::overload_add", G_SCALAR);
-
-         SPAGAIN;
-
-         if (count != 1)
-           croak("Error in Math::GMPz::overload_add callback to Math::MPFR::overload_add\n");
-
-         ret = POPs;
-
-         /* Avoid "Attempt to free unreferenced scalar" warning */
-         SvREFCNT_inc(ret);
-         LEAVE;
-         return ret;
-       }
-     }
-
-     croak("Invalid argument supplied to Math::GMPz::overload_add function");
-
-}
-
-SV * overload_sub(SV * a, SV * b, SV * third) {
-     mpz_t * mpz_t_obj;
-     SV * obj_ref, * obj;
-#ifdef USE_LONG_DOUBLE
-     char buffer[50];
-#endif
-
-     if(!sv_isobject(b) || strNE(HvNAME(SvSTASH(SvRV(b))), "Math::MPFR")) {
-       New(1, mpz_t_obj, 1, mpz_t);
-       if(mpz_t_obj == NULL) croak("Failed to allocate memory in overload_sub function");
-       obj_ref = newSV(0);
-       obj = newSVrv(obj_ref, "Math::GMPz");
-       mpz_init(*mpz_t_obj);
-       sv_setiv(obj, INT2PTR(IV, mpz_t_obj));
-       SvREADONLY_on(obj);
-     }
-
-
-#ifdef USE_64_BIT_INT
-     if(SvIOK(b)) {
-       if(mpz_set_str(*mpz_t_obj, SvPV_nolen(b), 0))
-         croak(" Invalid string supplied to Math::GMPz::overload_sub");
-       if(third == &PL_sv_yes) mpz_sub(*mpz_t_obj, *mpz_t_obj, *(INT2PTR(mpz_t *, SvIV(SvRV(a)))));
-       else mpz_sub(*mpz_t_obj, *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *mpz_t_obj);
-       return obj_ref;
-     }
-#else
-     if(SvUOK(b)) {
-       if(third == &PL_sv_yes) {
-         mpz_ui_sub(*mpz_t_obj, SvUV(b), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))));
-         return obj_ref;
-       }
-       mpz_sub_ui(*mpz_t_obj, *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), SvUV(b));
-       return obj_ref;
-     }
-
-     if(SvIOK(b)) {
-       if(SvIV(b) >= 0) {
-         if(third == &PL_sv_yes) {
-           mpz_ui_sub(*mpz_t_obj, SvIV(b), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))));
-           return obj_ref;
-           }
-         mpz_sub_ui(*mpz_t_obj, *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), SvIV(b));
-         return obj_ref;
-       }
-       mpz_add_ui(*mpz_t_obj, *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), SvIV(b) * -1);
-       if(third == &PL_sv_yes) mpz_neg(*mpz_t_obj, *mpz_t_obj);
-       return obj_ref;
-     }
-#endif
-
-     if(SvNOK(b)) {
-#ifdef USE_LONG_DOUBLE
-       long double ld = (long double)SvNV(b) >= 0 ? floorl((long double)SvNV(b)) : ceill((long double)SvNV(b));
-       sprintf(buffer, "%.0Lf", ld);
-       mpz_set_str(*mpz_t_obj, buffer, 10);
-#else
-       mpz_set_d(*mpz_t_obj, SvNV(b));
-#endif
-       if(third == &PL_sv_yes) mpz_sub(*mpz_t_obj, *mpz_t_obj, *(INT2PTR(mpz_t *, SvIV(SvRV(a)))));
-       else mpz_sub(*mpz_t_obj, *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *mpz_t_obj);
-       return obj_ref;
-     }
-
-     if(SvPOK(b)) {
-       if(mpz_set_str(*mpz_t_obj, SvPV_nolen(b), 0))
-         croak(" Invalid string supplied to Math::GMPz::overload_sub");
-       if(third == &PL_sv_yes) mpz_sub(*mpz_t_obj, *mpz_t_obj, *(INT2PTR(mpz_t *, SvIV(SvRV(a)))));
-       else mpz_sub(*mpz_t_obj, *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *mpz_t_obj);
-       return obj_ref;
-     }
-     if(sv_isobject(b)) {
-       if(strEQ(HvNAME(SvSTASH(SvRV(b))), "Math::GMPz")) {
-         mpz_sub(*mpz_t_obj, *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(b)))));
-         return obj_ref;
-       }
-       if(strEQ(HvNAME(SvSTASH(SvRV(b))), "Math::MPFR")) {
-         dSP;
-         SV * ret;
-         int count;
-
-         ENTER;
-
-         PUSHMARK(SP);
-         XPUSHs(b);
-         XPUSHs(a);
-         XPUSHs(sv_2mortal(&PL_sv_yes));
-         PUTBACK;
-
-         count = call_pv("Math::MPFR::overload_sub", G_SCALAR);
-
-         SPAGAIN;
-
-         if (count != 1)
-           croak("Error in Math::GMPz::overload_sub callback to Math::MPFR::overload_sub\n");
-
-         ret = POPs;
-
-         /* Avoid "Attempt to free unreferenced scalar" warning */
-         SvREFCNT_inc(ret);
-         LEAVE;
-         return ret;
-       }
-     }
-
-     croak("Invalid argument supplied to Math::GMPz::overload_sub function");
-
-}
-
-SV * overload_div(SV * a, SV * b, SV * third) {
-     mpz_t * mpz_t_obj;
-     SV * obj_ref, * obj;
-#ifdef USE_LONG_DOUBLE
-     char buffer[50];
-#endif
-
-     if(!sv_isobject(b) || strNE(HvNAME(SvSTASH(SvRV(b))), "Math::MPFR")) {
-       New(1, mpz_t_obj, 1, mpz_t);
-       if(mpz_t_obj == NULL) croak("Failed to allocate memory in overload_div function");
-       obj_ref = newSV(0);
-       obj = newSVrv(obj_ref, "Math::GMPz");
-       mpz_init(*mpz_t_obj);
-       sv_setiv(obj, INT2PTR(IV, mpz_t_obj));
-       SvREADONLY_on(obj);
-     }
-
-
-
-#ifdef USE_64_BIT_INT
-     if(SvIOK(b)) {
-       if(mpz_set_str(*mpz_t_obj, SvPV_nolen(b), 0))
-          croak(" Invalid string supplied to Math::GMPz::overload_div");
-       if(third == &PL_sv_yes) mpz_tdiv_q(*mpz_t_obj, *mpz_t_obj, *(INT2PTR(mpz_t *, SvIV(SvRV(a)))));
-       else mpz_tdiv_q(*mpz_t_obj, *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *mpz_t_obj);
-       return obj_ref;
-     }
-#else
-     if(SvUOK(b)) {
-       if(third == &PL_sv_yes) {
-         mpz_set_ui(*mpz_t_obj, SvUV(b));
-         mpz_tdiv_q(*mpz_t_obj, *mpz_t_obj, *(INT2PTR(mpz_t *, SvIV(SvRV(a)))));
-         return obj_ref;
-       }
-       mpz_tdiv_q_ui(*mpz_t_obj, *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), SvUV(b));
-       return obj_ref;
-     }
-
-     if(SvIOK(b)) {
-       if(SvIV(b) >= 0) {
-         if(third == &PL_sv_yes) {
-           mpz_set_si(*mpz_t_obj, SvIV(b));
-           mpz_tdiv_q(*mpz_t_obj, *mpz_t_obj, *(INT2PTR(mpz_t *, SvIV(SvRV(a)))));
-           return obj_ref;
-         }
-         mpz_tdiv_q_ui(*mpz_t_obj, *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), SvIV(b));
-         return obj_ref;
-       }
-       if(third == &PL_sv_yes) {
-         mpz_set_si(*mpz_t_obj, SvIV(b));
-         mpz_tdiv_q(*mpz_t_obj, *mpz_t_obj, *(INT2PTR(mpz_t *, SvIV(SvRV(a)))));
-         return obj_ref;
-     }
-       mpz_tdiv_q_ui(*mpz_t_obj, *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), SvIV(b) * -1);
-       mpz_neg(*mpz_t_obj, *mpz_t_obj);
-       return obj_ref;
-     }
-#endif
-
-     if(SvNOK(b)) {
-#ifdef USE_LONG_DOUBLE
-       long double ld = (long double)SvNV(b) >= 0 ? floorl((long double)SvNV(b)) : ceill((long double)SvNV(b));
-       sprintf(buffer, "%.0Lf", ld);
-       mpz_set_str(*mpz_t_obj, buffer, 10);
-#else
-       mpz_set_d(*mpz_t_obj, SvNV(b));
-#endif
-       if(third == &PL_sv_yes) mpz_tdiv_q(*mpz_t_obj, *mpz_t_obj, *(INT2PTR(mpz_t *, SvIV(SvRV(a)))));
-       else mpz_tdiv_q(*mpz_t_obj, *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *mpz_t_obj);
-       return obj_ref;
-     }
-
-     if(SvPOK(b)) {
-       if(mpz_set_str(*mpz_t_obj, SvPV_nolen(b), 0))
-          croak(" Invalid string supplied to Math::GMPz::overload_div");
-       if(third == &PL_sv_yes) mpz_tdiv_q(*mpz_t_obj, *mpz_t_obj, *(INT2PTR(mpz_t *, SvIV(SvRV(a)))));
-       else mpz_tdiv_q(*mpz_t_obj, *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *mpz_t_obj);
-       return obj_ref;
-     }
-
-     if(sv_isobject(b)) {
-       if(strEQ(HvNAME(SvSTASH(SvRV(b))), "Math::GMPz")) {
-         mpz_tdiv_q(*mpz_t_obj, *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(b)))));
-         return obj_ref;
-       }
-       if(strEQ(HvNAME(SvSTASH(SvRV(b))), "Math::MPFR")) {
-         dSP;
-         SV * ret;
-         int count;
-
-         ENTER;
-
-         PUSHMARK(SP);
-         XPUSHs(b);
-         XPUSHs(a);
-         XPUSHs(sv_2mortal(&PL_sv_yes));
-         PUTBACK;
-
-         count = call_pv("Math::MPFR::overload_div", G_SCALAR);
-
-         SPAGAIN;
-
-         if (count != 1)
-           croak("Error in Math::GMPz::overload_div callback to Math::MPFR::overload_div\n");
-
-         ret = POPs;
-
-         /* Avoid "Attempt to free unreferenced scalar" warning */
-         SvREFCNT_inc(ret);
-         LEAVE;
-         return ret;
-       }
-     }
-
-     croak("Invalid argument supplied to Math::GMPz::overload_div function");
-
-}
-
-SV * overload_mod (mpz_t * a, SV * b, SV * third) {
-     mpz_t *mpz_t_obj;
-     SV * obj_ref, * obj;
-#ifdef USE_LONG_DOUBLE
-     char buffer[50];
-#endif
-
-     New(1, mpz_t_obj, 1, mpz_t);
-     if(mpz_t_obj == NULL) croak("Failed to allocate memory in overload_mod function");
-     obj_ref = newSV(0);
-     obj = newSVrv(obj_ref, "Math::GMPz");
-     mpz_init(*mpz_t_obj);
-     sv_setiv(obj, INT2PTR(IV, mpz_t_obj));
-     SvREADONLY_on(obj);
-
-#ifdef USE_64_BIT_INT
-     if(SvIOK(b)) {
-       if(mpz_set_str(*mpz_t_obj, SvPV_nolen(b), 0))
-          croak(" Invalid string supplied to Math::GMPz::overload_mod");
-       if(third == &PL_sv_yes) {
-         mpz_mod(*mpz_t_obj, *mpz_t_obj, *a);  
-         return obj_ref;   
-         }
-       mpz_mod(*mpz_t_obj, *a, *mpz_t_obj);  
-       return obj_ref;
-       }
-#else
-     if(SvUOK(b)) {
-       if(third == &PL_sv_yes) {
-         mpz_set_ui(*mpz_t_obj, SvUV(b));
-         mpz_mod(*mpz_t_obj, *mpz_t_obj, *a);  
-         return obj_ref;       
-         }
-       mpz_mod_ui(*mpz_t_obj, *a, SvUV(b));
-       return obj_ref;
-       }
-
-     if(SvIOK(b)) {
-       mpz_set_si(*mpz_t_obj, SvIV(b));
-       if(third == &PL_sv_yes) {
-         mpz_mod(*mpz_t_obj, *mpz_t_obj, *a);  
-         return obj_ref;   
-         }
-       mpz_mod(*mpz_t_obj, *a, *mpz_t_obj);  
-       return obj_ref;
-       } 
-#endif  
-
-     if(SvNOK(b)) {
-#ifdef USE_LONG_DOUBLE
-       long double ld = (long double)SvNV(b) >= 0 ? floorl((long double)SvNV(b)) : ceill((long double)SvNV(b));
-       sprintf(buffer, "%.0Lf", ld);
-       mpz_set_str(*mpz_t_obj, buffer, 10);
-#else
-       mpz_set_d(*mpz_t_obj, SvNV(b));
-#endif
-       if(third == &PL_sv_yes) {
-         mpz_mod(*mpz_t_obj, *mpz_t_obj, *a);  
-         return obj_ref;   
-         }
-       mpz_mod(*mpz_t_obj, *a, *mpz_t_obj);  
-       return obj_ref;   
-       }
-
-     if(SvPOK(b)) {
-       if(mpz_set_str(*mpz_t_obj, SvPV_nolen(b), 0))
-          croak(" Invalid string supplied to Math::GMPz::overload_mod");
-       if(third == &PL_sv_yes) {
-         mpz_mod(*mpz_t_obj, *mpz_t_obj, *a);  
-         return obj_ref;   
-         }
-       mpz_mod(*mpz_t_obj, *a, *mpz_t_obj);  
-       return obj_ref;
-       }
-
-     if(sv_isobject(b)) {
-       if(strEQ(HvNAME(SvSTASH(SvRV(b))), "Math::GMPz")) {
-         mpz_mod(*mpz_t_obj, *a, *(INT2PTR(mpz_t *, SvIV(SvRV(b)))));
-         return obj_ref;
-         }
-       }
-
-     croak("Invalid argument supplied to Math::GMPz::overload_mod function");
-}
-
-SV * overload_string(mpz_t * p, SV * second, SV * third) {
-     char * out;
-     SV * outsv;
-
-     New(2, out, mpz_sizeinbase(*p, 10) + 3, char);
-     if(out == NULL) croak("Failed to allocate memory in overload_string function");
-
-     mpz_get_str(out, 10, *p);
-     outsv = newSVpv(out, 0);
-     Safefree(out);
-     return outsv;
-}
-
-SV * overload_copy(mpz_t * p, SV * second, SV * third) {
-     mpz_t * mpz_t_obj;
-     SV * obj_ref, * obj;
-
-     New(1, mpz_t_obj, 1, mpz_t);
-     if(mpz_t_obj == NULL) croak("Failed to allocate memory in overload_copy function");
-     obj_ref = newSV(0);
-     obj = newSVrv(obj_ref, "Math::GMPz");
-
-     mpz_init_set(*mpz_t_obj, *p);
-     sv_setiv(obj, INT2PTR(IV, mpz_t_obj));
-     SvREADONLY_on(obj);
-     return obj_ref;
-}
-
-SV * overload_abs(mpz_t * p, SV * second, SV * third) {
-     mpz_t * mpz_t_obj;
-     SV * obj_ref, * obj;
-
-     New(1, mpz_t_obj, 1, mpz_t);
-     if(mpz_t_obj == NULL) croak("Failed to allocate memory in overload_abs function");
-     obj_ref = newSV(0);
-     obj = newSVrv(obj_ref, "Math::GMPz");
-     mpz_init(*mpz_t_obj);
-
-     mpz_abs(*mpz_t_obj, *p);
-     sv_setiv(obj, INT2PTR(IV, mpz_t_obj));
-     SvREADONLY_on(obj);
-     return obj_ref;
-}
-
-SV * overload_lshift(mpz_t * a, SV * b, SV * third) {
-     mpz_t * mpz_t_obj;
-     SV * obj_ref, * obj;
-
-     New(1, mpz_t_obj, 1, mpz_t);
-     if(mpz_t_obj == NULL) croak("Failed to allocate memory in overload_lshift function");
-     obj_ref = newSV(0);
-     obj = newSVrv(obj_ref, "Math::GMPz");
-     mpz_init(*mpz_t_obj);
-
-     if(SvUOK(b)) {
-       mpz_mul_2exp(*mpz_t_obj, *a, SvUV(b));
-       sv_setiv(obj, INT2PTR(IV, mpz_t_obj));
-       SvREADONLY_on(obj);
-       return obj_ref;
-       }
-
-     if(SvIOK(b)) {
-       if(SvIV(b) < 0) croak("Invalid argument supplied to Math::GMPz::overload_lshift");
-       mpz_mul_2exp(*mpz_t_obj, *a, SvUV(b));
-       sv_setiv(obj, INT2PTR(IV, mpz_t_obj));
-       SvREADONLY_on(obj);
-       return obj_ref;
-       }
-
-     croak("Invalid argument supplied to Math::GMPz::overload_lshift");
-}
-
-SV * overload_rshift(mpz_t * a, SV * b, SV * third) {
-     mpz_t * mpz_t_obj;
-     SV * obj_ref, * obj;
-
-     New(1, mpz_t_obj, 1, mpz_t);
-     if(mpz_t_obj == NULL) croak("Failed to allocate memory in overload_rshift function");
-     obj_ref = newSV(0);
-     obj = newSVrv(obj_ref, "Math::GMPz");
-     mpz_init(*mpz_t_obj);
-
-     if(SvUOK(b)) {
-       mpz_tdiv_q_2exp(*mpz_t_obj, *a, SvUV(b));
-       sv_setiv(obj, INT2PTR(IV, mpz_t_obj));
-       SvREADONLY_on(obj);
-       return obj_ref;
-       }
-
-     if(SvIOK(b)) {
-       if(SvIV(b) < 0) croak("Invalid argument supplied to Math::GMPz::overload_rshift");
-       mpz_tdiv_q_2exp(*mpz_t_obj, *a, SvUV(b));
-       sv_setiv(obj, INT2PTR(IV, mpz_t_obj));
-       SvREADONLY_on(obj);
-       return obj_ref;
-       }
-
-     croak("Invalid argument supplied to Math::GMPz::overload_rshift");
-}
-
-SV * overload_pow(SV * a, SV * b, SV * third) {
-     mpz_t * mpz_t_obj;
-     SV * obj_ref, * obj;
-
-     if(third == &PL_sv_yes)
-       croak("Invalid third argument (&PL_sv_yes) supplied to Math::GMPz::overload_pow function");
-
-     if(!sv_isobject(b)) {
-       New(1, mpz_t_obj, 1, mpz_t);
-       if(mpz_t_obj == NULL) croak("Failed to allocate memory in overload_pow function");
-       obj_ref = newSV(0);
-       obj = newSVrv(obj_ref, "Math::GMPz");
-       mpz_init(*mpz_t_obj);
-       sv_setiv(obj, INT2PTR(IV, mpz_t_obj));
-       SvREADONLY_on(obj);
-     }
-
-     if(SvUOK(b)) {
-       mpz_pow_ui(*mpz_t_obj, *(INT2PTR(mpz_t *, SvIV(SvRV(a)))) , SvUV(b));
-       return obj_ref;
-       }
-
-     if(SvIOK(b)) {
-       if(SvIV(b) < 0) croak("Invalid argument supplied to Math::GMPz::overload_pow");
-       mpz_pow_ui(*mpz_t_obj, *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), SvUV(b));
-       return obj_ref;
-       }
-
-     if(sv_isobject(b)) {
-       if(strEQ(HvNAME(SvSTASH(SvRV(b))), "Math::MPFR")) {
-         dSP;
-         SV * ret;
-         int count;
-
-         ENTER;
-
-         PUSHMARK(SP);
-         XPUSHs(b);
-         XPUSHs(a);
-         XPUSHs(sv_2mortal(&PL_sv_yes));
-         PUTBACK;
-
-         count = call_pv("Math::MPFR::overload_pow", G_SCALAR);
-
-         SPAGAIN;
-
-         if (count != 1)
-           croak("Error in Math::GMPq:overload_pow callback to Math::MPFR::overload_pow\n");
-
-         ret = POPs;
-
-         /* Avoid "Attempt to free unreferenced scalar" warning */
-         SvREFCNT_inc(ret);
-         LEAVE;
-         return ret;
-       }
-     }
-
-     croak("Invalid argument supplied to Math::GMPz::overload_pow. It takes only signed/unsigned long or Math::MPFR object as exponent");
-}
-
-SV * overload_sqrt(mpz_t * p, SV * second, SV * third) {
-     mpz_t * mpz_t_obj;
-     SV * obj_ref, * obj;
-
-     New(1, mpz_t_obj, 1, mpz_t);
-     if(mpz_t_obj == NULL) croak("Failed to allocate memory in overload_sqrt function");
-     obj_ref = newSV(0);
-     obj = newSVrv(obj_ref, "Math::GMPz");
-     mpz_init(*mpz_t_obj);
-
-     if(mpz_cmp_ui(*p, 0) < 0) croak("Negative value supplied as argument to overload_sqrt");
-     mpz_sqrt(*mpz_t_obj, *p);
-     sv_setiv(obj, INT2PTR(IV, mpz_t_obj));
-     SvREADONLY_on(obj);
-     return obj_ref;
-}
-
-SV * overload_and(mpz_t * a, SV * b, SV * third) {
-     mpz_t * mpz_t_obj;
-     SV * obj_ref, * obj;
-#ifdef USE_LONG_DOUBLE
-     char buffer[50];
-#endif
-
-     New(1, mpz_t_obj, 1, mpz_t);
-     if(mpz_t_obj == NULL) croak("Failed to allocate memory in overload_and function");
-     obj_ref = newSV(0);
-     obj = newSVrv(obj_ref, "Math::GMPz");
-     mpz_init(*mpz_t_obj);
-     sv_setiv(obj, INT2PTR(IV, mpz_t_obj));
-     SvREADONLY_on(obj);
-
-#ifdef USE_64_BIT_INT
-     if(SvIOK(b)) {
-       if(mpz_set_str(*mpz_t_obj, SvPV_nolen(b), 0))
-         croak("Invalid string supplied to Math::GMPz::overload_and");
-       mpz_and(*mpz_t_obj, *a, *mpz_t_obj);
-       return obj_ref;
-       }
-#else
-     if(SvUOK(b)) {
-       mpz_set_ui(*mpz_t_obj, SvUV(b));
-       mpz_and(*mpz_t_obj, *a, *mpz_t_obj);
-       return obj_ref;
-       }
-
-     if(SvIOK(b)) {
-       mpz_set_si(*mpz_t_obj, SvIV(b));
-       mpz_and(*mpz_t_obj, *a, *mpz_t_obj);
-       return obj_ref;
-       }
-#endif
-
-
-     if(SvNOK(b)) {
-#ifdef USE_LONG_DOUBLE
-       long double ld = (long double)SvNV(b) >= 0 ? floorl((long double)SvNV(b)) : ceill((long double)SvNV(b));
-       sprintf(buffer, "%.0Lf", ld);
-       mpz_set_str(*mpz_t_obj, buffer, 10);
-#endif
-
-       mpz_set_d(*mpz_t_obj, SvNV(b));
-       mpz_and(*mpz_t_obj, *a, *mpz_t_obj);
-       return obj_ref;
-       }
-
-     if(SvPOK(b)) {
-       if(mpz_set_str(*mpz_t_obj, SvPV_nolen(b), 0))
-         croak("Invalid string supplied to Math::GMPz::overload_and");
-       mpz_and(*mpz_t_obj, *a, *mpz_t_obj);
-       return obj_ref;
-       }
-
-     if(sv_isobject(b)) {
-       if(strEQ(HvNAME(SvSTASH(SvRV(b))), "Math::GMPz")) {
-         mpz_and(*mpz_t_obj, *a, *(INT2PTR(mpz_t *, SvIV(SvRV(b)))));
-         return obj_ref;
-         }
-       }
-
-     croak("Invalid argument supplied to Math::GMPz::overload_and");
-}
-
-SV * overload_ior(mpz_t * a, SV * b, SV * third) {
-     mpz_t * mpz_t_obj;
-     SV * obj_ref, * obj;
-#ifdef USE_LONG_DOUBLE
-     char buffer[50];
-#endif
-
-     New(1, mpz_t_obj, 1, mpz_t);
-     if(mpz_t_obj == NULL) croak("Failed to allocate memory in overload_ior function");
-     obj_ref = newSV(0);
-     obj = newSVrv(obj_ref, "Math::GMPz");
-     mpz_init(*mpz_t_obj);
-     sv_setiv(obj, INT2PTR(IV, mpz_t_obj));
-     SvREADONLY_on(obj);
-
-#ifdef USE_64_BIT_INT
-     if(SvIOK(b)) {
-       if(mpz_set_str(*mpz_t_obj, SvPV_nolen(b), 0))
-         croak("Invalid string supplied to Math::GMPz::overload_ior");
-       mpz_ior(*mpz_t_obj, *a, *mpz_t_obj);
-       return obj_ref;
-       }
-#else
-     if(SvUOK(b)) {
-       mpz_set_ui(*mpz_t_obj, SvUV(b));
-       mpz_ior(*mpz_t_obj, *a, *mpz_t_obj);
-       return obj_ref;
-       }
-
-     if(SvIOK(b)) {
-       mpz_set_si(*mpz_t_obj, SvIV(b));
-       mpz_ior(*mpz_t_obj, *a, *mpz_t_obj);
-       return obj_ref;
-       }
-#endif
-
-     if(SvNOK(b)) {
-#ifdef USE_LONG_DOUBLE
-       long double ld = (long double)SvNV(b) >= 0 ? floorl((long double)SvNV(b)) : ceill((long double)SvNV(b));
-       sprintf(buffer, "%.0Lf", ld);
-       mpz_set_str(*mpz_t_obj, buffer, 10);
-#else
-       mpz_set_d(*mpz_t_obj, SvNV(b));
-#endif
-       mpz_ior(*mpz_t_obj, *a, *mpz_t_obj);
-       return obj_ref;
-       }
-
-     if(SvPOK(b)) {
-       if(mpz_set_str(*mpz_t_obj, SvPV_nolen(b), 0))
-         croak("Invalid string supplied to Math::GMPz::overload_ior");
-       mpz_ior(*mpz_t_obj, *a, *mpz_t_obj);
-       return obj_ref;
-       }
-
-     if(sv_isobject(b)) {
-       if(strEQ(HvNAME(SvSTASH(SvRV(b))), "Math::GMPz")) {
-         mpz_ior(*mpz_t_obj, *a, *(INT2PTR(mpz_t *, SvIV(SvRV(b)))));
-         return obj_ref;
-         }
-       }
-
-     croak("Invalid argument supplied to Math::GMPz::overload_ior");
-}
-
-SV * overload_xor(mpz_t * a, SV * b, SV * third) {
-     mpz_t * mpz_t_obj;
-     SV * obj_ref, * obj;
-#ifdef USE_LONG_DOUBLE
-     char buffer[50];
-#endif
-
-     New(1, mpz_t_obj, 1, mpz_t);
-     if(mpz_t_obj == NULL) croak("Failed to allocate memory in overload_xor function");
-     obj_ref = newSV(0);
-     obj = newSVrv(obj_ref, "Math::GMPz");
-     mpz_init(*mpz_t_obj);
-     sv_setiv(obj, INT2PTR(IV, mpz_t_obj));
-     SvREADONLY_on(obj);
-
-#ifdef USE_64_BIT_INT
-     if(SvIOK(b)) {
-       if(mpz_set_str(*mpz_t_obj, SvPV_nolen(b), 0))
-         croak("Invalid string supplied to Math::GMPz::overload_xor");
-       mpz_xor(*mpz_t_obj, *a, *mpz_t_obj);
-       return obj_ref;
-       }
-#else
-     if(SvUOK(b)) {
-       mpz_set_ui(*mpz_t_obj, SvUV(b));
-       mpz_xor(*mpz_t_obj, *a, *mpz_t_obj);
-       return obj_ref;
-       }
-
-     if(SvIOK(b)) {
-       mpz_set_si(*mpz_t_obj, SvIV(b));
-       mpz_xor(*mpz_t_obj, *a, *mpz_t_obj);
-       return obj_ref;
-       }
-#endif
-
-     if(SvNOK(b)) {
-#ifdef USE_LONG_DOUBLE
-       long double ld = (long double)SvNV(b) >= 0 ? floorl((long double)SvNV(b)) : ceill((long double)SvNV(b));
-       sprintf(buffer, "%.0Lf", ld);
-       mpz_set_str(*mpz_t_obj, buffer, 10);
-#else
-       mpz_set_d(*mpz_t_obj, SvNV(b));
-#endif
-       mpz_xor(*mpz_t_obj, *a, *mpz_t_obj);
-       return obj_ref;
-       }
-
-     if(SvPOK(b)) {
-       if(mpz_set_str(*mpz_t_obj, SvPV_nolen(b), 0))
-         croak("Invalid string supplied to Math::GMPz::overload_xor");
-       mpz_xor(*mpz_t_obj, *a, *mpz_t_obj);
-       return obj_ref;
-       }
-
-     if(sv_isobject(b)) {
-       if(strEQ(HvNAME(SvSTASH(SvRV(b))), "Math::GMPz")) {
-         mpz_xor(*mpz_t_obj, *a, *(INT2PTR(mpz_t *, SvIV(SvRV(b)))));
-         return obj_ref;
-         }
-       }
-
-     croak("Invalid argument supplied to Math::GMPz::overload_xor");
-}
-
-SV * overload_com(mpz_t * p, SV * second, SV * third) {
-     mpz_t * mpz_t_obj;
-     SV * obj_ref, * obj;
-
-     New(1, mpz_t_obj, 1, mpz_t);
-     if(mpz_t_obj == NULL) croak("Failed to allocate memory in overload_com function");
-     obj_ref = newSV(0);
-     obj = newSVrv(obj_ref, "Math::GMPz");
-     mpz_init(*mpz_t_obj);
-
-     mpz_com(*mpz_t_obj, *p);
-     sv_setiv(obj, INT2PTR(IV, mpz_t_obj));
-     SvREADONLY_on(obj);
-     return obj_ref;
-}
-
-SV * overload_gt(mpz_t * a, SV * b, SV * third) {
-     int ret;
-     mpz_t t;
-#ifdef USE_LONG_DOUBLE
-     char buffer[50];
-#endif
-
-#ifdef USE_64_BIT_INT
-     if(SvIOK(b)) {
-       if(mpz_init_set_str(t, SvPV_nolen(b), 0))
-         croak("Invalid string supplied to Math::GMPz::overload_gt");
-       ret = mpz_cmp(*a, t);
-       mpz_clear(t);
-       if(third == &PL_sv_yes) ret *= -1;
-       if(ret > 0) return newSViv(1);
-       return newSViv(0);
-       }
-#else
-     if(SvUOK(b)) {
-       ret = mpz_cmp_ui(*a, SvUV(b));
-       if(third == &PL_sv_yes) ret *= -1;
-       if(ret > 0) return newSViv(1);
-       return newSViv(0);
-       }
-     if(SvIOK(b)) {
-       ret = mpz_cmp_si(*a, SvIV(b));
-       if(third == &PL_sv_yes) ret *= -1;
-       if(ret > 0) return newSViv(1);
-       return newSViv(0);
-       }
-#endif
-
-     if(SvNOK(b)) {
-#ifdef USE_LONG_DOUBLE
-       long double ld = (long double)SvNV(b) >= 0 ? floorl((long double)SvNV(b)) : ceill((long double)SvNV(b));
-       sprintf(buffer, "%.0Lf", ld);
-       mpz_init_set_str(t, buffer, 10);
-       ret = mpz_cmp(*a, t);
-       mpz_clear(t); 
-#else
-       ret = mpz_cmp_d(*a, SvNV(b));
-#endif
-       if(third == &PL_sv_yes) ret *= -1;
-       if(ret > 0) return newSViv(1);
-       return newSViv(0);
-       }
-
-     if(SvPOK(b)) {
-       if(mpz_init_set_str(t, SvPV_nolen(b), 0))
-         croak("Invalid string supplied to Math::GMPz::overload_gt");
-       ret = mpz_cmp(*a, t);
-       mpz_clear(t);
-       if(third == &PL_sv_yes) ret *= -1;
-       if(ret > 0) return newSViv(1);
-       return newSViv(0);
-       }
-
-     if(sv_isobject(b)) {
-       if(strEQ(HvNAME(SvSTASH(SvRV(b))), "Math::GMPz")) {
-         ret = mpz_cmp(*a, *(INT2PTR(mpz_t *, SvIV(SvRV(b)))));
-         if(ret > 0) return newSViv(1);
-         return newSViv(0);
-         }
-       }
-
-     croak("Invalid argument supplied to Math::GMPz::overload_gt");
-}
-
-SV * overload_gte(mpz_t * a, SV * b, SV * third) {
-     int ret;
-     mpz_t t;
-#ifdef USE_LONG_DOUBLE
-     char buffer[50];
-#endif
-
-#ifdef USE_64_BIT_INT
-     if(SvIOK(b)) {
-       if(mpz_init_set_str(t, SvPV_nolen(b), 0))
-         croak("Invalid string supplied to Math::GMPz::overload_gte");
-       ret = mpz_cmp(*a, t);
-       mpz_clear(t);
-       if(third == &PL_sv_yes) ret *= -1;
-       if(ret >= 0) return newSViv(1);
-       return newSViv(0);
-       }
-#else
-     if(SvUOK(b)) {
-       ret = mpz_cmp_ui(*a, SvUV(b));
-       if(third == &PL_sv_yes) ret *= -1;
-       if(ret >= 0) return newSViv(1);
-       return newSViv(0);
-       }
-
-     if(SvIOK(b)) {
-       ret = mpz_cmp_si(*a, SvIV(b));
-       if(third == &PL_sv_yes) ret *= -1;
-       if(ret >= 0) return newSViv(1);
-       return newSViv(0);
-       }
-#endif
-
-     if(SvNOK(b)) {
-#ifdef USE_LONG_DOUBLE
-       long double ld = (long double)SvNV(b) >= 0 ? floorl((long double)SvNV(b)) : ceill((long double)SvNV(b));
-       sprintf(buffer, "%.0Lf", ld);
-       mpz_init_set_str(t, buffer, 10);
-       ret = mpz_cmp(*a, t);
-       mpz_clear(t); 
-#else
-       ret = mpz_cmp_d(*a, SvNV(b));
-#endif
-       if(third == &PL_sv_yes) ret *= -1;
-       if(ret >= 0) return newSViv(1);
-       return newSViv(0);
-       }
-
-     if(SvPOK(b)) {
-       if(mpz_init_set_str(t, SvPV_nolen(b), 0))
-         croak("Invalid string supplied to Math::GMPz::overload_gte");
-       ret = mpz_cmp(*a, t);
-       mpz_clear(t);
-       if(third == &PL_sv_yes) ret *= -1;
-       if(ret >= 0) return newSViv(1);
-       return newSViv(0);
-       }
-
-     if(sv_isobject(b)) {
-       if(strEQ(HvNAME(SvSTASH(SvRV(b))), "Math::GMPz")) {
-         ret = mpz_cmp(*a, *(INT2PTR(mpz_t *, SvIV(SvRV(b)))));
-         if(ret >= 0) return newSViv(1);
-         return newSViv(0);
-         }
-       }
-
-     croak("Invalid argument supplied to Math::GMPz::overload_gte");
-}
-
-SV * overload_lt(mpz_t * a, SV * b, SV * third) {
-     int ret;
-     mpz_t t;
-#ifdef USE_LONG_DOUBLE
-     char buffer[50];
-#endif
-
-#ifdef USE_64_BIT_INT
-     if(SvIOK(b)) {
-       if(mpz_init_set_str(t, SvPV_nolen(b), 0))
-         croak("Invalid string supplied to Math::GMPz::overload_lt");
-       ret = mpz_cmp(*a, t);
-       mpz_clear(t);
-       if(third == &PL_sv_yes) ret *= -1;
-       if(ret < 0) return newSViv(1);
-       return newSViv(0);
-       }
-#else
-     if(SvUOK(b)) {
-       ret = mpz_cmp_ui(*a, SvUV(b));
-       if(third == &PL_sv_yes) ret *= -1;
-       if(ret < 0) return newSViv(1);
-       return newSViv(0);
-       }
-
-     if(SvIOK(b)) {
-       ret = mpz_cmp_si(*a, SvIV(b));
-       if(third == &PL_sv_yes) ret *= -1;
-       if(ret < 0) return newSViv(1);
-       return newSViv(0);
-       }
-#endif
-
-     if(SvNOK(b)) {
-#ifdef USE_LONG_DOUBLE
-       long double ld = (long double)SvNV(b) >= 0 ? floorl((long double)SvNV(b)) : ceill((long double)SvNV(b));
-       sprintf(buffer, "%.0Lf", ld);
-       mpz_init_set_str(t, buffer, 10);
-       ret = mpz_cmp(*a, t);
-       mpz_clear(t); 
-#else
-       ret = mpz_cmp_d(*a, SvNV(b));
-#endif
-       if(third == &PL_sv_yes) ret *= -1;
-       if(ret < 0) return newSViv(1);
-       return newSViv(0);
-       }
-
-     if(SvPOK(b)) {
-       if(mpz_init_set_str(t, SvPV_nolen(b), 0))
-         croak("Invalid string supplied to Math::GMPz::overload_lt");
-       ret = mpz_cmp(*a, t);
-       mpz_clear(t);
-       if(third == &PL_sv_yes) ret *= -1;
-       if(ret < 0) return newSViv(1);
-       return newSViv(0);
-       }
-
-     if(sv_isobject(b)) {
-       if(strEQ(HvNAME(SvSTASH(SvRV(b))), "Math::GMPz")) {
-         ret = mpz_cmp(*a, *(INT2PTR(mpz_t *, SvIV(SvRV(b)))));
-         if(ret < 0) return newSViv(1);
-         return newSViv(0);
-         }
-       }
-
-     croak("Invalid argument supplied to Math::GMPz::overload_lt");
-}
-
-SV * overload_lte(mpz_t * a, SV * b, SV * third) {
-     int ret;
-     mpz_t t;
-#ifdef USE_LONG_DOUBLE
-     char buffer[50];
-#endif
-
-#ifdef USE_64_BIT_INT
-     if(SvIOK(b)) {
-       if(mpz_init_set_str(t, SvPV_nolen(b), 0))
-         croak("Invalid string supplied to Math::GMPz::overload_lte");
-       ret = mpz_cmp(*a, t);
-       mpz_clear(t);
-       if(third == &PL_sv_yes) ret *= -1;
-       if(ret <= 0) return newSViv(1);
-       return newSViv(0);
-       }
-#else
-     if(SvUOK(b)) {
-       ret = mpz_cmp_ui(*a, SvUV(b));
-       if(third == &PL_sv_yes) ret *= -1;
-       if(ret <= 0) return newSViv(1);
-       return newSViv(0);
-       }
-
-     if(SvIOK(b)) {
-       ret = mpz_cmp_si(*a, SvIV(b));
-       if(third == &PL_sv_yes) ret *= -1;
-       if(ret <= 0) return newSViv(1);
-       return newSViv(0);
-       }
-#endif
-
-     if(SvNOK(b)) {
-#ifdef USE_LONG_DOUBLE
-       long double ld = (long double)SvNV(b) >= 0 ? floorl((long double)SvNV(b)) : ceill((long double)SvNV(b));
-       sprintf(buffer, "%.0Lf", ld);
-       mpz_init_set_str(t, buffer, 10);
-       ret = mpz_cmp(*a, t);
-       mpz_clear(t); 
-#else
-       ret = mpz_cmp_d(*a, SvNV(b));
-#endif
-       if(third == &PL_sv_yes) ret *= -1;
-       if(ret <= 0) return newSViv(1);
-       return newSViv(0);
-       }
-
-     if(SvPOK(b)) {
-       if(mpz_init_set_str(t, SvPV_nolen(b), 0))
-         croak("Invalid string supplied to Math::GMPz::overload_lte");
-       ret = mpz_cmp(*a, t);
-       mpz_clear(t);
-       if(third == &PL_sv_yes) ret *= -1;
-       if(ret <= 0) return newSViv(1);
-       return newSViv(0);
-       }
-
-     if(sv_isobject(b)) {
-       if(strEQ(HvNAME(SvSTASH(SvRV(b))), "Math::GMPz")) {
-         ret = mpz_cmp(*a, *(INT2PTR(mpz_t *, SvIV(SvRV(b)))));
-         if(ret <= 0) return newSViv(1);
-         return newSViv(0);
-         }
-       }
-
-     croak("Invalid argument supplied to Math::GMPz::overload_lte");
-}
-
-SV * overload_spaceship(mpz_t * a, SV * b, SV * third) {
-     int ret;
-     mpz_t t;
-#ifdef USE_LONG_DOUBLE
-     char buffer[50];
-#endif
-
-#ifdef USE_64_BIT_INT
-     if(SvIOK(b)) {
-       if(mpz_init_set_str(t, SvPV_nolen(b), 0))
-         croak("Invalid string supplied to Math::GMPz::overload_spaceship");
-       ret = mpz_cmp(*a, t);
-       mpz_clear(t);
-       if(third == &PL_sv_yes) ret *= -1;
-       return newSViv(ret);
-       }
-#else
-     if(SvUOK(b)) {
-       ret = mpz_cmp_ui(*a, SvUV(b));
-       if(third == &PL_sv_yes) ret *= -1;
-       return newSViv(ret);
-       }
-
-     if(SvIOK(b)) {
-       ret = mpz_cmp_si(*a, SvIV(b));
-       if(third == &PL_sv_yes) ret *= -1;
-       return newSViv(ret);
-       }
-#endif
-
-     if(SvNOK(b)) {
-#ifdef USE_LONG_DOUBLE
-       long double ld = (long double)SvNV(b) >= 0 ? floorl((long double)SvNV(b)) : ceill((long double)SvNV(b));
-       sprintf(buffer, "%.0Lf", ld);
-       mpz_init_set_str(t, buffer, 10);
-       ret = mpz_cmp(*a, t);
-       mpz_clear(t); 
-#else
-       ret = mpz_cmp_d(*a, SvNV(b));
-#endif
-       if(third == &PL_sv_yes) ret *= -1;
-       return newSViv(ret);
-       }
-
-     if(SvPOK(b)) {
-       if(mpz_init_set_str(t, SvPV_nolen(b), 0))
-         croak("Invalid string supplied to Math::GMPz::overload_spaceship");
-       ret = mpz_cmp(*a, t);
-       mpz_clear(t);
-       if(third == &PL_sv_yes) ret *= -1;
-       return newSViv(ret);
-       }
-
-     if(sv_isobject(b)) {
-       if(strEQ(HvNAME(SvSTASH(SvRV(b))), "Math::GMPz")) {
-         ret = mpz_cmp(*a, *(INT2PTR(mpz_t *, SvIV(SvRV(b)))));
-         return newSViv(ret);
-         }
-       }
-
-     croak("Invalid argument supplied to Math::GMPz::overload_spaceship");
-}
-
-SV * overload_equiv(mpz_t * a, SV * b, SV * third) {
-     int ret;
-     mpz_t t;
-#ifdef USE_LONG_DOUBLE
-     char buffer[50];
-#endif
-
-#ifdef USE_64_BIT_INT
-     if(SvIOK(b)) {
-       if(mpz_init_set_str(t, SvPV_nolen(b), 0))
-         croak("Invalid string supplied to Math::GMPz::overload_equiv");
-       ret = mpz_cmp(*a, t);
-       mpz_clear(t);
-       if(ret == 0) return newSViv(1);
-       return newSViv(0);
-       }
-#else
-     if(SvUOK(b)) {
-       ret = mpz_cmp_ui(*a, SvUV(b));
-       if(ret == 0) return newSViv(1);
-       return newSViv(0);
-       }
-
-     if(SvIOK(b)) {
-       ret = mpz_cmp_si(*a, SvIV(b));
-       if(ret == 0) return newSViv(1);
-       return newSViv(0);
-       }
-#endif
-
-     if(SvNOK(b)) {
-#ifdef USE_LONG_DOUBLE
-       long double ld = (long double)SvNV(b) >= 0 ? floorl((long double)SvNV(b)) : ceill((long double)SvNV(b));
-       sprintf(buffer, "%.0Lf", ld);
-       mpz_init_set_str(t, buffer, 10);
-       ret = mpz_cmp(*a, t);
-       mpz_clear(t); 
-#else
-       ret = mpz_cmp_d(*a, SvNV(b));
-#endif
-       if(ret == 0) return newSViv(1);
-       return newSViv(0);
-       }
-
-     if(SvPOK(b)) {
-       if(mpz_init_set_str(t, SvPV_nolen(b), 0))
-         croak("Invalid string supplied to Math::GMPz::overload_equiv");
-       ret = mpz_cmp(*a, t);
-       mpz_clear(t);
-       if(ret == 0) return newSViv(1);
-       return newSViv(0);
-       }
-
-     if(sv_isobject(b)) {
-       if(strEQ(HvNAME(SvSTASH(SvRV(b))), "Math::GMPz")) {
-         ret = mpz_cmp(*a, *(INT2PTR(mpz_t *, SvIV(SvRV(b)))));
-         if(ret == 0) return newSViv(1);
-         return newSViv(0);
-         }
-       }
-
-     croak("Invalid argument supplied to Math::GMPz::overload_equiv");
-}
-
-SV * overload_not_equiv(mpz_t * a, SV * b, SV * third) {
-     int ret;
-     mpz_t t;
-#ifdef USE_LONG_DOUBLE
-     char buffer[50];
-#endif
-
-#ifdef USE_64_BIT_INT
-     if(SvIOK(b)) {
-       if(mpz_init_set_str(t, SvPV_nolen(b), 0))
-         croak("Invalid string supplied to Math::GMPz::overload_not_equiv");
-       ret = mpz_cmp(*a, t);
-       mpz_clear(t);
-       if(third == &PL_sv_yes) ret *= -1;
-       if(ret != 0) return newSViv(1);
-       return newSViv(0);
-       }
-#else
-     if(SvUOK(b)) {
-       ret = mpz_cmp_ui(*a, SvUV(b));
-       if(third == &PL_sv_yes) ret *= -1;
-       if(ret != 0) return newSViv(1);
-       return newSViv(0);
-       }
-
-     if(SvIOK(b)) {
-       ret = mpz_cmp_si(*a, SvIV(b));
-       if(third == &PL_sv_yes) ret *= -1;
-       if(ret != 0) return newSViv(1);
-       return newSViv(0);
-       }
-#endif
-
-     if(SvNOK(b)) {
-#ifdef USE_LONG_DOUBLE
-       long double ld = (long double)SvNV(b) >= 0 ? floorl((long double)SvNV(b)) : ceill((long double)SvNV(b));
-       sprintf(buffer, "%.0Lf", ld);
-       mpz_init_set_str(t, buffer, 10);
-       ret = mpz_cmp(*a, t);
-       mpz_clear(t); 
-#else
-       ret = mpz_cmp_d(*a, SvNV(b));
-#endif
-       if(third == &PL_sv_yes) ret *= -1;
-       if(ret != 0) return newSViv(1);
-       return newSViv(0);
-       }
-
-     if(SvPOK(b)) {
-       if(mpz_init_set_str(t, SvPV_nolen(b), 0))
-         croak("Invalid string supplied to Math::GMPz::overload_not_equiv");
-       ret = mpz_cmp(*a, t);
-       mpz_clear(t);
-       if(third == &PL_sv_yes) ret *= -1;
-       if(ret != 0) return newSViv(1);
-       return newSViv(0);
-       }
-
-     if(sv_isobject(b)) {
-       if(strEQ(HvNAME(SvSTASH(SvRV(b))), "Math::GMPz")) {
-         ret = mpz_cmp(*a, *(INT2PTR(mpz_t *, SvIV(SvRV(b)))));
-         if(ret != 0) return newSViv(1);
-         return newSViv(0);
-         }
-       }
-
-     croak("Invalid argument supplied to Math::GMPz::overload_not_equiv");
-}
-
-SV * overload_not(mpz_t * a, SV * second, SV * third) {
-     if(mpz_cmp_ui(*a, 0)) return newSViv(0);
-     return newSViv(1);
-}
-
-/* Finish typemapping */
-
-SV * overload_xor_eq(SV * a, SV * b, SV * third) {
-     mpz_t t;
-#ifdef USE_LONG_DOUBLE
-     char buffer[50];
-#endif
-
-     SvREFCNT_inc(a);
-
-#ifdef USE_64_BIT_INT
-     if(SvIOK(b)) {
-       if(mpz_init_set_str(t, SvPV_nolen(b), 0)) {
-         SvREFCNT_dec(a);
-         croak("Invalid string supplied to Math::GMPz::overload_xor_eq");
-         }
-       mpz_xor(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), t);
-       mpz_clear(t);
-       return a;
-       }
-#else
-     if(SvUOK(b)) {
-       mpz_init_set_ui(t, SvUV(b));
-       mpz_xor(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), t);
-       mpz_clear(t);
-       return a;
-       }
-
-     if(SvIOK(b)) {
-       mpz_init_set_si(t, SvIV(b));
-       mpz_xor(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), t);
-       mpz_clear(t);
-       return a;
-       }
-#endif
-
-     if(SvNOK(b)) {
-#ifdef USE_LONG_DOUBLE
-       long double ld = (long double)SvNV(b) >= 0 ? floorl((long double)SvNV(b)) : ceill((long double)SvNV(b));
-       sprintf(buffer, "%.0Lf", ld);
-       mpz_init_set_str(t, buffer, 10);
-#else
-       mpz_init_set_d(t, SvNV(b));
-#endif
-       mpz_xor(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), t);
-       mpz_clear(t);
-       return a;
-       }
-
-     if(SvPOK(b)) {
-       if(mpz_init_set_str(t, SvPV_nolen(b), 0)) {
-         SvREFCNT_dec(a);
-         croak("Invalid string supplied to Math::GMPz::overload_xor_eq");
-         }
-       mpz_xor(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), t);
-       mpz_clear(t);
-       return a;
-       }
-
-
-     if(sv_isobject(b)) {
-       if(strEQ(HvNAME(SvSTASH(SvRV(b))), "Math::GMPz")) {
-         mpz_xor(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(b)))));
-         return a;
-         }
-       }
-
-     SvREFCNT_dec(a);
-     croak("Invalid argument supplied to Math::GMPz::overload_xor_eq");
-}
-
-SV * overload_ior_eq(SV * a, SV * b, SV * third) {
-     mpz_t t;
-#ifdef USE_LONG_DOUBLE
-     char buffer[50];
-#endif
-
-     SvREFCNT_inc(a);
-
-#ifdef USE_64_BIT_INT
-     if(SvIOK(b)) {
-       if(mpz_init_set_str(t, SvPV_nolen(b), 0)) {
-         SvREFCNT_dec(a);
-         croak("Invalid string supplied to Math::GMPz::overload_ior_eq");
-         }
-       mpz_ior(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), t);
-       mpz_clear(t);
-       return a;
-       }
-#else
-     if(SvUOK(b)) {
-       mpz_init_set_ui(t, SvUV(b));
-       mpz_ior(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), t);
-       mpz_clear(t);
-       return a;
-       }
-
-     if(SvIOK(b)) {
-       mpz_init_set_si(t, SvIV(b));
-       mpz_ior(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), t);
-       mpz_clear(t);
-       return a;
-       }
-#endif
-
-     if(SvNOK(b)) {
-#ifdef USE_LONG_DOUBLE
-       long double ld = (long double)SvNV(b) >= 0 ? floorl((long double)SvNV(b)) : ceill((long double)SvNV(b));
-       sprintf(buffer, "%.0Lf", ld);
-       mpz_init_set_str(t, buffer, 10);
-#else
-       mpz_init_set_d(t, SvNV(b));
-#endif
-       mpz_ior(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), t);
-       mpz_clear(t);
-       return a;
-       }
-
-     if(SvPOK(b)) {
-       if(mpz_init_set_str(t, SvPV_nolen(b), 0)) {
-         SvREFCNT_dec(a);
-         croak("Invalid string supplied to Math::GMPz::overload_ior_eq");
-         }
-       mpz_ior(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), t);
-       mpz_clear(t);
-       return a;
-       }
-
-     if(sv_isobject(b)) {
-       if(strEQ(HvNAME(SvSTASH(SvRV(b))), "Math::GMPz")) {
-         mpz_ior(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(b)))));
-         return a;
-         }
-       }
-
-     SvREFCNT_dec(a);
-     croak("Invalid argument supplied to Math::GMPz::overload_ior_eq");
-}
-
-SV * overload_and_eq(SV * a, SV * b, SV * third) {
-     mpz_t t;
-#ifdef USE_LONG_DOUBLE
-     char buffer[50];
-#endif
-
-     SvREFCNT_inc(a);
-
-#ifdef USE_64_BIT_INT
-     if(SvIOK(b)) {
-       if(mpz_init_set_str(t, SvPV_nolen(b), 0)) {
-         SvREFCNT_dec(a);
-         croak("Invalid string supplied to Math::GMPz::overload_and_eq");
-         }
-       mpz_and(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), t);
-       mpz_clear(t);
-       return a;
-       }
-#else
-     if(SvUOK(b)) {
-       mpz_init_set_ui(t, SvUV(b));
-       mpz_and(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), t);
-       mpz_clear(t);
-       return a;
-       }
-
-     if(SvIOK(b)) {
-       mpz_init_set_si(t, SvIV(b));
-       mpz_and(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), t);
-       mpz_clear(t);
-       return a;
-       }
-#endif
-
-     if(SvNOK(b)) {
-#ifdef USE_LONG_DOUBLE
-       long double ld = (long double)SvNV(b) >= 0 ? floorl((long double)SvNV(b)) : ceill((long double)SvNV(b));
-       sprintf(buffer, "%.0Lf", ld);
-       mpz_init_set_str(t, buffer, 10);
-#else
-       mpz_init_set_d(t, SvNV(b));
-#endif
-       mpz_and(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), t);
-       mpz_clear(t);
-       return a;
-       }
-
-     if(SvPOK(b)) {
-       if(mpz_init_set_str(t, SvPV_nolen(b), 0)) {
-         SvREFCNT_dec(a);
-         croak("Invalid string supplied to Math::GMPz::overload_and_eq");
-         }
-       mpz_and(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), t);
-       mpz_clear(t);
-       return a;
-       }
-
-     if(sv_isobject(b)) {
-       if(strEQ(HvNAME(SvSTASH(SvRV(b))), "Math::GMPz")) {
-         mpz_and(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(b)))));
-         return a;
-         }
-       }
-
-     SvREFCNT_dec(a);
-     croak("Invalid argument supplied to Math::GMPz::overload_and_eq");
-}
-
-SV * overload_pow_eq(SV * a, SV * b, SV * third) {
-     SvREFCNT_inc(a);
-
-     if(SvUOK(b)) {
-       mpz_pow_ui(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), SvUV(b));
-       return a;
-       }
-
-     if(SvIOK(b)) {
-       if(SvIV(b) < 0) croak("Invalid argument supplied to Math::GMPz::overload_pow_eq");
-       mpz_pow_ui(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), SvUV(b));
-       return a;
-       }
-
-     SvREFCNT_dec(a);
-     croak("Invalid argument supplied to Math::GMPz::overload_pow_eq");
-}
-
-SV * overload_rshift_eq(SV * a, SV * b, SV * third) {
-
-     SvREFCNT_inc(a);
-
-     if(SvUOK(b)) {
-       mpz_tdiv_q_2exp(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), SvUV(b));
-       return a;
-       }
-
-     if(SvIOK(b)) {
-       if(SvIV(b) < 0) croak("Invalid argument supplied to Math::GMPz::overload_rshift_eq");
-       mpz_tdiv_q_2exp(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), SvIV(b));
-       return a;
-       }
-
-     SvREFCNT_dec(a);
-     croak("Invalid argument supplied to Math::GMPz::overload_rshift_eq");
-}
-
-SV * overload_lshift_eq(SV * a, SV * b, SV * third) {
-
-     SvREFCNT_inc(a);
-
-     if(SvUOK(b)) {
-       mpz_mul_2exp(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), SvUV(b));
-       return a;
-       }
-
-     if(SvIOK(b)) {
-       if(SvIV(b) < 0) croak("Invalid argument supplied to Math::GMPz::overload_lshift_eq");
-       mpz_mul_2exp(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), SvIV(b));
-       return a;
-       }
-
-     SvREFCNT_dec(a);
-     croak("Invalid argument supplied to Math::GMPz::overload_lshift_eq");
-}
-
-SV * overload_inc(SV * p, SV * second, SV * third) {
-     SvREFCNT_inc(p);
-     mpz_add_ui(*(INT2PTR(mpz_t *, SvIV(SvRV(p)))), *(INT2PTR(mpz_t *, SvIV(SvRV(p)))), 1);
-     return p;
-}
-
-SV * overload_dec(SV * p, SV * second, SV * third) {
-     SvREFCNT_inc(p);
-     mpz_sub_ui(*(INT2PTR(mpz_t *, SvIV(SvRV(p)))), *(INT2PTR(mpz_t *, SvIV(SvRV(p)))), 1);
-     return p;
-}
-
-SV * overload_mod_eq(SV * a, SV * b, SV * third) {
-     mpz_t t;
-#ifdef USE_LONG_DOUBLE
-     char buffer[50];
-#endif
-
-     SvREFCNT_inc(a);
-
-#ifdef USE_64_BIT_INT
-     if(SvIOK(b)) {
-       if(mpz_init_set_str(t, SvPV_nolen(b), 0)) {
-         SvREFCNT_dec(a);
-         croak("Invalid string supplied to Math::GMPz::overload_mod_eq");
-         }
-       mpz_mod(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), t);
-       mpz_clear(t);
-       return a;
-       }
-#else
-     if(SvUOK(b)) {
-       mpz_mod_ui(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), SvUV(b));
-       return a;
-       }
-
-     if(SvIOK(b)) {
-       if(SvIV(b) > 0) {
-         mpz_mod_ui(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), SvUV(b));
-         return a;
-         }
-       mpz_init_set_si(t, SvNV(b));
-       mpz_mod(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), t);
-       mpz_clear(t);
-       return a;
-       }
-#endif
-
-     if(SvNOK(b)) {
-#ifdef USE_LONG_DOUBLE
-       long double ld = (long double)SvNV(b) >= 0 ? floorl((long double)SvNV(b)) : ceill((long double)SvNV(b));
-       sprintf(buffer, "%.0Lf", ld);
-       mpz_init_set_str(t, buffer, 10);
-#else
-       mpz_init_set_d(t, SvNV(b));
-#endif
-       mpz_mod(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), t);
-       mpz_clear(t);
-       return a;
-       }
-
-     if(SvPOK(b)) {
-       if(mpz_init_set_str(t, SvPV_nolen(b), 0)) {
-         SvREFCNT_dec(a);
-         croak("Invalid string supplied to Math::GMPz::overload_mod_eq");
-         }
-       mpz_mod(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), t);
-       mpz_clear(t);
-       return a;
-       }
-
-     if(sv_isobject(b)) {
-       if(strEQ(HvNAME(SvSTASH(SvRV(b))), "Math::GMPz")) {
-         mpz_mod(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(b)))));
-         return a;
-         }
-       }
-
-     SvREFCNT_dec(a);
-     croak("Invalid argument supplied to Math::GMPz::overload_mod_eq");
-}
-
-SV * get_refcnt(SV * s) {
-     return newSVuv(SvREFCNT(s));
-}
-
-SV * overload_div_eq(SV * a, SV * b, SV * third) {
-     mpz_t t;
-#ifdef USE_LONG_DOUBLE
-     char buffer[50];
-#endif
-
-     SvREFCNT_inc(a);
-
-#ifdef USE_64_BIT_INT
-     if(SvIOK(b)) {
-       if(mpz_init_set_str(t, SvPV_nolen(b), 0)) {
-         SvREFCNT_dec(a);
-         croak("Invalid string supplied to Math::GMPz::overload_div_eq");
-         }
-       mpz_tdiv_q(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), t);
-       mpz_clear(t);
-       return a;
-       }
-#else
-     if(SvUOK(b)) {
-       mpz_tdiv_q_ui(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), SvUV(b));
-       return a;
-       }
-
-     if(SvIOK(b)) {
-       if(SvIV(b) >= 0) {
-         mpz_tdiv_q_ui(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), SvIV(b));
-         return a;
-         }
-       mpz_tdiv_q_ui(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), SvIV(b) * -1);
-       mpz_neg(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))));
-       return a;
-       }
-#endif
-
-     if(SvNOK(b)) {
-#ifdef USE_LONG_DOUBLE
-       long double ld = (long double)SvNV(b) >= 0 ? floorl((long double)SvNV(b)) : ceill((long double)SvNV(b));
-       sprintf(buffer, "%.0Lf", ld);
-       mpz_init_set_str(t, buffer, 10);
-#else
-       mpz_init_set_d(t, SvNV(b));
-#endif
-       mpz_tdiv_q(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), t);
-       mpz_clear(t);
-       return a;
-       }
-
-     if(SvPOK(b)) {
-       if(mpz_init_set_str(t, SvPV_nolen(b), 0)) {
-         SvREFCNT_dec(a);
-         croak("Invalid string supplied to Math::GMPz::overload_div_eq");
-         }
-       mpz_tdiv_q(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), t);
-       mpz_clear(t);
-       return a;
-       }
-
-     if(sv_isobject(b)) {
-       if(strEQ(HvNAME(SvSTASH(SvRV(b))), "Math::GMPz")) {
-         mpz_tdiv_q(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(b)))));
-         return a;
-         }
-       }
-
-     SvREFCNT_dec(a);
-     croak("Invalid argument supplied to Math::GMPz::overload_div_eq function");
-
-}
-
-SV * overload_sub_eq(SV * a, SV * b, SV * third) {
-     mpz_t t;
-#ifdef USE_LONG_DOUBLE
-     char buffer[50];
-#endif
-
-     SvREFCNT_inc(a);
-
-#ifdef USE_64_BIT_INT
-     if(SvIOK(b)) {
-       if(mpz_init_set_str(t, SvPV_nolen(b), 0)) {
-         SvREFCNT_dec(a);
-         croak("Invalid string supplied to Math::GMPz::overload_sub_eq");
-         }
-       mpz_sub(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), t);
-       mpz_clear(t);
-       return a;
-       }
-#else
-     if(SvUOK(b)) {
-       mpz_sub_ui(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), SvUV(b));
-       return a;
-       }
-
-     if(SvIOK(b)) {
-       if(SvIV(b) >= 0) {
-         mpz_sub_ui(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), SvIV(b));
-         return a;
-         }
-       mpz_add_ui(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), SvIV(b) * -1);
-       return a;
-       }
-#endif
-
-     if(SvNOK(b)) {
-#ifdef USE_LONG_DOUBLE
-       long double ld = (long double)SvNV(b) >= 0 ? floorl((long double)SvNV(b)) : ceill((long double)SvNV(b));
-       sprintf(buffer, "%.0Lf", ld);
-       mpz_init_set_str(t, buffer, 10);
-#else
-       mpz_init_set_d(t, SvNV(b));
-#endif
-       mpz_sub(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), t);
-       mpz_clear(t);
-       return a;
-       }
-
-     if(SvPOK(b)) {
-       if(mpz_init_set_str(t, SvPV_nolen(b), 0)) {
-         SvREFCNT_dec(a);
-         croak("Invalid string supplied to Math::GMPz::overload_sub_eq");
-         }
-       mpz_sub(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), t);
-       mpz_clear(t);
-       return a;
-       }
-
-     if(sv_isobject(b)) {
-       if(strEQ(HvNAME(SvSTASH(SvRV(b))), "Math::GMPz")) {
-         mpz_sub(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(b)))));
-         return a;
-         }
-       }
-
-     SvREFCNT_dec(a);
-     croak("Invalid argument supplied to Math::GMPz::overload_sub_eq function");
-
-}
-
-SV * overload_add_eq(SV * a, SV * b, SV * third) {
-     mpz_t t;
-#ifdef USE_LONG_DOUBLE
-     char buffer[50];
-#endif
-
-     SvREFCNT_inc(a);
-
-#ifdef USE_64_BIT_INT
-     if(SvIOK(b)) {
-       if(mpz_init_set_str(t, SvPV_nolen(b), 0)) {
-         SvREFCNT_dec(a);
-         croak("Invalid string supplied to Math::GMPz::overload_add_eq");
-         }
-       mpz_add(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), t);
-       mpz_clear(t);
-       return a;
-       }
-#else
-     if(SvUOK(b)) {
-       mpz_add_ui(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), SvUV(b));
-       return a;
-       }
-
-     if(SvIOK(b)) {
-       if(SvIV(b) >= 0) {
-         mpz_add_ui(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), SvIV(b));
-         return a;
-         }
-       mpz_sub_ui(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), SvIV(b) * -1);
-       return a;
-       }
-#endif
-
-     if(SvNOK(b)) {
-#ifdef USE_LONG_DOUBLE
-       long double ld = (long double)SvNV(b) >= 0 ? floorl((long double)SvNV(b)) : ceill((long double)SvNV(b));
-       sprintf(buffer, "%.0Lf", ld);
-       mpz_init_set_str(t, buffer, 10);
-#else
-       mpz_init_set_d(t, SvNV(b));
-#endif
-       mpz_add(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), t);
-       mpz_clear(t);
-       return a;
-       }
-
-     if(SvPOK(b)) {
-       if(mpz_init_set_str(t, SvPV_nolen(b), 0)) {
-         SvREFCNT_dec(a);
-         croak("Invalid string supplied to Math::GMPz::overload_add_eq");
-         }
-       mpz_add(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), t);
-       mpz_clear(t);
-       return a;
-       }
-
-
-     if(sv_isobject(b)) {
-       if(strEQ(HvNAME(SvSTASH(SvRV(b))), "Math::GMPz")) {
-         mpz_add(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(b)))));
-         return a;
-         }
-       }
-
-     SvREFCNT_dec(a);
-     croak("Invalid argument supplied to Math::GMPz::overload_add_eq function");
-
-}
-
-SV * overload_mul_eq(SV * a, SV * b, SV * third) {
-     mpz_t t;
-#ifdef USE_LONG_DOUBLE
-     char buffer[50];
-#endif
-
-     SvREFCNT_inc(a);
-
-#ifdef USE_64_BIT_INT
-     if(SvIOK(b)) {
-       if(mpz_init_set_str(t, SvPV_nolen(b), 0)) {
-         SvREFCNT_dec(a);      
-         croak(" Invalid string supplied to Math::GMPz::overload_mul_eq");
-         }
-       mpz_mul(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), t);
-       mpz_clear(t);
-       return a;
-       }
-#else
-     if(SvUOK(b)) {
-       mpz_mul_ui(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), SvUV(b));
-       return a;
-       }
-
-     if(SvIOK(b)) {
-       mpz_mul_si(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), SvIV(b));
-       return a;
-       }
-#endif
-
-     if(SvNOK(b)) {
-#ifdef USE_LONG_DOUBLE
-       long double ld = (long double)SvNV(b) >= 0 ? floorl((long double)SvNV(b)) : ceill((long double)SvNV(b));
-       sprintf(buffer, "%.0Lf", ld);
-       mpz_init_set_str(t, buffer, 10);
-#else
-       mpz_init_set_d(t, SvNV(b));
-#endif
-       mpz_mul(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), t);
-       mpz_clear(t);
-       return a;
-       }
-
-     if(SvPOK(b)) {
-       if(mpz_init_set_str(t, SvPV_nolen(b), 0)) {
-         SvREFCNT_dec(a);      
-         croak(" Invalid string supplied to Math::GMPz::overload_mul_eq");
-         }
-       mpz_mul(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), t);
-       mpz_clear(t);
-       return a;
-       }
-
-     if(sv_isobject(b)) {
-       if(strEQ(HvNAME(SvSTASH(SvRV(b))), "Math::GMPz")) {
-         mpz_mul(*(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(a)))), *(INT2PTR(mpz_t *, SvIV(SvRV(b)))));
-         return a;
-         }
-       }
-
-     SvREFCNT_dec(a);
-     croak("Invalid argument supplied to Math::GMPz::overload_mul_eq");
-}
-
-SV * eratosthenes_string(SV * x_arg) {
-
-unsigned char *v, set[8] = {254,253,251,247,239,223,191,127};
-unsigned long leap, i, size, b, imax, k, x = (unsigned long)SvUV(x_arg);
-SV * ret;
-
-if(x & 1) croak("max_num argument must be even in eratosthenes_string()");
-
-imax = sqrt(x - 1) / 2;
-
-b = (x + 1) / 2;
-
-if(!(b % 8)) size = b / 8;
-else size = (b / 8) + 1;
-
-ret = NEWSV(0, size);
-
-for(i = 1; i < size; ++i) SvPVX(ret)[i] = 255;
-SvPVX(ret)[0] = 254;
-
-for(i = 0; i <= imax; ++i) {
-    
-    if(SvPVX(ret)[i / 8] & (1 << (i % 8))) {
-       leap = (2 * i) + 1;
-       k = 2 * i * (i + 1);
-       while(k < b) {
-             SvPVX(ret)[k / 8] &= set[k % 8];
-             k += leap;
-             }
-       }
-}
-
-SvPOK_on(ret);
-SvCUR_set(ret, size);
-*SvEND(ret) = 0;
-
-return ret;
-
-}
-
-SV * gmp_v(void) {
-     return newSVpv(gmp_version, 0);
-}
-
-SV * wrap_gmp_printf(SV * a, SV * b) {
-     int ret;
-     if(sv_isobject(b)) { 
-       if(strEQ(HvNAME(SvSTASH(SvRV(b))), "Math::GMPz") ||
-         strEQ(HvNAME(SvSTASH(SvRV(b))), "Math::GMP") ||
-         strEQ(HvNAME(SvSTASH(SvRV(b))), "GMP::Mpz")) {
-         ret = gmp_printf(SvPV_nolen(a), *(INT2PTR(mpz_t *, SvIV(SvRV(b)))));
-         fflush(stdout);
-         return newSViv(ret);
-       }
-       if(strEQ(HvNAME(SvSTASH(SvRV(b))), "Math::GMPq") ||
-         strEQ(HvNAME(SvSTASH(SvRV(b))), "GMP::Mpq")) {
-         ret = gmp_printf(SvPV_nolen(a), *(INT2PTR(mpq_t *, SvIV(SvRV(b)))));
-         fflush(stdout);
-         return newSViv(ret);
-       }
-       if(strEQ(HvNAME(SvSTASH(SvRV(b))), "Math::GMPf") ||
-         strEQ(HvNAME(SvSTASH(SvRV(b))), "GMP::Mpf")) {
-         ret = gmp_printf(SvPV_nolen(a), *(INT2PTR(mpf_t *, SvIV(SvRV(b)))));
-         fflush(stdout);
-         return newSViv(ret);
-       }
-   
-       croak("Unrecognised object supplied as argument to Rmpz_printf");
-     } 
-
-     if(SvUOK(b)) {
-       ret = gmp_printf(SvPV_nolen(a), SvUV(b));
-       fflush(stdout);
-       return newSViv(ret);
-     }
-     if(SvIOK(b)) {
-       ret = gmp_printf(SvPV_nolen(a), SvIV(b));
-       fflush(stdout);
-       return newSViv(ret);
-     }
-     if(SvNOK(b)) {
-       ret = gmp_printf(SvPV_nolen(a), SvNV(b));
-       fflush(stdout);
-       return newSViv(ret);
-     }
-     if(SvPOK(b)) {
-       ret = gmp_printf(SvPV_nolen(a), SvPV_nolen(b));
-       fflush(stdout);
-       return newSViv(ret);
-     }
-  
-     croak("Unrecognised type supplied as argument to Rmpz_printf");
-}
-
-SV * wrap_gmp_fprintf(FILE * stream, SV * a, SV * b) {
-     int ret;
-     if(sv_isobject(b)) { 
-       if(strEQ(HvNAME(SvSTASH(SvRV(b))), "Math::GMPz") ||
-         strEQ(HvNAME(SvSTASH(SvRV(b))), "Math::GMP") ||
-         strEQ(HvNAME(SvSTASH(SvRV(b))), "GMP::Mpz")) {
-         ret = gmp_fprintf(stream, SvPV_nolen(a), *(INT2PTR(mpz_t *, SvIV(SvRV(b)))));
-         fflush(stream);
-         return newSViv(ret);
-       }
-       if(strEQ(HvNAME(SvSTASH(SvRV(b))), "Math::GMPq") ||
-         strEQ(HvNAME(SvSTASH(SvRV(b))), "GMP::Mpq")) {
-         ret = gmp_fprintf(stream, SvPV_nolen(a), *(INT2PTR(mpq_t *, SvIV(SvRV(b)))));
-         fflush(stream);
-         return newSViv(ret);
-       }
-       if(strEQ(HvNAME(SvSTASH(SvRV(b))), "Math::GMPf") ||
-         strEQ(HvNAME(SvSTASH(SvRV(b))), "GMP::Mpf")) {
-         ret = gmp_fprintf(stream, SvPV_nolen(a), *(INT2PTR(mpf_t *, SvIV(SvRV(b)))));
-         fflush(stream);
-         return newSViv(ret);
-       }
- 
-       else croak("Unrecognised object supplied as argument to Rmpz_fprintf");
-     } 
-
-     if(SvUOK(b)) {
-       ret = gmp_fprintf(stream, SvPV_nolen(a), SvUV(b));
-       fflush(stream);
-       return newSViv(ret);
-     }
-     if(SvIOK(b)) {
-       ret = gmp_fprintf(stream, SvPV_nolen(a), SvIV(b));
-       fflush(stream);
-       return newSViv(ret);
-     }
-     if(SvNOK(b)) {
-       ret = gmp_fprintf(stream, SvPV_nolen(a), SvNV(b));
-       fflush(stream);
-       return newSViv(ret);
-     }
-     if(SvPOK(b)) {
-       ret = gmp_fprintf(stream, SvPV_nolen(a), SvPV_nolen(b));
-       fflush(stream);
-       return newSViv(ret);
-     }
-
-     croak("Unrecognised type supplied as argument to Rmpz_fprintf");
-}
-
-SV * wrap_gmp_sprintf(char * stream, SV * a, SV * b) {
-     int ret;
-     if(sv_isobject(b)) { 
-       if(strEQ(HvNAME(SvSTASH(SvRV(b))), "Math::GMPz") ||
-         strEQ(HvNAME(SvSTASH(SvRV(b))), "Math::GMP") ||
-         strEQ(HvNAME(SvSTASH(SvRV(b))), "GMP::Mpz")) {
-         ret = gmp_sprintf(stream, SvPV_nolen(a), *(INT2PTR(mpz_t *, SvIV(SvRV(b)))));
-         return newSViv(ret);
-       }
-
-       if(strEQ(HvNAME(SvSTASH(SvRV(b))), "Math::GMPq") ||
-         strEQ(HvNAME(SvSTASH(SvRV(b))), "GMP::Mpq")) {
-         ret = gmp_sprintf(stream, SvPV_nolen(a), *(INT2PTR(mpq_t *, SvIV(SvRV(b)))));
-         return newSViv(ret);
-       }
-
-       if(strEQ(HvNAME(SvSTASH(SvRV(b))), "Math::GMPf") ||
-         strEQ(HvNAME(SvSTASH(SvRV(b))), "GMP::Mpf")) {
-         ret = gmp_sprintf(stream, SvPV_nolen(a), *(INT2PTR(mpf_t *, SvIV(SvRV(b)))));
-         return newSViv(ret);
-       }
-
-       croak("Unrecognised object supplied as argument to Rmpz_sprintf");
-     } 
-
-     if(SvUOK(b)) {
-       ret = gmp_sprintf(stream, SvPV_nolen(a), SvUV(b));
-       return newSViv(ret);
-     }
-
-     if(SvIOK(b)) {
-       ret = gmp_sprintf(stream, SvPV_nolen(a), SvIV(b));
-       return newSViv(ret);
-     }
-
-     if(SvNOK(b)) {
-       ret = gmp_sprintf(stream, SvPV_nolen(a), SvNV(b));
-       return newSViv(ret);
-     }
-
-     if(SvPOK(b)) {
-       ret = gmp_sprintf(stream, SvPV_nolen(a), SvPV_nolen(b));
-       return newSViv(ret);
-     }
-
-     croak("Unrecognised type supplied as argument to Rmpz_sprintf");
-}
-
-SV * wrap_gmp_snprintf(char * stream, SV * bytes, SV * a, SV * b) {
-     int ret;
-     if(sv_isobject(b)) { 
-       if(strEQ(HvNAME(SvSTASH(SvRV(b))), "Math::GMPz") ||
-         strEQ(HvNAME(SvSTASH(SvRV(b))), "Math::GMP") ||
-         strEQ(HvNAME(SvSTASH(SvRV(b))), "GMP::Mpz")) {
-         ret = gmp_snprintf(stream, (size_t)SvUV(bytes), SvPV_nolen(a), *(INT2PTR(mpz_t *, SvIV(SvRV(b)))));
-         return newSViv(ret);
-       }
-
-       if(strEQ(HvNAME(SvSTASH(SvRV(b))), "Math::GMPq") ||
-         strEQ(HvNAME(SvSTASH(SvRV(b))), "GMP::Mpq")) {
-         ret = gmp_snprintf(stream, (size_t)SvUV(bytes), SvPV_nolen(a), *(INT2PTR(mpq_t *, SvIV(SvRV(b)))));
-         return newSViv(ret);
-       }
-
-       if(strEQ(HvNAME(SvSTASH(SvRV(b))), "Math::GMPf") ||
-         strEQ(HvNAME(SvSTASH(SvRV(b))), "GMP::Mpf")) {
-         ret = gmp_snprintf(stream, (size_t)SvUV(bytes), SvPV_nolen(a), *(INT2PTR(mpf_t *, SvIV(SvRV(b)))));
-         return newSViv(ret);
-       }
-
-       croak("Unrecognised object supplied as argument to Rmpz_snprintf");
-     } 
-
-     if(SvUOK(b)) {
-       ret = gmp_snprintf(stream, (size_t)SvUV(bytes), SvPV_nolen(a), SvUV(b));
-       return newSViv(ret);
-     }
-
-     if(SvIOK(b)) {
-       ret = gmp_snprintf(stream, (size_t)SvUV(bytes), SvPV_nolen(a), SvIV(b));
-       return newSViv(ret);
-     }
-
-     if(SvNOK(b)) {
-       ret = gmp_snprintf(stream, (size_t)SvUV(bytes), SvPV_nolen(a), SvNV(b));
-       return newSViv(ret);
-     }
-
-     if(SvPOK(b)) {
-       ret = gmp_snprintf(stream, (size_t)SvUV(bytes), SvPV_nolen(a), SvPV_nolen(b));
-       return newSViv(ret);
-     }
-
-     croak("Unrecognised type supplied as argument to Rmpz_snprintf");
-}
-
-SV * _itsa(SV * a) {
-     if(SvUOK(a)) return newSVuv(1);
-     if(SvIOK(a)) return newSVuv(2);
-     if(SvNOK(a)) return newSVuv(3);
-     if(SvPOK(a)) return newSVuv(4);
-     if(sv_isobject(a)) {
-       if(strEQ(HvNAME(SvSTASH(SvRV(a))), "Math::GMPz")) return newSVuv(8);
-       if(strEQ(HvNAME(SvSTASH(SvRV(a))), "Math::GMP")) return newSVuv(9);
-     }
-     return newSVuv(0);
-}
-
-void Rmpz_urandomb(SV * p, ...) {
-     dXSARGS;
-     unsigned long q, i, thingies;
-
-     thingies = items;
-     q = SvUV(ST(thingies - 1)); 
-
-     if((q + 3) != thingies) croak ("Wrong args supplied to mpz_urandomb function");
-
-     for(i = 0; i < q; ++i) {
-        mpz_urandomb(*(INT2PTR(mpz_t *, SvIV(SvRV(ST(i))))), *(INT2PTR(gmp_randstate_t *, SvIV(SvRV(ST(thingies - 3))))), SvUV(ST(thingies - 2)));
-        }
-
-     XSRETURN(0);
-}
-
-void Rmpz_urandomm(SV * x, ...){
-     dXSARGS;
-     unsigned long q, i, thingies;
-
-     thingies = items;
-     q = SvUV(ST(thingies - 1)); 
-
-     if((q + 3) != thingies) croak ("Wrong args supplied to mpz_urandomm function"); 
-
-     for(i = 0; i < q; ++i) {
-        mpz_urandomm(*(INT2PTR(mpz_t *, SvIV(SvRV(ST(i))))), *(INT2PTR(gmp_randstate_t *, SvIV(SvRV(ST(thingies - 3))))), *(INT2PTR(mpz_t *, SvIV(SvRV(ST(thingies - 2))))));
-        }
-     
-     XSRETURN(0);
-}
-
-void Rmpz_rrandomb(SV * x, ...) {
-     dXSARGS;
-     unsigned long q, i, thingies;
-
-     thingies = items;
-     q = SvUV(ST(thingies - 1)); 
-
-     if((q + 3) != thingies) croak ("Wrong args supplied to mpz_rrandomb function"); 
-
-     for(i = 0; i < q; ++i) {
-        mpz_rrandomb(*(INT2PTR(mpz_t *, SvIV(SvRV(ST(i))))), *(INT2PTR(gmp_randstate_t *, SvIV(SvRV(ST(thingies - 3))))), SvUV(ST(thingies - 2)));
-        }
-
-     XSRETURN(0);
-}
-
-SV * rand_init(SV * seed) {
-     gmp_randstate_t * state;
-     SV * obj_ref, * obj;
-
-     New(1, state, 1, gmp_randstate_t);
-     if(state == NULL) croak("Failed to allocate memory in rand_init function");
-     obj_ref = newSV(0);
-     obj = newSVrv(obj_ref, NULL);
-     gmp_randinit_default(*state);
-     gmp_randseed(*state, *(INT2PTR(mpz_t *, SvIV(SvRV(seed)))));
-     sv_setiv(obj, INT2PTR(IV, state));
-     SvREADONLY_on(obj);
-     return obj_ref;
-     }
-
-void rand_clear(SV * p) {
-     gmp_randclear(*(INT2PTR(gmp_randstate_t *, SvIV(SvRV(p)))));
-     Safefree(INT2PTR(gmp_randstate_t *, SvIV(SvRV(p))));
-     }
-
-int _has_longlong(void) {
-#ifdef USE_64_BIT_INT
-    return 1;
-#else
-    return 0;
-#endif
-}
-
-int _has_longdouble(void) {
-#ifdef USE_LONG_DOUBLE
-    return 1;
-#else
-    return 0;
-#endif
-}
-
-/* Has inttypes.h been included ? */
-int _has_inttypes(void) {
-#ifdef _MSC_VER
-return 0;
-#else
-#if defined USE_64_BIT_INT || defined USE_LONG_DOUBLE
-return 1;
-#else
-return 0;
-#endif
-#endif
-}
-
-SV * Rmpz_inp_raw(mpz_t * a, FILE * stream) {
-     size_t ret = mpz_inp_raw(*a, stream);
-     fflush(stream);
-     return newSVuv(ret);
-}
-
-SV * Rmpz_out_raw(FILE * stream, mpz_t * a) {
-     size_t ret = mpz_out_raw(stream, *a);
-     fflush(stream);
-     return newSVuv(ret);
-}
-
-SV * ___GNU_MP_VERSION(void) {
-     return newSVuv(__GNU_MP_VERSION);
-}
-
-SV * ___GNU_MP_VERSION_MINOR(void) {
-     return newSVuv(__GNU_MP_VERSION_MINOR);
-}
-
-SV * ___GNU_MP_VERSION_PATCHLEVEL(void) {
-     return newSVuv(__GNU_MP_VERSION_PATCHLEVEL);
-}
-
-SV * ___GMP_CC(void) {
-#ifdef __GMP_CC
-     char * ret = __GMP_CC;
-     return newSVpv(ret, 0);
-#else
-     return &PL_sv_undef;
-#endif
-}
-
-SV * ___GMP_CFLAGS(void) {
-#ifdef __GMP_CFLAGS
-     char * ret = __GMP_CFLAGS;
-     return newSVpv(ret, 0);
-#else
-     return &PL_sv_undef;
-#endif
-}
-
-#if __GNU_MP_VERSION >= 5
-#ifndef __MPIR_VERSION
-void Rmpz_powm_sec(mpz_t * dest, mpz_t * base, mpz_t * exp, mpz_t * mod) {
-     mpz_powm_sec(*dest, *base, *exp, *mod);
-}
-#else
-void Rmpz_powm_sec(mpz_t * dest, mpz_t * base, mpz_t * exp, mpz_t * mod) {
-     croak("Rmpz_powm_sec not implemented by the mpir library");
-}
-#endif
-#else
-void Rmpz_powm_sec(mpz_t * dest, mpz_t * base, mpz_t * exp, mpz_t * mod) {
-     croak("Rmpz_powm_sec not implemented - gmp-5 or later needed, this is gmp-%d", __GNU_MP_VERSION);
-}
-#endif
-
-int _using_mpir(void) {
-#ifdef __MPIR_VERSION
-return 1;
-#else
-return 0;
-#endif
-}
-
-SV * _Rmpz_NULL(void) {
-     mpz_t * mpz_t_obj;
-     SV * obj_ref, * obj;
-
-     mpz_t_obj = NULL;
-     obj_ref = newSV(0);
-     obj = newSVrv(obj_ref, NULL);
-
-     sv_setiv(obj, INT2PTR(IV, mpz_t_obj));
-     SvREADONLY_on(obj);
-     return obj_ref;
-}
-
-SV * _wrap_count(void) {
-     return newSVuv(PL_sv_count);
-}
-
-
 
 MODULE = Math::GMPz	PACKAGE = Math::GMPz	
 
@@ -6051,215 +5842,6 @@ Rrm_gmp (num, base)
 	mpz_t *	num
 	SV *	base
 
-void
-Rprbg_ms (outref, p, q, seed, bits_required)
-	mpz_t *	outref
-	mpz_t *	p
-	mpz_t *	q
-	mpz_t *	seed
-	int	bits_required
-	PREINIT:
-	I32* temp;
-	PPCODE:
-	temp = PL_markstack_ptr++;
-	Rprbg_ms(outref, p, q, seed, bits_required);
-	if (PL_markstack_ptr != temp) {
-          /* truly void, because dXSARGS not invoked */
-	  PL_markstack_ptr = temp;
-	  XSRETURN_EMPTY; /* return empty stack */
-        }
-        /* must have used dXSARGS; list context implied */
-	return; /* assume stack size is correct */
-
-void
-Rprbg_bbs (outref, p, q, seed, bits_required)
-	mpz_t *	outref
-	mpz_t *	p
-	mpz_t *	q
-	mpz_t *	seed
-	int	bits_required
-	PREINIT:
-	I32* temp;
-	PPCODE:
-	temp = PL_markstack_ptr++;
-	Rprbg_bbs(outref, p, q, seed, bits_required);
-	if (PL_markstack_ptr != temp) {
-          /* truly void, because dXSARGS not invoked */
-	  PL_markstack_ptr = temp;
-	  XSRETURN_EMPTY; /* return empty stack */
-        }
-        /* must have used dXSARGS; list context implied */
-	return; /* assume stack size is correct */
-
-int
-Rmonobit (bitstream)
-	mpz_t *	bitstream
-
-int
-Rlong_run (bitstream)
-	mpz_t *	bitstream
-
-int
-Rruns (bitstream)
-	mpz_t *	bitstream
-
-int
-Rpoker (bitstream)
-	mpz_t *	bitstream
-
-int
-Rparity_ul (v)
-	unsigned long	v
-
-int
-Rparity_gmp (num)
-	mpz_t *	num
-
-SV *
-Rrotate_left_ul (ulnum, ulb, uls)
-	SV *	ulnum
-	SV *	ulb
-	SV *	uls
-
-void
-Rrotate_left_gmp (out, num, bsv, ssv)
-	mpz_t *	out
-	mpz_t *	num
-	SV *	bsv
-	SV *	ssv
-	PREINIT:
-	I32* temp;
-	PPCODE:
-	temp = PL_markstack_ptr++;
-	Rrotate_left_gmp(out, num, bsv, ssv);
-	if (PL_markstack_ptr != temp) {
-          /* truly void, because dXSARGS not invoked */
-	  PL_markstack_ptr = temp;
-	  XSRETURN_EMPTY; /* return empty stack */
-        }
-        /* must have used dXSARGS; list context implied */
-	return; /* assume stack size is correct */
-
-SV *
-Rrotate_right_ul (ulnum, ulb, uls)
-	SV *	ulnum
-	SV *	ulb
-	SV *	uls
-
-void
-Rrotate_right_gmp (out, num, ulb, uls)
-	mpz_t *	out
-	mpz_t *	num
-	SV *	ulb
-	SV *	uls
-	PREINIT:
-	I32* temp;
-	PPCODE:
-	temp = PL_markstack_ptr++;
-	Rrotate_right_gmp(out, num, ulb, uls);
-	if (PL_markstack_ptr != temp) {
-          /* truly void, because dXSARGS not invoked */
-	  PL_markstack_ptr = temp;
-	  XSRETURN_EMPTY; /* return empty stack */
-        }
-        /* must have used dXSARGS; list context implied */
-	return; /* assume stack size is correct */
-
-void
-Rrsa_cert (n, d, e, p, q)
-	mpz_t *	n
-	mpz_t *	d
-	mpz_t *	e
-	mpz_t *	p
-	mpz_t *	q
-	PREINIT:
-	I32* temp;
-	PPCODE:
-	temp = PL_markstack_ptr++;
-	Rrsa_cert(n, d, e, p, q);
-	if (PL_markstack_ptr != temp) {
-          /* truly void, because dXSARGS not invoked */
-	  PL_markstack_ptr = temp;
-	  XSRETURN_EMPTY; /* return empty stack */
-        }
-        /* must have used dXSARGS; list context implied */
-	return; /* assume stack size is correct */
-
-void
-Rmers_div_q (q, n, d)
-	mpz_t *	q
-	mpz_t *	n
-	mpz_t *	d
-	PREINIT:
-	I32* temp;
-	PPCODE:
-	temp = PL_markstack_ptr++;
-	Rmers_div_q(q, n, d);
-	if (PL_markstack_ptr != temp) {
-          /* truly void, because dXSARGS not invoked */
-	  PL_markstack_ptr = temp;
-	  XSRETURN_EMPTY; /* return empty stack */
-        }
-        /* must have used dXSARGS; list context implied */
-	return; /* assume stack size is correct */
-
-void
-Rmers_div_r (r, n, d)
-	mpz_t *	r
-	mpz_t *	n
-	mpz_t *	d
-	PREINIT:
-	I32* temp;
-	PPCODE:
-	temp = PL_markstack_ptr++;
-	Rmers_div_r(r, n, d);
-	if (PL_markstack_ptr != temp) {
-          /* truly void, because dXSARGS not invoked */
-	  PL_markstack_ptr = temp;
-	  XSRETURN_EMPTY; /* return empty stack */
-        }
-        /* must have used dXSARGS; list context implied */
-	return; /* assume stack size is correct */
-
-void
-Rmers_div_r5 (r, n, d, n_copy, add)
-	mpz_t *	r
-	mpz_t *	n
-	mpz_t *	d
-	mpz_t *	n_copy
-	mpz_t *	add
-	PREINIT:
-	I32* temp;
-	PPCODE:
-	temp = PL_markstack_ptr++;
-	Rmers_div_r5(r, n, d, n_copy, add);
-	if (PL_markstack_ptr != temp) {
-          /* truly void, because dXSARGS not invoked */
-	  PL_markstack_ptr = temp;
-	  XSRETURN_EMPTY; /* return empty stack */
-        }
-        /* must have used dXSARGS; list context implied */
-	return; /* assume stack size is correct */
-
-void
-Rmers_div_qr (q, r, n, d)
-	mpz_t *	q
-	mpz_t *	r
-	mpz_t *	n
-	mpz_t *	d
-	PREINIT:
-	I32* temp;
-	PPCODE:
-	temp = PL_markstack_ptr++;
-	Rmers_div_qr(q, r, n, d);
-	if (PL_markstack_ptr != temp) {
-          /* truly void, because dXSARGS not invoked */
-	  PL_markstack_ptr = temp;
-	  XSRETURN_EMPTY; /* return empty stack */
-        }
-        /* must have used dXSARGS; list context implied */
-	return; /* assume stack size is correct */
-
 SV *
 _Rmpz_out_str (p, base)
 	mpz_t *	p
@@ -6343,23 +5925,6 @@ int
 trial_div_ul (num, x_arg)
 	mpz_t *	num
 	SV *	x_arg
-
-void
-Rflipbit (flipped, orig)
-	mpz_t *	flipped
-	mpz_t *	orig
-	PREINIT:
-	I32* temp;
-	PPCODE:
-	temp = PL_markstack_ptr++;
-	Rflipbit(flipped, orig);
-	if (PL_markstack_ptr != temp) {
-          /* truly void, because dXSARGS not invoked */
-	  PL_markstack_ptr = temp;
-	  XSRETURN_EMPTY; /* return empty stack */
-        }
-        /* must have used dXSARGS; list context implied */
-	return; /* assume stack size is correct */
 
 void
 Rmpz_rootrem (root, rem, u, d)
@@ -6799,4 +6364,60 @@ _Rmpz_NULL ()
 SV *
 _wrap_count ()
 		
+
+void
+Rprbg_ms (outref, p, q, seed, bits_required)
+	mpz_t *	outref
+	mpz_t *	p
+	mpz_t *	q
+	mpz_t *	seed
+	int	bits_required
+	PREINIT:
+	I32* temp;
+	PPCODE:
+	temp = PL_markstack_ptr++;
+	Rprbg_ms(outref, p, q, seed, bits_required);
+	if (PL_markstack_ptr != temp) {
+          /* truly void, because dXSARGS not invoked */
+	  PL_markstack_ptr = temp;
+	  XSRETURN_EMPTY; /* return empty stack */
+        }
+        /* must have used dXSARGS; list context implied */
+	return; /* assume stack size is correct */
+
+void
+Rprbg_bbs (outref, p, q, seed, bits_required)
+	mpz_t *	outref
+	mpz_t *	p
+	mpz_t *	q
+	mpz_t *	seed
+	int	bits_required
+	PREINIT:
+	I32* temp;
+	PPCODE:
+	temp = PL_markstack_ptr++;
+	Rprbg_bbs(outref, p, q, seed, bits_required);
+	if (PL_markstack_ptr != temp) {
+          /* truly void, because dXSARGS not invoked */
+	  PL_markstack_ptr = temp;
+	  XSRETURN_EMPTY; /* return empty stack */
+        }
+        /* must have used dXSARGS; list context implied */
+	return; /* assume stack size is correct */
+
+int
+Rmonobit (bitstream)
+	mpz_t *	bitstream
+
+int
+Rlong_run (bitstream)
+	mpz_t *	bitstream
+
+int
+Rruns (bitstream)
+	mpz_t *	bitstream
+
+int
+Rpoker (bitstream)
+	mpz_t *	bitstream
 

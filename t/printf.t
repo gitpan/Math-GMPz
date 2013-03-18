@@ -73,13 +73,13 @@ else {print "not ok 1 $ok\n"}
 
 $ok = '';
 my $buffer = 'XOXO' x 10;
-my $buf = $buffer;
+my $buf = "$buffer";
 
 Rmpz_sprintf($buf, "The mpz object: %Zd", $mp);
 if ($buf eq 'The mpz object: -1234565') {$ok .= 'a'}
 else {warn "2a got: $buf\n"}
 
-$buf = $buffer;
+$buf = "$buffer";
 $mp *= -1;
 
 my $ret = Rmpz_sprintf_ret($buf, "The mpz object: %Zd", $mp);
