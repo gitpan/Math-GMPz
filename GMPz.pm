@@ -17,7 +17,7 @@
     use constant _MATH_MPC_T    => 10;
 
 use subs qw( __GNU_MP_VERSION __GNU_MP_VERSION_MINOR __GNU_MP_VERSION_PATCHLEVEL
-             __GMP_CC __GMP_CFLAGS);
+             __GNU_MP_RELEASE __GMP_CC __GMP_CFLAGS);
 
 use overload
     '+'    => \&overload_add,
@@ -60,7 +60,7 @@ use overload
 
     @Math::GMPz::EXPORT_OK = qw(
 __GNU_MP_VERSION __GNU_MP_VERSION_MINOR __GNU_MP_VERSION_PATCHLEVEL
-__GMP_CC __GMP_CFLAGS
+__GNU_MP_RELEASE __GMP_CC __GMP_CFLAGS
 Rmpz_abs Rmpz_add Rmpz_add_ui Rmpz_addmul Rmpz_addmul_ui Rmpz_and Rmpz_bin_ui
 Rmpz_bin_uiui Rmpz_cdiv_q Rmpz_cdiv_q_2exp Rmpz_cdiv_q_ui Rmpz_cdiv_qr 
 Rmpz_cdiv_qr_ui Rmpz_cdiv_r Rmpz_cdiv_r_2exp Rmpz_cdiv_r_ui Rmpz_cdiv_ui 
@@ -74,7 +74,7 @@ Rmpz_fdiv_q Rmpz_fdiv_q_2exp Rmpz_fdiv_q_ui
 Rmpz_fdiv_qr Rmpz_fdiv_qr_ui Rmpz_fdiv_r Rmpz_fdiv_r_2exp Rmpz_fdiv_r_ui 
 Rmpz_fdiv_ui Rmpz_fib2_ui Rmpz_fib_ui Rmpz_fits_sint_p Rmpz_fits_slong_p 
 Rmpz_fits_sshort_p Rmpz_fits_uint_p Rmpz_fits_ulong_p Rmpz_fits_ushort_p
-Rmpz_fprintf Rmpz_sprintf Rmpz_sprintf_ret Rmpz_snprintf Rmpz_snprintf_ret
+Rmpz_fprintf Rmpz_sprintf Rmpz_snprintf
 Rmpz_gcd Rmpz_gcd_ui Rmpz_gcdext Rmpz_get_d_2exp Rmpz_get_si Rmpz_get_str 
 Rmpz_get_ui Rmpz_getlimbn Rmpz_hamdist Rmpz_import Rmpz_init Rmpz_init2 
 Rmpz_init2_nobless Rmpz_init_nobless Rmpz_init_set Rmpz_init_set_d 
@@ -104,7 +104,7 @@ zgmp_randinit_set zgmp_randinit_default_nobless zgmp_randinit_mt_nobless
 zgmp_randinit_lc_2exp_nobless zgmp_randinit_lc_2exp_size_nobless zgmp_randinit_set_nobless
 zgmp_urandomb_ui zgmp_urandomm_ui
     );
-    our $VERSION = '0.37';
+    our $VERSION = '0.38';
     $VERSION = eval $VERSION;
 
     DynaLoader::bootstrap Math::GMPz $VERSION;
@@ -125,7 +125,7 @@ Rmpz_fdiv_q Rmpz_fdiv_q_2exp Rmpz_fdiv_q_ui
 Rmpz_fdiv_qr Rmpz_fdiv_qr_ui Rmpz_fdiv_r Rmpz_fdiv_r_2exp Rmpz_fdiv_r_ui 
 Rmpz_fdiv_ui Rmpz_fib2_ui Rmpz_fib_ui Rmpz_fits_sint_p Rmpz_fits_slong_p 
 Rmpz_fits_sshort_p Rmpz_fits_uint_p Rmpz_fits_ulong_p Rmpz_fits_ushort_p
-Rmpz_fprintf Rmpz_sprintf Rmpz_sprintf_ret Rmpz_snprintf Rmpz_snprintf_ret
+Rmpz_fprintf Rmpz_sprintf Rmpz_snprintf
 Rmpz_gcd Rmpz_gcd_ui Rmpz_gcdext Rmpz_get_d_2exp Rmpz_get_si Rmpz_get_str 
 Rmpz_get_ui Rmpz_getlimbn Rmpz_hamdist Rmpz_import Rmpz_init Rmpz_init2 
 Rmpz_init2_nobless Rmpz_init_nobless Rmpz_init_set Rmpz_init_set_d 
@@ -480,47 +480,39 @@ sub Rmpz_fprintf {
 }
 
 sub Rmpz_sprintf {
-    push @_, 0 if @_ == 2; # add a dummy third argument
-    die "Rmpz_sprintf must pass 3 arguments: buffer, format string, and variable" if @_ != 3;
-    my $len = wrap_gmp_sprintf(@_);
-    $_[0] = substr($_[0], 0, $len);
-    return $len;
-}
 
-sub Rmpz_sprintf_ret {
-    push @_, 0 if @_ == 2; # add a dummy third argument
-    die "Rmpz_sprintf_ret must pass 3 arguments: buffer, format string, and variable" if @_ != 3;
-    my $len = wrap_gmp_sprintf(@_);
-    return substr($_[0], 0, $len);
+    my $len;
+
+    if(@_ == 3) {      # optional arg wasn't provided
+      $len = wrap_gmp_sprintf($_[0], $_[1], 0, $_[2]);  # Set missing arg to 0
+    }
+    else {
+      die "Rmpz_sprintf must pass 4 arguments: buffer, format string, variable, buflen" if @_ != 4;
+      $len = wrap_gmp_sprintf(@_);
+    }
+
+    return $len;
 }
 
 sub Rmpz_snprintf {
-    push @_, 0 if @_ == 3; # add a dummy third argument
-    die "Rmpz_snprintf must pass 4 arguments: buffer, bytes written, format string, and variable" if @_ != 4;
-    my $len = wrap_gmp_snprintf(@_);
-    $_[0] = substr($_[0], 0, $_[1] - 1);
+
+    my $len;
+
+    if(@_ == 4) {      # optional arg wasn't provided
+      $len = wrap_gmp_sprintf($_[0], $_[1], $_[2], 0, $_[3]);  # Set missing arg to 0
+    }
+    else {
+      die "Rmpz_snprintf must pass 5 arguments: buffer, bytes written, format string, variable and buflen" if @_ != 5;
+      $len = wrap_gmp_snprintf(@_);
+    }
+
     return $len;
-}
-
-sub Rmpz_snprintf_ret {
-    push @_, 0 if @_ == 3; # add a dummy third argument
-    die "Rmpz_snprintf_ret must pass 4 arguments: buffer, bytes written, format string, and variable" if @_ != 4;
-    my $len = wrap_gmp_snprintf(@_);
-    return substr($_[0], 0, $_[1] - 1);
-}
-
-sub query_eratosthenes_string {
-    my $x = $_[0] - 1;
-    if($x == 1) {return 1}
-    if($x & 1) {return 0}
-
-    if(ord(substr($_[1], $x / 16, 1)) & 1 << ($x / 2) % 8) {return 1}
-    return 0;
 }
 
 sub __GNU_MP_VERSION {return ___GNU_MP_VERSION()}
 sub __GNU_MP_VERSION_MINOR {return ___GNU_MP_VERSION_MINOR()}
 sub __GNU_MP_VERSION_PATCHLEVEL {return ___GNU_MP_VERSION_PATCHLEVEL()}
+sub __GNU_MP_RELEASE {return ___GNU_MP_RELEASE()}
 sub __GMP_CC {return ___GMP_CC()}
 sub __GMP_CFLAGS {return ___GMP_CFLAGS()}
 
@@ -1564,63 +1556,44 @@ __END__
     If there is no variable to be formatted, then the final arg
     can be omitted - a suitable dummy arg will be passed to the XS
     code for you. ie the following will work:
-     Rmpz_printf($fh, "hello world\n");
+     Rmpz_fprintf($fh, "hello world\n");
     Returns the number of characters written, or -1 if an error
     occurred.
 
-   $si = Rmpz_sprintf($buffer, $format_string, $var);
+   $si = Rmpz_sprintf($buffer, $format_string, [$var,] $buflen);
 
     This function (unlike the GMP counterpart) is limited to taking
-    3 arguments - the buffer, the format string, and the variable
-    to be formatted. If there is no variable to be formatted, then the
-    final arg can be omitted - a suitable dummy arg will be passed to
-    the XS code for you. ie the following will work:
-     Rmpz_sprintf($buffer, "hello world\n");
-    $buffer must be large enough to accommodate the formatted string,
-    and is truncated to the length of that formatted string.
-    If you prefer to have the resultant string returned (rather
-    than stored in $buffer), use Rmpz_sprintf_ret instead - which will
-    also leave the length of $buffer unaltered.
-    Returns the number of characters written, or -1 if an error
-    occurred.
+    4 arguments - the buffer, the format string, the variable to be
+    formatted and the buffer length. If there is no variable to be
+    formatted, then the "$var" arg can be omitted - a suitable dummy
+    arg will be passed to the XS code for you. ie the following will
+    work:
+     Rmpz_sprintf($buffer, "hello world\n", 12);
+    $buflen must be large enough to accommodate the formatted string,
+    Sets $buffer to the formatted string and returns the number of
+    characters written, or -1 if an error occurred.
 
-   $string = Rmpz_sprintf_ret($buffer, $format_string, $var);
-
-    As for Rmpz_sprintf, but returns the formatted string, as well as
-    storing it in $buffer. $buffer needs to be large enough to 
-    accommodate the formatted string. The length of $buffer will be
-    unaltered.
-
-   $si = Rmpz_snprintf($buffer, $bytes, $format_string, $var);
+   $si = Rmpz_snprintf($buffer, $bytes, $format_string, [$var,] $buflen);
 
     Form a null-terminated string in $buffer. No more than $bytes 
     bytes will be written. To get the full output, $bytes must be
-    enough for the string and null-terminator. $buffer must be large
-    enough to accommodate the string and null-terminator, and is
-    truncated to the length of that string (and null-terminator).
+    enough for the string and null-terminator. $buflen must be large
+    enough to accommodate the string and null-terminator..
     The return value is the total number of characters which ought
     to have been produced, excluding the terminating null.
     If $si >= $bytes then the actual output has been truncated to
     the first $bytes-1 characters, and a null appended.
     This function (unlike the GMP counterpart) is limited to taking
-    4 arguments - the buffer, the maximum number of bytes to be
-    returned, the format string, and the variable to be formatted.
-    If there is no variable to be formatted, then the final arg can
+    5 arguments - the buffer, the maximum number of bytes to be
+    returned, the format string, the variable to be formatted, and
+    the length of the buffer to which the formatted string will be
+    written.
+    If there is no variable to be formatted, then the "$var" arg can
     be omitted - a suitable dummy arg will be passed to the XS code
     for you. ie the following will work:
-     Rmpz_snprintf($buffer, 12, "hello world");
-    If you prefer to have the resultant string returned (rather
-    than stored in $buffer), use Rmpz_snprintf_ret instead - which will
-    also leave the length of $buffer unaltered.
+     Rmpz_snprintf($buffer, 6 "hello world", 12);
 
-   $string = Rmpz_snprintf_ret($buffer, $bytes, $format_string, $var);
-
-    As for Rmpz_snprintf, but returns the formatted string, as well as
-    storing it in $buffer. $buffer needs to be large enough to 
-    accommodate the formatted string. The length of $buffer will be
-    unaltered. The length of $string (as reported by perl's length
-    function) will be no greater than $bytes.
-
+   ###################
    ###################
     
 =head1 BUGS

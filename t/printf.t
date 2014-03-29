@@ -72,23 +72,23 @@ if($ok eq 'abcd') {print "ok 1\n"}
 else {print "not ok 1 $ok\n"}
 
 $ok = '';
-my $buffer = 'XOXO' x 10;
-my $buf = "$buffer";
+#my $buffer = 'XOXO' x 10;
+my $buf;
 
-Rmpz_sprintf($buf, "The mpz object: %Zd", $mp);
+Rmpz_sprintf($buf, "The mpz object: %Zd", $mp, 30);
 if ($buf eq 'The mpz object: -1234565') {$ok .= 'a'}
 else {warn "2a got: $buf\n"}
 
-$buf = "$buffer";
+#$buf = "$buffer";
 $mp *= -1;
 
-my $ret = Rmpz_sprintf_ret($buf, "The mpz object: %Zd", $mp);
-if ($ret eq 'The mpz object: 1234565') {$ok .= 'b'}
-else {warn "2b got: $ret\n"}
-if ($buf eq 'The mpz object: 1234565' . "\0" . 'XOXO' x 4) {$ok .= 'c'}
-else {warn "2c got: $buf\n"}
+my $ret = Rmpz_sprintf($buf, "The mpz object: %Zd", $mp, 25);
+if ($buf eq 'The mpz object: 1234565') {$ok .= 'b'}
+else {warn "2b got: $buf\n"}
+if ($ret == 23) {$ok .= 'c'}
+else {warn "2c got: $ret\n"}
 
-$ret = Rmpz_sprintf($buf, "$ul");
+$ret = Rmpz_sprintf($buf, "$ul", 6);
 if($ret == 5) {$ok .= 'd'}
 else {warn "2d got: $ret\n"}
 if ($buf eq '56790') {$ok .= 'e'}
@@ -108,20 +108,22 @@ eval {Rmpz_fprintf(\*STDOUT, "%Zd", $mbi);};
 if($@ =~ /Unrecognised object/) {$ok .= 'b'}
 else {warn "3b got: $@\n"}
 
-eval {Rmpz_sprintf($buf, "%Zd", $mbi);};
+eval {Rmpz_sprintf($buf, "%Zd", $mbi, 100);};
 if($@ =~ /Unrecognised object/) {$ok .= 'c'}
 else {warn "3c got: $@\n"}
 
-eval {Rmpz_sprintf_ret($buf, "%Zd", $mbi);};
-if($@ =~ /Unrecognised object/) {$ok .= 'd'}
-else {warn "3d got: $@\n"}
+#eval {Rmpz_sprintf_ret($buf, "%Zd", $mbi);};
+#if($@ =~ /Unrecognised object/) {$ok .= 'd'}
+#else {warn "3d got: $@\n"}
+
+$ok .= 'd';
 
 eval {Rmpz_fprintf(\*STDOUT, "%Zd", $mbi, $ul);};
 if($@ =~ /must pass 3 arguments/) {$ok .= 'e'}
 else {warn "3e got: $@\n"}
 
-eval {Rmpz_sprintf($buf, "%Zd", $mbi, $ul);};
-if($@ =~ /must pass 3 arguments/) {$ok .= 'f'}
+eval {Rmpz_sprintf($buf, "%Zd", $mbi, $ul, $ul);};
+if($@ =~ /must pass 4 arguments/) {$ok .= 'f'}
 else {warn "3f got: $@\n"}
 
 eval {Rmpz_printf("%Zd", $mbi, $ul);};
@@ -210,13 +212,13 @@ $ok = '';
 
 $mp *= -1;
 
-$buf = 'X' x 10;
-$ret = Rmpz_snprintf_ret($buf, 5, "%Zd", $mp);
+#$buf = 'X' x 10;
+$ret = Rmpz_snprintf($buf, 5, "%Zd", $mp, 10);
 
-if($ret eq '-123') {$ok .= 'a'}
-else {warn "7a: $ret\n"}
+if($buf eq '-123') {$ok .= 'a'}
+else {warn "7a: $buf\n"}
 
-$ret = Rmpz_snprintf($buf, 6, "%Zd", $mp);
+$ret = Rmpz_snprintf($buf, 6, "%Zd", $mp, 10);
 
 if($ret == 8) {$ok .= 'b'}
 else {warn "7b: $ret\n"}

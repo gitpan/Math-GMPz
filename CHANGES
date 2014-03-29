@@ -1,3 +1,17 @@
+0.38
+ - Alter wrap_gmp_sprintf and wrap_gmp_snprintf to take an extra arg (length of
+   buffer to which we write).
+ - Remove Rmpz_sprintf_ret and Rmpz_snprintf_ret. (These now seem pointless in
+   view of the changes to wrap_gmp_sprintf and wrap_gmp_snprintf.) 
+ - Add Math::GMPz::__GNU_MP_RELEASE.
+ - Alter V.xs to accommodate the possibility that the global constant gmp_version
+   has not been set in gmp.h. I've assumed this can only happen if the gmp
+   library version is earlier than 4.0.0. (The gmp ChangeLog indicates that this
+   is so.)
+ - No longer include inttypes.h on the basis of USE_LONG_DOUBLE being defined.
+   (Was harmless ... but didn't make much sense.)
+ - Define PERL_NO_GET_CONTEXT (in XS code).
+
 0.37
  - Alter test 3i in new.t to allow for the possibility that perl has been bult
    with -Duselongdouble.

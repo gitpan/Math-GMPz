@@ -1,3 +1,5 @@
+#define PERL_NO_GET_CONTEXT 1
+
 #include "EXTERN.h"
 #include "perl.h"
 #include "XSUB.h"
@@ -10,7 +12,7 @@
 #pragma warning(disable:4700 4715 4716)
 #endif
 
-#if defined USE_64_BIT_INT || defined USE_LONG_DOUBLE
+#if defined USE_64_BIT_INT
 #ifndef _MSC_VER
 #include <inttypes.h>
 #endif
@@ -28,7 +30,7 @@
 #  define Newxz(v,n,t) Newz(0,v,n,t)
 #endif
 
-SV * Rmpz_init_set_str_nobless(SV * num, SV * base) {
+SV * Rmpz_init_set_str_nobless(pTHX_ SV * num, SV * base) {
      mpz_t * mpz_t_obj;
      unsigned long b = SvUV(base);
      SV * obj_ref, * obj;
@@ -48,7 +50,7 @@ SV * Rmpz_init_set_str_nobless(SV * num, SV * base) {
 
 }
 
-SV * Rmpz_init2_nobless(SV * bits) {
+SV * Rmpz_init2_nobless(pTHX_ SV * bits) {
      mpz_t * mpz_t_obj;
      SV * obj_ref, * obj;
 
@@ -64,7 +66,7 @@ SV * Rmpz_init2_nobless(SV * bits) {
 
 }
 
-SV * Rmpz_init_nobless(void) {
+SV * Rmpz_init_nobless(pTHX) {
      mpz_t * mpz_t_obj;
      SV * obj_ref, * obj;
 
@@ -79,7 +81,7 @@ SV * Rmpz_init_nobless(void) {
      return obj_ref;
 }
 
-SV * Rmpz_init_set_nobless(mpz_t * p) {
+SV * Rmpz_init_set_nobless(pTHX_ mpz_t * p) {
      mpz_t * mpz_t_obj;
      SV * obj_ref, * obj;
 
@@ -94,7 +96,7 @@ SV * Rmpz_init_set_nobless(mpz_t * p) {
      return obj_ref;
 }
 
-SV * Rmpz_init_set_ui_nobless(SV * p) {
+SV * Rmpz_init_set_ui_nobless(pTHX_ SV * p) {
      mpz_t * mpz_t_obj;
      SV * obj_ref, * obj;
 
@@ -109,7 +111,7 @@ SV * Rmpz_init_set_ui_nobless(SV * p) {
      return obj_ref;
 }
 
-SV * Rmpz_init_set_si_nobless(SV * p) {
+SV * Rmpz_init_set_si_nobless(pTHX_ SV * p) {
      mpz_t * mpz_t_obj;
      SV * obj_ref, * obj;
 
@@ -125,7 +127,7 @@ SV * Rmpz_init_set_si_nobless(SV * p) {
 }
 
 
-SV * Rmpz_init_set_d_nobless(SV * p) {
+SV * Rmpz_init_set_d_nobless(pTHX_ SV * p) {
      mpz_t * mpz_t_obj;
      SV * obj_ref, * obj;
 
@@ -140,7 +142,7 @@ SV * Rmpz_init_set_d_nobless(SV * p) {
      return obj_ref;
 }
 
-SV * Rmpz_init(void) {
+SV * Rmpz_init(pTHX) {
      mpz_t * mpz_t_obj;
      SV * obj_ref, * obj;
 
@@ -155,7 +157,7 @@ SV * Rmpz_init(void) {
      return obj_ref;
 }
 
-SV * Rmpz_init_set(mpz_t * p) {
+SV * Rmpz_init_set(pTHX_ mpz_t * p) {
      mpz_t * mpz_t_obj;
      SV * obj_ref, * obj;
 
@@ -170,7 +172,7 @@ SV * Rmpz_init_set(mpz_t * p) {
      return obj_ref;
 }
 
-SV * Rmpz_init_set_ui(SV * p) {
+SV * Rmpz_init_set_ui(pTHX_ SV * p) {
      mpz_t * mpz_t_obj;
      SV * obj_ref, * obj;
 
@@ -185,7 +187,7 @@ SV * Rmpz_init_set_ui(SV * p) {
      return obj_ref;
 }
 
-SV * Rmpz_init_set_si(SV * p) {
+SV * Rmpz_init_set_si(pTHX_ SV * p) {
      mpz_t * mpz_t_obj;
      SV * obj_ref, * obj;
 
@@ -201,7 +203,7 @@ SV * Rmpz_init_set_si(SV * p) {
 }
 
 
-SV * Rmpz_init_set_d(SV * p) {
+SV * Rmpz_init_set_d(pTHX_ SV * p) {
      mpz_t * mpz_t_obj;
      SV * obj_ref, * obj;
 
@@ -216,7 +218,7 @@ SV * Rmpz_init_set_d(SV * p) {
      return obj_ref;
 }
 
-SV * _Rmpz_init_set_ld(SV * p) {
+SV * _Rmpz_init_set_ld(pTHX_ SV * p) {
 #ifdef USE_LONG_DOUBLE
      mpz_t * mpz_t_obj;
      SV * obj_ref, * obj;
@@ -240,7 +242,7 @@ SV * _Rmpz_init_set_ld(SV * p) {
 }
 
 
-SV * Rmpz_init_set_str(SV * num, SV * base) {
+SV * Rmpz_init_set_str(pTHX_ SV * num, SV * base) {
      mpz_t * mpz_t_obj;
      unsigned long b = SvUV(base);
      SV * obj_ref, * obj;
@@ -260,7 +262,7 @@ SV * Rmpz_init_set_str(SV * num, SV * base) {
 
 }
 
-SV * Rmpz_init2(SV * bits) {
+SV * Rmpz_init2(pTHX_ SV * bits) {
      mpz_t * mpz_t_obj;
      SV * obj_ref, * obj;
 
@@ -276,7 +278,7 @@ SV * Rmpz_init2(SV * bits) {
 
 }
 
-SV * Rmpz_get_str(mpz_t * p, SV * base) {
+SV * Rmpz_get_str(pTHX_ mpz_t * p, SV * base) {
      char * out;
      SV * outsv;
      int c = (int)SvIV(base), b = (int)SvIV(base);
@@ -294,77 +296,77 @@ SV * Rmpz_get_str(mpz_t * p, SV * base) {
      return outsv;
 }
 
-void DESTROY(mpz_t * p) {
+void DESTROY(pTHX_ mpz_t * p) {
 /*     printf("Destroying mpz "); */
      mpz_clear(*p);
      Safefree(p);
 /*     printf("...destroyed\n"); */
 }
 
-void Rmpz_clear(mpz_t * p) {
+void Rmpz_clear(pTHX_ mpz_t * p) {
      mpz_clear(*p);
      Safefree(p);
 }
 
-void Rmpz_clear_mpz(mpz_t * p) {
+void Rmpz_clear_mpz(pTHX_ mpz_t * p) {
      mpz_clear(*p);
 }
 
-void Rmpz_clear_ptr(mpz_t * p) {
+void Rmpz_clear_ptr(pTHX_ mpz_t * p) {
      Safefree(p);
 }
 
-void Rmpz_realloc2(mpz_t * integer, SV * bits){
+void Rmpz_realloc2(pTHX_ mpz_t * integer, SV * bits){
      mpz_realloc2(*integer, SvUV(bits));
 }
 
-void Rmpz_set(mpz_t * copy, mpz_t * original) {
+void Rmpz_set(pTHX_ mpz_t * copy, mpz_t * original) {
      mpz_set(*copy, *original);
 }
 
-void Rmpz_set_q(mpz_t * copy, mpq_t * original) {
+void Rmpz_set_q(pTHX_ mpz_t * copy, mpq_t * original) {
      mpz_set_q(*copy, *original);
 }
 
-void Rmpz_set_f(mpz_t * copy, mpf_t * original) {
+void Rmpz_set_f(pTHX_ mpz_t * copy, mpf_t * original) {
      mpz_set_f(*copy, *original);
 }
 
-void Rmpz_set_si(mpz_t * copy, SV * original) {
+void Rmpz_set_si(pTHX_ mpz_t * copy, SV * original) {
      mpz_set_si(*copy, SvIV(original));
 }
 
-void Rmpz_set_ui(mpz_t * copy, SV * original) {
+void Rmpz_set_ui(pTHX_ mpz_t * copy, SV * original) {
      mpz_set_ui(*copy, SvUV(original));
 }
 
-void Rmpz_set_d(mpz_t * copy, SV * original) {
+void Rmpz_set_d(pTHX_ mpz_t * copy, SV * original) {
      mpz_set_d(*copy, SvNV(original));
 }
 
-void Rmpz_set_str(mpz_t * copy, SV * original, SV * base) {
+void Rmpz_set_str(pTHX_ mpz_t * copy, SV * original, SV * base) {
     if(SvUV(base) == 1 || SvUV(base) > 62) croak("Second argument supplied to Rmpz_set_str() is not in acceptable range");
     if(mpz_set_str(*copy, SvPV_nolen(original), SvUV(base)))
        croak("Second argument supplied to Rmpz_set_str() is not a valid base %u integer", SvUV(base));
 }
 
-void Rmpz_swap(mpz_t * a, mpz_t * b) {
+void Rmpz_swap(pTHX_ mpz_t * a, mpz_t * b) {
      mpz_swap(*a, *b);
 }
 
-SV * Rmpz_get_ui(mpz_t * n) {
+SV * Rmpz_get_ui(pTHX_ mpz_t * n) {
      return newSVuv(mpz_get_ui(*n));
 }
 
-SV * Rmpz_get_si(mpz_t * n) {
+SV * Rmpz_get_si(pTHX_ mpz_t * n) {
      return newSViv(mpz_get_si(*n));
 }
 
-SV * Rmpz_get_d(mpz_t * n) {
+SV * Rmpz_get_d(pTHX_ mpz_t * n) {
      return newSVnv(mpz_get_d(*n));
 }
 
-void Rmpz_get_d_2exp(mpz_t * n) {
+void Rmpz_get_d_2exp(pTHX_ mpz_t * n) {
      dXSARGS;
      double d;
      long exp;
@@ -379,220 +381,220 @@ void Rmpz_get_d_2exp(mpz_t * n) {
      XSRETURN(2);
 }
 
-SV * Rmpz_getlimbn(mpz_t * p, SV * n) {
+SV * Rmpz_getlimbn(pTHX_ mpz_t * p, SV * n) {
      return newSVuv(mpz_getlimbn(*p, SvUV(n)));
 }
 
-void Rmpz_add(mpz_t * dest, mpz_t * src1, mpz_t * src2) {
+void Rmpz_add(pTHX_ mpz_t * dest, mpz_t * src1, mpz_t * src2) {
      mpz_add(*dest, *src1, *src2 );
 }
 
-void Rmpz_add_ui(mpz_t * dest, mpz_t * src, SV * num) {
+void Rmpz_add_ui(pTHX_ mpz_t * dest, mpz_t * src, SV * num) {
      mpz_add_ui(*dest, *src, SvUV(num));
 /*     return sv_setref_pv(newSViv(0), Nullch, INT2PTR(mpz_t *, SvIV(SvRV(dest)))); */ 
 }
 
-void Rmpz_sub(mpz_t * dest, mpz_t * src1, mpz_t * src2) {
+void Rmpz_sub(pTHX_ mpz_t * dest, mpz_t * src1, mpz_t * src2) {
      mpz_sub(*dest, *src1, *src2 );
 }
 
-void Rmpz_sub_ui(mpz_t * dest, mpz_t * src, SV * num) {
+void Rmpz_sub_ui(pTHX_ mpz_t * dest, mpz_t * src, SV * num) {
      mpz_sub_ui(*dest, *src, SvUV(num));
 }
 
-void Rmpz_ui_sub(mpz_t * dest, SV * num, mpz_t * src) {
+void Rmpz_ui_sub(pTHX_ mpz_t * dest, SV * num, mpz_t * src) {
      mpz_ui_sub(*dest, SvUV(num), *src);
 }
 
-void Rmpz_mul(mpz_t * dest, mpz_t * src1, mpz_t * src2) {
+void Rmpz_mul(pTHX_ mpz_t * dest, mpz_t * src1, mpz_t * src2) {
      mpz_mul(*dest, *src1, *src2 );
 }
 
-void Rmpz_mul_si(mpz_t * dest, mpz_t * src, SV * num) {
+void Rmpz_mul_si(pTHX_ mpz_t * dest, mpz_t * src, SV * num) {
      mpz_mul_si(*dest, *src, SvIV(num));
 }
 
-void Rmpz_mul_ui(mpz_t * dest, mpz_t * src, SV * num) {
+void Rmpz_mul_ui(pTHX_ mpz_t * dest, mpz_t * src, SV * num) {
      mpz_mul_ui(*dest, *src, SvUV(num));
 }
 
-void Rmpz_addmul(mpz_t * dest, mpz_t * src1, mpz_t * src2) {
+void Rmpz_addmul(pTHX_ mpz_t * dest, mpz_t * src1, mpz_t * src2) {
      mpz_addmul(*dest, *src1, *src2 );
 }
 
-void Rmpz_addmul_ui(mpz_t * dest, mpz_t * src, SV * num) {
+void Rmpz_addmul_ui(pTHX_ mpz_t * dest, mpz_t * src, SV * num) {
      mpz_addmul_ui(*dest, *src, SvUV(num));
 }
 
-void Rmpz_submul(mpz_t * dest, mpz_t * src1, mpz_t * src2) {
+void Rmpz_submul(pTHX_ mpz_t * dest, mpz_t * src1, mpz_t * src2) {
      mpz_submul(*dest, *src1, *src2 );
 }
 
-void Rmpz_submul_ui(mpz_t * dest, mpz_t * src, SV * num) {
+void Rmpz_submul_ui(pTHX_ mpz_t * dest, mpz_t * src, SV * num) {
      mpz_submul_ui(*dest, *src, SvUV(num));
 }
 
-void Rmpz_mul_2exp(mpz_t * dest, mpz_t * src1, SV * b) {
+void Rmpz_mul_2exp(pTHX_ mpz_t * dest, mpz_t * src1, SV * b) {
      mpz_mul_2exp(*dest, *src1, SvUV(b));
 }
 
-void Rmpz_div_2exp(mpz_t * dest, mpz_t * src1, SV * b) {
+void Rmpz_div_2exp(pTHX_ mpz_t * dest, mpz_t * src1, SV * b) {
      mpz_div_2exp(*dest, *src1, SvUV(b));
 }
 
-void Rmpz_neg(mpz_t * dest, mpz_t * src) {
+void Rmpz_neg(pTHX_ mpz_t * dest, mpz_t * src) {
      mpz_neg(*dest, *src );
 }
 
-void Rmpz_abs(mpz_t * dest, mpz_t * src) {
+void Rmpz_abs(pTHX_ mpz_t * dest, mpz_t * src) {
      mpz_abs(*dest, *src );
 }
 
-void Rmpz_cdiv_q( mpz_t * q, mpz_t *  n, mpz_t * d) {
+void Rmpz_cdiv_q(pTHX_  mpz_t * q, mpz_t *  n, mpz_t * d) {
      mpz_cdiv_q(*q, *n, *d);
 }
 
-void Rmpz_cdiv_r( mpz_t * mod, mpz_t *  n, mpz_t * d) {
+void Rmpz_cdiv_r(pTHX_  mpz_t * mod, mpz_t *  n, mpz_t * d) {
      mpz_cdiv_r(*mod, *n, *d);
 }
 
-void Rmpz_cdiv_qr( mpz_t * q, mpz_t * r, mpz_t *  n, mpz_t * d) {
+void Rmpz_cdiv_qr(pTHX_  mpz_t * q, mpz_t * r, mpz_t *  n, mpz_t * d) {
      mpz_cdiv_qr(*q, *r, *n, *d);
 }
 
-SV * Rmpz_cdiv_q_ui( mpz_t * q, mpz_t *  n, SV * d) {
+SV * Rmpz_cdiv_q_ui(pTHX_  mpz_t * q, mpz_t *  n, SV * d) {
      return newSVuv(mpz_cdiv_q_ui(*q, *n, SvUV(d)));
 }
 
-SV * Rmpz_cdiv_r_ui( mpz_t * q, mpz_t *  n, SV * d) {
+SV * Rmpz_cdiv_r_ui(pTHX_  mpz_t * q, mpz_t *  n, SV * d) {
      return newSVuv(mpz_cdiv_r_ui(*q, *n, SvUV(d)));
 }
 
-SV * Rmpz_cdiv_qr_ui( mpz_t * q, mpz_t * r, mpz_t *  n, SV * d) {
+SV * Rmpz_cdiv_qr_ui(pTHX_  mpz_t * q, mpz_t * r, mpz_t *  n, SV * d) {
      return newSVuv(mpz_cdiv_qr_ui(*q, *r, *n, SvUV(d)));
 }
 
-int Rmpz_cdiv_ui( mpz_t *  n, SV * d) {
-    return mpz_cdiv_ui(*n, SvUV(d));
+SV * Rmpz_cdiv_ui(pTHX_  mpz_t *  n, SV * d) {
+     return newSVuv(mpz_cdiv_ui(*n, SvUV(d)));
 }
 
-void Rmpz_cdiv_q_2exp( mpz_t * q, mpz_t *  n, SV * b) {
+void Rmpz_cdiv_q_2exp(pTHX_  mpz_t * q, mpz_t *  n, SV * b) {
      mpz_cdiv_q_2exp(*q, *n, SvUV(b));
 }
 
-void Rmpz_cdiv_r_2exp( mpz_t * r, mpz_t *  n, SV * b) {
+void Rmpz_cdiv_r_2exp(pTHX_  mpz_t * r, mpz_t *  n, SV * b) {
      mpz_cdiv_r_2exp(*r, *n, SvUV(b));
 }
 
-void Rmpz_fdiv_q( mpz_t * q, mpz_t *  n, mpz_t * d) {
+void Rmpz_fdiv_q(pTHX_  mpz_t * q, mpz_t *  n, mpz_t * d) {
      mpz_fdiv_q(*q, *n, *d);
 }
 
-void Rmpz_div( mpz_t * q, mpz_t *  n, mpz_t * d) {
+void Rmpz_div(pTHX_  mpz_t * q, mpz_t *  n, mpz_t * d) {
      mpz_div(*q, *n, *d);
 }
 
 /* % mpz-t (modulus) operator */
-void Rmpz_fdiv_r( mpz_t * mod, mpz_t *  n, mpz_t * d) {
+void Rmpz_fdiv_r(pTHX_  mpz_t * mod, mpz_t *  n, mpz_t * d) {
      mpz_fdiv_r(*mod, *n, *d);
 }
 
-void Rmpz_fdiv_qr( mpz_t * q, mpz_t * r, mpz_t *  n, mpz_t * d) {
+void Rmpz_fdiv_qr(pTHX_  mpz_t * q, mpz_t * r, mpz_t *  n, mpz_t * d) {
      mpz_fdiv_qr(*q, *r, *n, *d);
 }
 
-void Rmpz_divmod( mpz_t * q, mpz_t * r, mpz_t *  n, mpz_t * d) {
+void Rmpz_divmod(pTHX_  mpz_t * q, mpz_t * r, mpz_t *  n, mpz_t * d) {
      mpz_divmod(*q, *r, *n, *d);
 }
 
-SV * Rmpz_fdiv_q_ui( mpz_t * q, mpz_t *  n, SV * d) {
+SV * Rmpz_fdiv_q_ui(pTHX_  mpz_t * q, mpz_t *  n, SV * d) {
      return newSVuv(mpz_fdiv_q_ui(*q, *n, SvUV(d)));
 }
 
-SV * Rmpz_div_ui( mpz_t * q, mpz_t *  n, SV * d) {
+SV * Rmpz_div_ui(pTHX_  mpz_t * q, mpz_t *  n, SV * d) {
      return newSVuv(mpz_div_ui(*q, *n, SvUV(d)));
 }
 
-SV * Rmpz_fdiv_r_ui( mpz_t * q, mpz_t *  n, SV * d) {
+SV * Rmpz_fdiv_r_ui(pTHX_  mpz_t * q, mpz_t *  n, SV * d) {
      return newSVuv(mpz_fdiv_r_ui(*q, *n, SvUV(d)));
 }
 
-SV * Rmpz_fdiv_qr_ui( mpz_t * q, mpz_t * r, mpz_t *  n, SV * d) {
+SV * Rmpz_fdiv_qr_ui(pTHX_  mpz_t * q, mpz_t * r, mpz_t *  n, SV * d) {
      return newSVuv(mpz_fdiv_qr_ui(*q, *r, *n, SvUV(d)));
 }
 
-SV * Rmpz_divmod_ui( mpz_t * q, mpz_t * r, mpz_t *  n, SV * d) {
+SV * Rmpz_divmod_ui(pTHX_  mpz_t * q, mpz_t * r, mpz_t *  n, SV * d) {
      return newSVuv(mpz_divmod_ui(*q, *r, *n, SvUV(d)));
 }
 
 /* % int (modulus) operator */
-int Rmpz_fdiv_ui( mpz_t *  n, SV * d) {
-    return mpz_fdiv_ui(*n, SvUV(d));
+SV * Rmpz_fdiv_ui(pTHX_  mpz_t *  n, SV * d) {
+     return newSVuv(mpz_fdiv_ui(*n, SvUV(d)));
 }
 
-void Rmpz_fdiv_q_2exp( mpz_t * q, mpz_t *  n, SV * b) {
+void Rmpz_fdiv_q_2exp(pTHX_  mpz_t * q, mpz_t *  n, SV * b) {
      mpz_fdiv_q_2exp(*q, *n, SvUV(b));
 }
 
-void Rmpz_fdiv_r_2exp( mpz_t * r, mpz_t *  n, SV * b) {
+void Rmpz_fdiv_r_2exp(pTHX_  mpz_t * r, mpz_t *  n, SV * b) {
      mpz_fdiv_r_2exp(*r, *n, SvUV(b));
 }
 
-void Rmpz_mod_2exp( mpz_t * r, mpz_t *  n, SV * b) {
+void Rmpz_mod_2exp(pTHX_  mpz_t * r, mpz_t *  n, SV * b) {
      mpz_mod_2exp(*r, *n, SvUV(b));
 }
 
-void Rmpz_tdiv_q( mpz_t * q, mpz_t *  n, mpz_t * d) {
+void Rmpz_tdiv_q(pTHX_  mpz_t * q, mpz_t *  n, mpz_t * d) {
      mpz_tdiv_q(*q, *n, *d);
 }
 
 /* % mpz-t (modulus) operator */
-void Rmpz_tdiv_r( mpz_t * mod, mpz_t *  n, mpz_t * d) {
+void Rmpz_tdiv_r(pTHX_  mpz_t * mod, mpz_t *  n, mpz_t * d) {
      mpz_tdiv_r(*mod, *n, *d);
 }
 
-void Rmpz_tdiv_qr( mpz_t * q, mpz_t * r, mpz_t *  n, mpz_t * d) {
+void Rmpz_tdiv_qr(pTHX_  mpz_t * q, mpz_t * r, mpz_t *  n, mpz_t * d) {
      mpz_tdiv_qr(*q, *r, *n, *d);
 }
 
-SV * Rmpz_tdiv_q_ui( mpz_t * q, mpz_t *  n, SV * d) {
+SV * Rmpz_tdiv_q_ui(pTHX_  mpz_t * q, mpz_t *  n, SV * d) {
      return newSVuv(mpz_tdiv_q_ui(*q, *n, SvUV(d)));
 }
 
-SV * Rmpz_tdiv_r_ui( mpz_t * q, mpz_t *  n, SV * d) {
+SV * Rmpz_tdiv_r_ui(pTHX_  mpz_t * q, mpz_t *  n, SV * d) {
      return newSVuv(mpz_tdiv_r_ui(*q, *n, SvUV(d)));
 }
 
-SV * Rmpz_tdiv_qr_ui( mpz_t * q, mpz_t * r, mpz_t *  n, SV * d) {
+SV * Rmpz_tdiv_qr_ui(pTHX_  mpz_t * q, mpz_t * r, mpz_t *  n, SV * d) {
      return newSVuv(mpz_tdiv_qr_ui(*q, *r, *n, SvUV(d)));
 }
 
 /* % int (modulus) operator */
-int Rmpz_tdiv_ui( mpz_t *  n, SV * d) {
-    return mpz_tdiv_ui(*n, SvUV(d));
+SV * Rmpz_tdiv_ui(pTHX_  mpz_t *  n, SV * d) {
+     return newSVuv(mpz_tdiv_ui(*n, SvUV(d)));
 }
 
-void Rmpz_tdiv_q_2exp( mpz_t * q, mpz_t *  n, SV * b) {
+void Rmpz_tdiv_q_2exp(pTHX_  mpz_t * q, mpz_t *  n, SV * b) {
      mpz_tdiv_q_2exp(*q, *n, SvUV(b));
 }
 
-void Rmpz_tdiv_r_2exp( mpz_t * r, mpz_t *  n, SV * b) {
+void Rmpz_tdiv_r_2exp(pTHX_  mpz_t * r, mpz_t *  n, SV * b) {
      mpz_tdiv_r_2exp(*r, *n, SvUV(b));
 }
 
-void Rmpz_mod( mpz_t * r, mpz_t *  n, mpz_t * d) {
+void Rmpz_mod(pTHX_  mpz_t * r, mpz_t *  n, mpz_t * d) {
      mpz_mod(*r, *n, *d);
 }
 
-SV * Rmpz_mod_ui( mpz_t * r, mpz_t *  n, SV * d) {
+SV * Rmpz_mod_ui(pTHX_  mpz_t * r, mpz_t *  n, SV * d) {
      return newSVuv(mpz_mod_ui(*r, *n, SvUV(d)));
 }
 
-void Rmpz_divexact(mpz_t * dest, mpz_t * n, mpz_t * d) {
+void Rmpz_divexact(pTHX_ mpz_t * dest, mpz_t * n, mpz_t * d) {
      mpz_divexact(*dest, *n, *d );
 }
 
-void Rmpz_divexact_ui(mpz_t * dest, mpz_t * n, SV * d) {
+void Rmpz_divexact_ui(pTHX_ mpz_t * dest, mpz_t * n, SV * d) {
      mpz_divexact_ui(*dest, *n, SvUV(d));
 }
 
@@ -600,51 +602,51 @@ int Rmpz_divisible_p(mpz_t * n, mpz_t * d) {
     return mpz_divisible_p(*n, *d);
 }
 
-int Rmpz_divisible_ui_p(mpz_t * n, SV * d) {
-    return mpz_divisible_ui_p(*n, SvUV(d));
+SV * Rmpz_divisible_ui_p(pTHX_ mpz_t * n, SV * d) {
+     return newSViv(mpz_divisible_ui_p(*n, SvUV(d)));
 }
 
-int Rmpz_divisible_2exp_p(mpz_t * n, SV * b) {
-    return mpz_divisible_2exp_p(*n, SvUV(b));
+SV * Rmpz_divisible_2exp_p(pTHX_ mpz_t * n, SV * b) {
+     return newSViv(mpz_divisible_2exp_p(*n, SvUV(b)));
 }
 
-SV * Rmpz_congruent_p(mpz_t * n, mpz_t * c, mpz_t * d) {
+SV * Rmpz_congruent_p(pTHX_ mpz_t * n, mpz_t * c, mpz_t * d) {
      return newSViv(mpz_congruent_p(*n, *c, *d));
 }
 
-SV * Rmpz_congruent_ui_p(mpz_t * n, SV * c, SV * d) {
+SV * Rmpz_congruent_ui_p(pTHX_ mpz_t * n, SV * c, SV * d) {
      return newSViv(mpz_congruent_ui_p(*n, SvUV(c), SvUV(d)));
 }
 
-SV * Rmpz_congruent_2exp_p(mpz_t * n, mpz_t * c, SV * d) {
+SV * Rmpz_congruent_2exp_p(pTHX_ mpz_t * n, mpz_t * c, SV * d) {
      return newSViv(mpz_congruent_2exp_p(*n, *c, SvUV(d)));
 }
 
-void Rmpz_powm(mpz_t * dest, mpz_t * base, mpz_t * exp, mpz_t * mod) {
+void Rmpz_powm(pTHX_ mpz_t * dest, mpz_t * base, mpz_t * exp, mpz_t * mod) {
      mpz_powm(*dest, *base, *exp, *mod);
 }
 
-void Rmpz_powm_ui(mpz_t * dest, mpz_t * base, SV * exp, mpz_t * mod) {
+void Rmpz_powm_ui(pTHX_ mpz_t * dest, mpz_t * base, SV * exp, mpz_t * mod) {
      mpz_powm_ui(*dest, *base, SvUV(exp), *mod);
 }
 
-void Rmpz_pow_ui(mpz_t * dest, mpz_t * base, SV * exp) {
+void Rmpz_pow_ui(pTHX_ mpz_t * dest, mpz_t * base, SV * exp) {
      mpz_pow_ui(*dest, *base, SvUV(exp));
 }
 
-void Rmpz_ui_pow_ui(mpz_t * dest, SV * base, SV * exp) {
+void Rmpz_ui_pow_ui(pTHX_ mpz_t * dest, SV * base, SV * exp) {
      mpz_ui_pow_ui(*dest, SvUV(base), SvUV(exp));
 }
 
-SV * Rmpz_root(mpz_t * r, mpz_t * n, SV * d) {
+SV * Rmpz_root(pTHX_ mpz_t * r, mpz_t * n, SV * d) {
      return newSViv(mpz_root(*r, *n, SvUV(d)));
 }
 
-void Rmpz_sqrt(mpz_t * r, mpz_t * n) {
+void Rmpz_sqrt(pTHX_ mpz_t * r, mpz_t * n) {
      mpz_sqrt(*r, *n);
 }
 
-void Rmpz_sqrtrem(mpz_t * root, mpz_t * rem, mpz_t * src) {
+void Rmpz_sqrtrem(pTHX_ mpz_t * root, mpz_t * rem, mpz_t * src) {
      mpz_sqrtrem(*root, *rem, *src);
 }
 
@@ -656,34 +658,34 @@ int Rmpz_perfect_square_p(mpz_t * in) {
     return mpz_perfect_square_p(*in);
 }
 
-int Rmpz_probab_prime_p(mpz_t * cand, SV * reps) {
-    return mpz_probab_prime_p(*cand, SvUV(reps));
+SV * Rmpz_probab_prime_p(pTHX_ mpz_t * cand, SV * reps) {
+     return newSViv(mpz_probab_prime_p(*cand, SvUV(reps)));
 }
 
-void Rmpz_nextprime(mpz_t * prime, mpz_t * init) {
+void Rmpz_nextprime(pTHX_ mpz_t * prime, mpz_t * init) {
      mpz_nextprime(*prime, *init);
 }
 
-void Rmpz_gcd(mpz_t * gcd, mpz_t * src1, mpz_t * src2) {
+void Rmpz_gcd(pTHX_ mpz_t * gcd, mpz_t * src1, mpz_t * src2) {
      mpz_gcd(*gcd, *src1, *src2);
 }
 
 /* First arg can be either (the unblessed) $Math::GMPz::NULL or a
  * (blessed) Math::GMPz object.
  */
-SV * Rmpz_gcd_ui(mpz_t * gcd, mpz_t * n, SV * d) {
+SV * Rmpz_gcd_ui(pTHX_ mpz_t * gcd, mpz_t * n, SV * d) {
      return newSVuv(mpz_gcd_ui(*gcd, *n, SvUV(d)));
 }
 
-void Rmpz_gcdext(mpz_t * g, mpz_t * s, mpz_t * t, mpz_t * a, mpz_t * b) {
+void Rmpz_gcdext(pTHX_ mpz_t * g, mpz_t * s, mpz_t * t, mpz_t * a, mpz_t * b) {
      mpz_gcdext(*g, *s, *t, *a, *b);
 }
 
-void Rmpz_lcm(mpz_t * lcm, mpz_t * src1, mpz_t * src2) {
+void Rmpz_lcm(pTHX_ mpz_t * lcm, mpz_t * src1, mpz_t * src2) {
      mpz_lcm(*lcm, *src1, *src2);
 }
 
-void Rmpz_lcm_ui(mpz_t * lcm, mpz_t * src1, SV * src2) {
+void Rmpz_lcm_ui(pTHX_ mpz_t * lcm, mpz_t * src1, SV * src2) {
      mpz_lcm_ui(*lcm, *src1, SvUV(src2));
 }
 
@@ -703,81 +705,81 @@ int Rmpz_kronecker(mpz_t * a, mpz_t * b) {
     return mpz_kronecker(*a, *b);
 }
 
-int Rmpz_kronecker_si(mpz_t * a, SV * b) {
-    return mpz_kronecker_si(*a, SvIV(b));
+SV * Rmpz_kronecker_si(pTHX_ mpz_t * a, SV * b) {
+     return newSViv(mpz_kronecker_si(*a, SvIV(b)));
 }
 
-int Rmpz_kronecker_ui(mpz_t * a, SV * b) {
-    return mpz_kronecker_ui(*a, SvUV(b));
+SV * Rmpz_kronecker_ui(pTHX_ mpz_t * a, SV * b) {
+     return newSViv(mpz_kronecker_ui(*a, SvUV(b)));
 }
 
-int Rmpz_si_kronecker(SV * a, mpz_t * b) {
-    return mpz_si_kronecker(SvIV(a), *b);
+SV * Rmpz_si_kronecker(pTHX_ SV * a, mpz_t * b) {
+     return newSViv(mpz_si_kronecker(SvIV(a), *b));
 }
 
-int Rmpz_ui_kronecker(SV * a, mpz_t * b) {
-    return mpz_ui_kronecker(SvUV(a), *b);
+SV * Rmpz_ui_kronecker(pTHX_ SV * a, mpz_t * b) {
+     return newSViv(mpz_ui_kronecker(SvUV(a), *b));
 }
 
-SV * Rmpz_remove(mpz_t * rem, mpz_t * src1, mpz_t * src2) {
+SV * Rmpz_remove(pTHX_ mpz_t * rem, mpz_t * src1, mpz_t * src2) {
      return newSVuv(mpz_remove(*rem, *src1, *src2));
 }
 
-void Rmpz_fac_ui(mpz_t * fac, SV * b) {
+void Rmpz_fac_ui(pTHX_ mpz_t * fac, SV * b) {
      mpz_fac_ui(*fac, SvUV(b));
 }
 
 #if __GNU_MP_VERSION > 5 || (__GNU_MP_VERSION == 5 && __GNU_MP_VERSION_MINOR >= 1)
 
-void Rmpz_2fac_ui(mpz_t * fac, SV * b) {
+void Rmpz_2fac_ui(pTHX_ mpz_t * fac, SV * b) {
      mpz_2fac_ui(*fac, SvUV(b));
 }
 
-void Rmpz_mfac_uiui(mpz_t * fac, SV * b, SV * c) {
+void Rmpz_mfac_uiui(pTHX_ mpz_t * fac, SV * b, SV * c) {
      mpz_mfac_uiui(*fac, SvUV(b), SvUV(c));
 }
 
-void Rmpz_primorial_ui(mpz_t * fac, SV * b) {
+void Rmpz_primorial_ui(pTHX_ mpz_t * fac, SV * b) {
      mpz_primorial_ui(*fac, SvUV(b));
 }
 
 #else
 
-void Rmpz_2fac_ui(mpz_t * fac, SV * b) {
+void Rmpz_2fac_ui(pTHX_ mpz_t * fac, SV * b) {
      croak("Rmpz_2fac_ui not implemented - gmp-5.1.0 (or later) is needed; we have only gmp-%s", gmp_version);
 }
 
-void Rmpz_mfac_uiui(mpz_t * fac, SV * b, SV * c) {
+void Rmpz_mfac_uiui(pTHX_ mpz_t * fac, SV * b, SV * c) {
      croak("Rmpz_mfac_uiui not implemented - gmp-5.1.0 (or later) is needed; we have only gmp-%s", gmp_version);
 }
 
-void Rmpz_primorial_ui(mpz_t * fac, SV * b) {
+void Rmpz_primorial_ui(pTHX_ mpz_t * fac, SV * b) {
      croak("Rmpz_primorial_ui not implemented - gmp-5.1.0 (or later) is needed; we have only gmp-%s", gmp_version);
 }
 
 #endif
 
-void Rmpz_bin_ui(mpz_t * dest, mpz_t * n, SV * d) {
+void Rmpz_bin_ui(pTHX_ mpz_t * dest, mpz_t * n, SV * d) {
      mpz_bin_ui(*dest, *n, SvUV(d));
 }
 
-void Rmpz_bin_uiui(mpz_t * dest, SV * n, SV * d) {
+void Rmpz_bin_uiui(pTHX_ mpz_t * dest, SV * n, SV * d) {
      mpz_bin_uiui(*dest, SvUV(n), SvUV(d));
 }
 
-void Rmpz_fib_ui(mpz_t * dest, SV * b) {
+void Rmpz_fib_ui(pTHX_ mpz_t * dest, SV * b) {
      mpz_fib_ui(*dest, SvUV(b));
 }
 
-void Rmpz_fib2_ui(mpz_t * fn, mpz_t * fnsub1, SV * b) {
+void Rmpz_fib2_ui(pTHX_ mpz_t * fn, mpz_t * fnsub1, SV * b) {
      mpz_fib2_ui(*fn, *fnsub1, SvUV(b));
 }
 
-void Rmpz_lucnum_ui(mpz_t * dest, SV * b) {
+void Rmpz_lucnum_ui(pTHX_ mpz_t * dest, SV * b) {
      mpz_lucnum_ui(*dest, SvUV(b));
 }
 
-void Rmpz_lucnum2_ui(mpz_t * ln, mpz_t * lnsub1, SV * b) {
+void Rmpz_lucnum2_ui(pTHX_ mpz_t * ln, mpz_t * lnsub1, SV * b) {
      mpz_lucnum2_ui(*ln, *lnsub1, SvUV(b));
 }
 
@@ -785,47 +787,47 @@ int Rmpz_cmp(mpz_t * n, mpz_t * d) {
     return mpz_cmp(*n, *d );
 }
 
-int Rmpz_cmp_d(mpz_t * n, SV * d) {
-    return mpz_cmp_d(*n, SvNV(d));
+SV * Rmpz_cmp_d(pTHX_ mpz_t * n, SV * d) {
+     return newSViv(mpz_cmp_d(*n, SvNV(d)));
 }
 
-int Rmpz_cmp_si(mpz_t * n, SV * d) {
-    return mpz_cmp_si(*n, SvIV(d));
+SV * Rmpz_cmp_si(pTHX_ mpz_t * n, SV * d) {
+     return newSViv(mpz_cmp_si(*n, SvIV(d)));
 }
 
-int Rmpz_cmp_ui(mpz_t * n, SV * d) {
-    return mpz_cmp_ui(*n, SvUV(d));
+SV * Rmpz_cmp_ui(pTHX_ mpz_t * n, SV * d) {
+     return newSViv(mpz_cmp_ui(*n, SvUV(d)));
 }
 
 int Rmpz_cmpabs(mpz_t * n, mpz_t * d) {
     return mpz_cmpabs(*n, *d );
 }
 
-int Rmpz_cmpabs_d(mpz_t * n, SV * d) {
-    return mpz_cmpabs_d(*n, SvNV(d));
+SV * Rmpz_cmpabs_d(pTHX_ mpz_t * n, SV * d) {
+     return newSViv(mpz_cmpabs_d(*n, SvNV(d)));
 }
 
-int Rmpz_cmpabs_ui(mpz_t * n, SV * d) {
-    return mpz_cmpabs_ui(*n, SvUV(d));
+SV * Rmpz_cmpabs_ui(pTHX_ mpz_t * n, SV * d) {
+     return newSViv(mpz_cmpabs_ui(*n, SvUV(d)));
 }
 
 int Rmpz_sgn(mpz_t * n) {
     return mpz_sgn(*n);
 }
 
-void Rmpz_and(mpz_t * dest, mpz_t * src1, mpz_t * src2) {
+void Rmpz_and(pTHX_ mpz_t * dest, mpz_t * src1, mpz_t * src2) {
      mpz_and(*dest, *src1, *src2 );
 }
 
-void Rmpz_ior(mpz_t * dest, mpz_t * src1, mpz_t * src2) {
+void Rmpz_ior(pTHX_ mpz_t * dest, mpz_t * src1, mpz_t * src2) {
      mpz_ior(*dest, *src1, *src2 );
 }
 
-void Rmpz_xor(mpz_t * dest, mpz_t * src1, mpz_t * src2) {
+void Rmpz_xor(pTHX_ mpz_t * dest, mpz_t * src1, mpz_t * src2) {
      mpz_xor(*dest, *src1, *src2 );
 }
 
-void Rmpz_com(mpz_t * dest, mpz_t * src) {
+void Rmpz_com(pTHX_ mpz_t * dest, mpz_t * src) {
      mpz_com(*dest, *src );
 }
 
@@ -837,33 +839,33 @@ int Rmpz_hamdist(mpz_t * dest, mpz_t * src) {
      return mpz_hamdist(*dest, *src );
 }
 
-SV * Rmpz_scan0(mpz_t * n, SV * start_bit) {
+SV * Rmpz_scan0(pTHX_ mpz_t * n, SV * start_bit) {
     return newSVuv(mpz_scan0(*n, SvUV(start_bit)));
 }
 
-SV * Rmpz_scan1(mpz_t * n, SV * start_bit) {
+SV * Rmpz_scan1(pTHX_ mpz_t * n, SV * start_bit) {
     return newSVuv(mpz_scan1(*n, SvUV(start_bit)));
 }
 
-void Rmpz_setbit(mpz_t * num, SV * bit_index) {
+void Rmpz_setbit(pTHX_ mpz_t * num, SV * bit_index) {
      mpz_setbit(*num, SvUV(bit_index));
 }
 
-void Rmpz_clrbit(mpz_t * num, SV * bit_index) {
+void Rmpz_clrbit(pTHX_ mpz_t * num, SV * bit_index) {
      mpz_clrbit(*num, SvUV(bit_index));
 }
 
-int Rmpz_tstbit(mpz_t * num, SV * bit_index) {
-    return mpz_tstbit(*num, SvUV(bit_index));
+SV * Rmpz_tstbit(pTHX_ mpz_t * num, SV * bit_index) {
+     return newSViv(mpz_tstbit(*num, SvUV(bit_index)));
 }
 
 /* Turn a binary string into an mpz_t */
-void Rmpz_import(mpz_t * rop, SV * count, SV * order, SV * size, SV * endian, SV * nails, SV * op){
+void Rmpz_import(pTHX_ mpz_t * rop, SV * count, SV * order, SV * size, SV * endian, SV * nails, SV * op){
      mpz_import(*rop, SvUV(count), SvIV(order), SvIV(size), SvIV(endian), SvUV(nails), SvPV_nolen(op));
 }
 
 /* Return an mpz_t to a binary string */
-SV * Rmpz_export(SV * order, SV * size, SV * endian, SV * nails, mpz_t * number) {
+SV * Rmpz_export(pTHX_ SV * order, SV * size, SV * endian, SV * nails, mpz_t * number) {
      SV * outsv;
      char * out;
      size_t * cptr, count;
@@ -912,16 +914,16 @@ int Rmpz_even_p(mpz_t * in) {
     return mpz_even_p(*in);
 }
 
-SV * Rmpz_size(mpz_t * in) {
+SV * Rmpz_size(pTHX_ mpz_t * in) {
     return newSVuv(mpz_size(*in));
 }
 
-SV * Rmpz_sizeinbase(mpz_t * in, SV * base) {
+SV * Rmpz_sizeinbase(pTHX_ mpz_t * in, SV * base) {
     if(SvIV(base) < 2 || SvIV(base) > 62) croak("Rmpz_sizeinbase handles only bases in the range 2..62");
     return newSVuv(mpz_sizeinbase(*in, (int)SvIV(base)));
 }
 
-void Rsieve_gmp(int x_arg, int a, mpz_t *number) {
+void Rsieve_gmp(pTHX_ int x_arg, int a, mpz_t *number) {
 dXSARGS;
 unsigned short *v, *addon, set[16] = {65534,65533,65531,65527,65519,65503,65471,65407,65279,65023,64511,63487,61439,57343,49151,32767};
 unsigned long init, leap, abits, asize, i, size, b, imax, k, x = x_arg;
@@ -1001,68 +1003,68 @@ XSRETURN(size);
 
 }
 
-int Rfermat_gmp(mpz_t * num, SV * base){
-            mpz_t b, num_less_1;
+SV * Rfermat_gmp(pTHX_ mpz_t * num, SV * base){
+     mpz_t b, num_less_1;
 
-    mpz_init_set_ui(b, SvUV(base));
-    mpz_init_set(num_less_1, *num);
-    mpz_sub_ui(num_less_1, num_less_1, 1);
-    mpz_powm(b, b, num_less_1, *num);
+     mpz_init_set_ui(b, SvUV(base));
+     mpz_init_set(num_less_1, *num);
+     mpz_sub_ui(num_less_1, num_less_1, 1);
+     mpz_powm(b, b, num_less_1, *num);
 
-    if(!mpz_cmp_si(b, 1)) {
-       mpz_clear(b);
-       mpz_clear(num_less_1);
-       return 1;
-       }
+     if(!mpz_cmp_si(b, 1)) {
+        mpz_clear(b);
+        mpz_clear(num_less_1);
+        return newSViv(1);
+     }
 
-    mpz_clear(b);
-    mpz_clear(num_less_1);
-    return 0;
+     mpz_clear(b);
+     mpz_clear(num_less_1);
+     return newSViv(0);
 }
 
-int Rrm_gmp(mpz_t * num, SV * base){
-    mpz_t c_less, r, y, bb;
-    unsigned long i, s = 0, b = SvUV(base);
+SV * Rrm_gmp(pTHX_ mpz_t * num, SV * base){
+     mpz_t c_less, r, y, bb;
+     unsigned long i, s = 0, b = SvUV(base);
 
-    mpz_init(c_less);
-    mpz_init(r);
-    mpz_init(y);
+     mpz_init(c_less);
+     mpz_init(r);
+     mpz_init(y);
 
-    mpz_sub_ui(c_less, *num, 1);
-    mpz_set(r, c_less);
-    mpz_init_set_ui(bb, b);
+     mpz_sub_ui(c_less, *num, 1);
+     mpz_set(r, c_less);
+     mpz_init_set_ui(bb, b);
 
-    while(mpz_even_p(r)) {
-          mpz_tdiv_q_2exp(r, r, 1);
-          ++s;
-          } 
+     while(mpz_even_p(r)) {
+       mpz_tdiv_q_2exp(r, r, 1);
+       ++s;
+     } 
 
-    mpz_powm(y, bb, r, *num);
-    mpz_clear(r);
-    mpz_clear(bb);
-    if(mpz_cmp_ui(y, 1) && mpz_cmp(y, c_less)) {
+     mpz_powm(y, bb, r, *num);
+     mpz_clear(r);
+     mpz_clear(bb);
+     if(mpz_cmp_ui(y, 1) && mpz_cmp(y, c_less)) {
        for(i = 0; i < s; ++i) {
-           mpz_powm_ui(y, y, 2, *num); 
-           if(!mpz_cmp_ui(y, 1)) {
-              mpz_clear(c_less);
-              mpz_clear(y);
-              return 0;
-              }
-           if(!mpz_cmp(y, c_less)) break;
-           }
-       if(mpz_cmp(y, c_less)) {
-          mpz_clear(c_less);
-          mpz_clear(y);
-          return 0;
+          mpz_powm_ui(y, y, 2, *num); 
+          if(!mpz_cmp_ui(y, 1)) {
+             mpz_clear(c_less);
+             mpz_clear(y);
+             return 0;
           }
+          if(!mpz_cmp(y, c_less)) break;
        }
+       if(mpz_cmp(y, c_less)) {
+         mpz_clear(c_less);
+         mpz_clear(y);
+         return newSViv(0);
+       }
+     }
 
-   mpz_clear(c_less);
-   mpz_clear(y);
-   return 1; 
+     mpz_clear(c_less);
+     mpz_clear(y);
+     return newSVuv(1); 
 }
 
-SV * _Rmpz_out_str(mpz_t * p, SV * base) {
+SV * _Rmpz_out_str(pTHX_ mpz_t * p, SV * base) {
      unsigned long ret;
      if((SvIV(base) > -2 && SvIV(base) < 2) || SvIV(base) < -36 || SvIV(base) > 62)
        croak("2nd argument supplied to Rmpz_out_str is out of allowable range (must be in range -36..-2, 2..62)");
@@ -1071,7 +1073,7 @@ SV * _Rmpz_out_str(mpz_t * p, SV * base) {
      return newSVuv(ret);
 }
 
-SV * _Rmpz_out_strS(mpz_t * p, SV * base, SV * suff) {
+SV * _Rmpz_out_strS(pTHX_ mpz_t * p, SV * base, SV * suff) {
      unsigned long ret;
      if((SvIV(base) > -2 && SvIV(base) < 2) || SvIV(base) < -36 || SvIV(base) > 62)
        croak("2nd argument supplied to Rmpz_out_str is out of allowable range (must be in range -36..-2, 2..62)");
@@ -1081,7 +1083,7 @@ SV * _Rmpz_out_strS(mpz_t * p, SV * base, SV * suff) {
      return newSVuv(ret);
 }
 
-SV * _Rmpz_out_strP(SV * pre, mpz_t * p, SV * base) {
+SV * _Rmpz_out_strP(pTHX_ SV * pre, mpz_t * p, SV * base) {
      unsigned long ret;
      if((SvIV(base) > -2 && SvIV(base) < 2) || SvIV(base) < -36 || SvIV(base) > 62)
        croak("3rd argument supplied to Rmpz_out_str is out of allowable range (must be in range -36..-2, 2..62)");
@@ -1091,7 +1093,7 @@ SV * _Rmpz_out_strP(SV * pre, mpz_t * p, SV * base) {
      return newSVuv(ret);
 }
 
-SV * _Rmpz_out_strPS(SV * pre, mpz_t * p, SV * base, SV * suff) {
+SV * _Rmpz_out_strPS(pTHX_ SV * pre, mpz_t * p, SV * base, SV * suff) {
      unsigned long ret;
      if((SvIV(base) > -2 && SvIV(base) < 2) || SvIV(base) < -36 || SvIV(base) > 62)
        croak("3rd argument supplied to Rmpz_out_str is out of allowable range (must be in range -36..-2, 2..62)");
@@ -1102,7 +1104,7 @@ SV * _Rmpz_out_strPS(SV * pre, mpz_t * p, SV * base, SV * suff) {
      return newSVuv(ret);
 }
 
-SV * _TRmpz_out_str(FILE * stream, SV * base, mpz_t * p) {
+SV * _TRmpz_out_str(pTHX_ FILE * stream, SV * base, mpz_t * p) {
      size_t ret;
      if((SvIV(base) > -2 && SvIV(base) < 2) || SvIV(base) < -36 || SvIV(base) > 62)
        croak("2nd argument supplied to TRmpz_out_str is out of allowable range (must be in range -36..-2, 2..62)");
@@ -1111,7 +1113,7 @@ SV * _TRmpz_out_str(FILE * stream, SV * base, mpz_t * p) {
      return newSVuv(ret);
 }
 
-SV * _TRmpz_out_strS(FILE * stream, SV * base, mpz_t * p, SV * suff) {
+SV * _TRmpz_out_strS(pTHX_ FILE * stream, SV * base, mpz_t * p, SV * suff) {
      size_t ret;
      if((SvIV(base) > -2 && SvIV(base) < 2) || SvIV(base) < -36 || SvIV(base) > 62)
        croak("2nd argument supplied to TRmpz_out_str is out of allowable range (must be in range -36..-2, 2..62)");
@@ -1122,7 +1124,7 @@ SV * _TRmpz_out_strS(FILE * stream, SV * base, mpz_t * p, SV * suff) {
      return newSVuv(ret);
 }
 
-SV * _TRmpz_out_strP(SV * pre, FILE * stream, SV * base, mpz_t * p) {
+SV * _TRmpz_out_strP(pTHX_ SV * pre, FILE * stream, SV * base, mpz_t * p) {
      size_t ret;
      if((SvIV(base) > -2 && SvIV(base) < 2) || SvIV(base) < -36 || SvIV(base) > 62)
        croak("3rd argument supplied to TRmpz_out_str is out of allowable range (must be in range -36..-2, 2..62)");
@@ -1133,7 +1135,7 @@ SV * _TRmpz_out_strP(SV * pre, FILE * stream, SV * base, mpz_t * p) {
      return newSVuv(ret);
 }
 
-SV * _TRmpz_out_strPS(SV * pre, FILE * stream, SV * base, mpz_t * p, SV * suff) {
+SV * _TRmpz_out_strPS(pTHX_ SV * pre, FILE * stream, SV * base, mpz_t * p, SV * suff) {
      size_t ret;
      if((SvIV(base) > -2 && SvIV(base) < 2) || SvIV(base) < -36 || SvIV(base) > 62)
        croak("3rd argument supplied to TRmpz_out_str is out of allowable range (must be in range -36..-2, 2..62)");
@@ -1146,7 +1148,7 @@ SV * _TRmpz_out_strPS(SV * pre, FILE * stream, SV * base, mpz_t * p, SV * suff) 
      return newSVuv(ret);
 }
 
-SV * Rmpz_inp_str(mpz_t * p, SV * base) {
+SV * Rmpz_inp_str(pTHX_ mpz_t * p, SV * base) {
      size_t ret;
      if(SvUV(base) == 1 || SvUV(base) > 62)
        croak("2nd argument supplied to Rmpz_inp_str is out of allowable range (must be in range 0, 2..62)");
@@ -1155,7 +1157,7 @@ SV * Rmpz_inp_str(mpz_t * p, SV * base) {
      return newSVuv(ret);
 }
 
-SV * TRmpz_inp_str(mpz_t * p, FILE * stream, SV * base) {
+SV * TRmpz_inp_str(pTHX_ mpz_t * p, FILE * stream, SV * base) {
      size_t ret;
      if(SvUV(base) == 1 || SvUV(base) > 62)
        croak("4th argument supplied to TRmpz_inp_str is out of allowable range (must be in range 0, 2..62)");
@@ -1164,7 +1166,7 @@ SV * TRmpz_inp_str(mpz_t * p, FILE * stream, SV * base) {
      return newSVuv(ret);
 }
 
-void eratosthenes(SV * x_arg) {
+void eratosthenes(pTHX_ SV * x_arg) {
 dXSARGS;
 
 unsigned short *v, set[16] = {65534,65533,65531,65527,65519,65503,65471,65407,65279,65023,64511,63487,61439,57343,49151,32767};
@@ -1216,71 +1218,70 @@ XSRETURN(size);
 }
 
 
-int trial_div_ul(mpz_t * num, SV * x_arg) {
+SV * trial_div_ul(pTHX_ mpz_t * num, SV * x_arg) {
 
-unsigned short *v, set[16] = {65534,65533,65531,65527,65519,65503,65471,65407,65279,65023,64511,63487,61439,57343,49151,32767};
-unsigned long leap, i, size, b, imax, k, x = SvUV(x_arg);
+     unsigned short *v, set[16] = {65534,65533,65531,65527,65519,65503,65471,65407,65279,65023,64511,63487,61439,57343,49151,32767};
+     unsigned long leap, i, size, b, imax, k, x = SvUV(x_arg);
 
-if(x & 1) croak("Second argument supplied to trial_div_ul() must be even");
+     if(x & 1) croak("Second argument supplied to trial_div_ul() must be even");
 
-imax = sqrt(x - 1) / 2;
+     imax = sqrt(x - 1) / 2;
 
-b = (x + 1) / 2;
+     b = (x + 1) / 2;
 
-if(!(b % 16)) size = b / 16;
-else size = (b / 16) + 1;
+     if(!(b % 16)) size = b / 16;
+     else size = (b / 16) + 1;
 
-Newz(2, v, size, unsigned short);
-if(v == NULL) croak("2: Unable to allocate memory in trial_div_ul() function");
+     Newz(2, v, size, unsigned short);
+     if(v == NULL) croak("2: Unable to allocate memory in trial_div_ul() function");
 
-for(i = 1; i < size; ++i) v[i] = 65535;
-v[0] = 65534;
+     for(i = 1; i < size; ++i) v[i] = 65535;
+     v[0] = 65534;
 
-for(i = 0; i <= imax; ++i) {
+     for(i = 0; i <= imax; ++i) {
     
-    if(v[i / 16] & (1 << (i % 16))) {
-       leap = (2 * i) + 1;
-       k = 2 * i * (i + 1);
-       while(k < b) {
-             v[k / 16] &= set[k % 16];
-             k += leap;
-             }
-       }
-}
-
-if(mpz_divisible_ui_p(*num, 2)) {
-   Safefree(v);
-   return 2;
-   }
-
-for(i = 0; i < b; ++i) {
-    if(v[i / 16] & (1 << (i % 16))) {
-      if(mpz_divisible_ui_p(*num, 2 * i + 1)) {
-         Safefree(v);
-         return (2 * i + 1);
+       if(v[i / 16] & (1 << (i % 16))) {
+         leap = (2 * i) + 1;
+         k = 2 * i * (i + 1);
+         while(k < b) {
+           v[k / 16] &= set[k % 16];
+           k += leap;
          }
-      }
-   }
+       }
+     }
 
-Safefree(v);
+     if(mpz_divisible_ui_p(*num, 2)) {
+       Safefree(v);
+       return newSViv(2);
+     }
 
-return 1;
+     for(i = 0; i < b; ++i) {
+       if(v[i / 16] & (1 << (i % 16))) {
+         if(mpz_divisible_ui_p(*num, 2 * i + 1)) {
+           Safefree(v);
+           return newSViv(2 * i + 1);
+         }
+       }
+     }
 
+     Safefree(v);
+
+     return newSViv(1);
 }
 
 /* Next 2 functions became available with GMP-4.2 */
 
-void Rmpz_rootrem(mpz_t * root, mpz_t * rem, mpz_t * u, SV * d) { 
+void Rmpz_rootrem(pTHX_ mpz_t * root, mpz_t * rem, mpz_t * u, SV * d) { 
      mpz_rootrem(*root, *rem, *u, (unsigned long)SvUV(d));
 }
 
-void Rmpz_combit(mpz_t * num, SV * bitpos) {
+void Rmpz_combit(pTHX_ mpz_t * num, SV * bitpos) {
      mpz_combit(*num, (unsigned long)SvUV(bitpos));
 }
 
 /* Finish typemapping - typemap 1st arg only */
 
-SV * overload_mul(SV * a, SV * b, SV * third) {
+SV * overload_mul(pTHX_ SV * a, SV * b, SV * third) {
      mpz_t * mpz_t_obj;
      SV * obj_ref, * obj;
      const char *h;
@@ -1377,7 +1378,7 @@ SV * overload_mul(SV * a, SV * b, SV * third) {
      croak("Invalid argument supplied to Math::GMPz::overload_mul");
 }
 
-SV * overload_add(SV * a, SV * b, SV * third) {
+SV * overload_add(pTHX_ SV * a, SV * b, SV * third) {
      mpz_t * mpz_t_obj;
      SV * obj_ref, * obj;
      const char *h;
@@ -1478,7 +1479,7 @@ SV * overload_add(SV * a, SV * b, SV * third) {
 
 }
 
-SV * overload_sub(SV * a, SV * b, SV * third) {
+SV * overload_sub(pTHX_ SV * a, SV * b, SV * third) {
      mpz_t * mpz_t_obj;
      SV * obj_ref, * obj;
      const char *h;
@@ -1591,7 +1592,7 @@ SV * overload_sub(SV * a, SV * b, SV * third) {
 
 }
 
-SV * overload_div(SV * a, SV * b, SV * third) {
+SV * overload_div(pTHX_ SV * a, SV * b, SV * third) {
      mpz_t * mpz_t_obj;
      SV * obj_ref, * obj;
      const char *h;
@@ -1713,7 +1714,7 @@ SV * overload_div(SV * a, SV * b, SV * third) {
 
 }
 
-SV * overload_mod (mpz_t * a, SV * b, SV * third) {
+SV * overload_mod (pTHX_ mpz_t * a, SV * b, SV * third) {
      mpz_t *mpz_t_obj;
      SV * obj_ref, * obj;
 #ifdef USE_LONG_DOUBLE
@@ -1799,7 +1800,7 @@ SV * overload_mod (mpz_t * a, SV * b, SV * third) {
      croak("Invalid argument supplied to Math::GMPz::overload_mod function");
 }
 
-SV * overload_string(mpz_t * p, SV * second, SV * third) {
+SV * overload_string(pTHX_ mpz_t * p, SV * second, SV * third) {
      char * out;
      SV * outsv;
 
@@ -1812,7 +1813,7 @@ SV * overload_string(mpz_t * p, SV * second, SV * third) {
      return outsv;
 }
 
-SV * overload_copy(mpz_t * p, SV * second, SV * third) {
+SV * overload_copy(pTHX_ mpz_t * p, SV * second, SV * third) {
      mpz_t * mpz_t_obj;
      SV * obj_ref, * obj;
 
@@ -1827,7 +1828,7 @@ SV * overload_copy(mpz_t * p, SV * second, SV * third) {
      return obj_ref;
 }
 
-SV * overload_abs(mpz_t * p, SV * second, SV * third) {
+SV * overload_abs(pTHX_ mpz_t * p, SV * second, SV * third) {
      mpz_t * mpz_t_obj;
      SV * obj_ref, * obj;
 
@@ -1843,7 +1844,7 @@ SV * overload_abs(mpz_t * p, SV * second, SV * third) {
      return obj_ref;
 }
 
-SV * overload_lshift(mpz_t * a, SV * b, SV * third) {
+SV * overload_lshift(pTHX_ mpz_t * a, SV * b, SV * third) {
      mpz_t * mpz_t_obj;
      SV * obj_ref, * obj;
 
@@ -1871,7 +1872,7 @@ SV * overload_lshift(mpz_t * a, SV * b, SV * third) {
      croak("Invalid argument supplied to Math::GMPz::overload_lshift");
 }
 
-SV * overload_rshift(mpz_t * a, SV * b, SV * third) {
+SV * overload_rshift(pTHX_ mpz_t * a, SV * b, SV * third) {
      mpz_t * mpz_t_obj;
      SV * obj_ref, * obj;
 
@@ -1899,7 +1900,7 @@ SV * overload_rshift(mpz_t * a, SV * b, SV * third) {
      croak("Invalid argument supplied to Math::GMPz::overload_rshift");
 }
 
-SV * overload_pow(SV * a, SV * b, SV * third) {
+SV * overload_pow(pTHX_ SV * a, SV * b, SV * third) {
      mpz_t * mpz_t_obj;
      SV * obj_ref, * obj;
 
@@ -1961,7 +1962,7 @@ SV * overload_pow(SV * a, SV * b, SV * third) {
      croak("Invalid argument supplied to Math::GMPz::overload_pow. It takes only signed/unsigned long or Math::MPFR object as exponent");
 }
 
-SV * overload_sqrt(mpz_t * p, SV * second, SV * third) {
+SV * overload_sqrt(pTHX_ mpz_t * p, SV * second, SV * third) {
      mpz_t * mpz_t_obj;
      SV * obj_ref, * obj;
 
@@ -1978,7 +1979,7 @@ SV * overload_sqrt(mpz_t * p, SV * second, SV * third) {
      return obj_ref;
 }
 
-SV * overload_and(mpz_t * a, SV * b, SV * third) {
+SV * overload_and(pTHX_ mpz_t * a, SV * b, SV * third) {
      mpz_t * mpz_t_obj;
      SV * obj_ref, * obj;
 #ifdef USE_LONG_DOUBLE
@@ -2045,7 +2046,7 @@ SV * overload_and(mpz_t * a, SV * b, SV * third) {
      croak("Invalid argument supplied to Math::GMPz::overload_and");
 }
 
-SV * overload_ior(mpz_t * a, SV * b, SV * third) {
+SV * overload_ior(pTHX_ mpz_t * a, SV * b, SV * third) {
      mpz_t * mpz_t_obj;
      SV * obj_ref, * obj;
 #ifdef USE_LONG_DOUBLE
@@ -2111,7 +2112,7 @@ SV * overload_ior(mpz_t * a, SV * b, SV * third) {
      croak("Invalid argument supplied to Math::GMPz::overload_ior");
 }
 
-SV * overload_xor(mpz_t * a, SV * b, SV * third) {
+SV * overload_xor(pTHX_ mpz_t * a, SV * b, SV * third) {
      mpz_t * mpz_t_obj;
      SV * obj_ref, * obj;
 #ifdef USE_LONG_DOUBLE
@@ -2177,7 +2178,7 @@ SV * overload_xor(mpz_t * a, SV * b, SV * third) {
      croak("Invalid argument supplied to Math::GMPz::overload_xor");
 }
 
-SV * overload_com(mpz_t * p, SV * second, SV * third) {
+SV * overload_com(pTHX_ mpz_t * p, SV * second, SV * third) {
      mpz_t * mpz_t_obj;
      SV * obj_ref, * obj;
 
@@ -2193,7 +2194,7 @@ SV * overload_com(mpz_t * p, SV * second, SV * third) {
      return obj_ref;
 }
 
-SV * overload_gt(mpz_t * a, SV * b, SV * third) {
+SV * overload_gt(pTHX_ mpz_t * a, SV * b, SV * third) {
      int ret;
      mpz_t t;
 #ifdef USE_LONG_DOUBLE
@@ -2262,7 +2263,7 @@ SV * overload_gt(mpz_t * a, SV * b, SV * third) {
      croak("Invalid argument supplied to Math::GMPz::overload_gt");
 }
 
-SV * overload_gte(mpz_t * a, SV * b, SV * third) {
+SV * overload_gte(pTHX_ mpz_t * a, SV * b, SV * third) {
      int ret;
      mpz_t t;
 #ifdef USE_LONG_DOUBLE
@@ -2332,7 +2333,7 @@ SV * overload_gte(mpz_t * a, SV * b, SV * third) {
      croak("Invalid argument supplied to Math::GMPz::overload_gte");
 }
 
-SV * overload_lt(mpz_t * a, SV * b, SV * third) {
+SV * overload_lt(pTHX_ mpz_t * a, SV * b, SV * third) {
      int ret;
      mpz_t t;
 #ifdef USE_LONG_DOUBLE
@@ -2402,7 +2403,7 @@ SV * overload_lt(mpz_t * a, SV * b, SV * third) {
      croak("Invalid argument supplied to Math::GMPz::overload_lt");
 }
 
-SV * overload_lte(mpz_t * a, SV * b, SV * third) {
+SV * overload_lte(pTHX_ mpz_t * a, SV * b, SV * third) {
      int ret;
      mpz_t t;
 #ifdef USE_LONG_DOUBLE
@@ -2472,7 +2473,7 @@ SV * overload_lte(mpz_t * a, SV * b, SV * third) {
      croak("Invalid argument supplied to Math::GMPz::overload_lte");
 }
 
-SV * overload_spaceship(mpz_t * a, SV * b, SV * third) {
+SV * overload_spaceship(pTHX_ mpz_t * a, SV * b, SV * third) {
      int ret;
      mpz_t t;
 #ifdef USE_LONG_DOUBLE
@@ -2536,7 +2537,7 @@ SV * overload_spaceship(mpz_t * a, SV * b, SV * third) {
      croak("Invalid argument supplied to Math::GMPz::overload_spaceship");
 }
 
-SV * overload_equiv(mpz_t * a, SV * b, SV * third) {
+SV * overload_equiv(pTHX_ mpz_t * a, SV * b, SV * third) {
      int ret;
      mpz_t t;
 #ifdef USE_LONG_DOUBLE
@@ -2601,7 +2602,7 @@ SV * overload_equiv(mpz_t * a, SV * b, SV * third) {
      croak("Invalid argument supplied to Math::GMPz::overload_equiv");
 }
 
-SV * overload_not_equiv(mpz_t * a, SV * b, SV * third) {
+SV * overload_not_equiv(pTHX_ mpz_t * a, SV * b, SV * third) {
      int ret;
      mpz_t t;
 #ifdef USE_LONG_DOUBLE
@@ -2671,14 +2672,14 @@ SV * overload_not_equiv(mpz_t * a, SV * b, SV * third) {
      croak("Invalid argument supplied to Math::GMPz::overload_not_equiv");
 }
 
-SV * overload_not(mpz_t * a, SV * second, SV * third) {
+SV * overload_not(pTHX_ mpz_t * a, SV * second, SV * third) {
      if(mpz_cmp_ui(*a, 0)) return newSViv(0);
      return newSViv(1);
 }
 
 /* Finish typemapping */
 
-SV * overload_xor_eq(SV * a, SV * b, SV * third) {
+SV * overload_xor_eq(pTHX_ SV * a, SV * b, SV * third) {
      mpz_t t;
 #ifdef USE_LONG_DOUBLE
      char buffer[50];
@@ -2748,7 +2749,7 @@ SV * overload_xor_eq(SV * a, SV * b, SV * third) {
      croak("Invalid argument supplied to Math::GMPz::overload_xor_eq");
 }
 
-SV * overload_ior_eq(SV * a, SV * b, SV * third) {
+SV * overload_ior_eq(pTHX_ SV * a, SV * b, SV * third) {
      mpz_t t;
 #ifdef USE_LONG_DOUBLE
      char buffer[50];
@@ -2817,7 +2818,7 @@ SV * overload_ior_eq(SV * a, SV * b, SV * third) {
      croak("Invalid argument supplied to Math::GMPz::overload_ior_eq");
 }
 
-SV * overload_and_eq(SV * a, SV * b, SV * third) {
+SV * overload_and_eq(pTHX_ SV * a, SV * b, SV * third) {
      mpz_t t;
 #ifdef USE_LONG_DOUBLE
      char buffer[50];
@@ -2886,7 +2887,7 @@ SV * overload_and_eq(SV * a, SV * b, SV * third) {
      croak("Invalid argument supplied to Math::GMPz::overload_and_eq");
 }
 
-SV * overload_pow_eq(SV * a, SV * b, SV * third) {
+SV * overload_pow_eq(pTHX_ SV * a, SV * b, SV * third) {
      SvREFCNT_inc(a);
 
      if(SvUOK(b)) {
@@ -2904,7 +2905,7 @@ SV * overload_pow_eq(SV * a, SV * b, SV * third) {
      croak("Invalid argument supplied to Math::GMPz::overload_pow_eq");
 }
 
-SV * overload_rshift_eq(SV * a, SV * b, SV * third) {
+SV * overload_rshift_eq(pTHX_ SV * a, SV * b, SV * third) {
 
      SvREFCNT_inc(a);
 
@@ -2923,7 +2924,7 @@ SV * overload_rshift_eq(SV * a, SV * b, SV * third) {
      croak("Invalid argument supplied to Math::GMPz::overload_rshift_eq");
 }
 
-SV * overload_lshift_eq(SV * a, SV * b, SV * third) {
+SV * overload_lshift_eq(pTHX_ SV * a, SV * b, SV * third) {
 
      SvREFCNT_inc(a);
 
@@ -2942,19 +2943,19 @@ SV * overload_lshift_eq(SV * a, SV * b, SV * third) {
      croak("Invalid argument supplied to Math::GMPz::overload_lshift_eq");
 }
 
-SV * overload_inc(SV * p, SV * second, SV * third) {
+SV * overload_inc(pTHX_ SV * p, SV * second, SV * third) {
      SvREFCNT_inc(p);
      mpz_add_ui(*(INT2PTR(mpz_t *, SvIV(SvRV(p)))), *(INT2PTR(mpz_t *, SvIV(SvRV(p)))), 1);
      return p;
 }
 
-SV * overload_dec(SV * p, SV * second, SV * third) {
+SV * overload_dec(pTHX_ SV * p, SV * second, SV * third) {
      SvREFCNT_inc(p);
      mpz_sub_ui(*(INT2PTR(mpz_t *, SvIV(SvRV(p)))), *(INT2PTR(mpz_t *, SvIV(SvRV(p)))), 1);
      return p;
 }
 
-SV * overload_mod_eq(SV * a, SV * b, SV * third) {
+SV * overload_mod_eq(pTHX_ SV * a, SV * b, SV * third) {
      mpz_t t;
 #ifdef USE_LONG_DOUBLE
      char buffer[50];
@@ -3025,11 +3026,11 @@ SV * overload_mod_eq(SV * a, SV * b, SV * third) {
      croak("Invalid argument supplied to Math::GMPz::overload_mod_eq");
 }
 
-SV * get_refcnt(SV * s) {
+SV * get_refcnt(pTHX_ SV * s) {
      return newSVuv(SvREFCNT(s));
 }
 
-SV * overload_div_eq(SV * a, SV * b, SV * third) {
+SV * overload_div_eq(pTHX_ SV * a, SV * b, SV * third) {
      mpz_t t;
 #ifdef USE_LONG_DOUBLE
      char buffer[50];
@@ -3100,7 +3101,7 @@ SV * overload_div_eq(SV * a, SV * b, SV * third) {
 
 }
 
-SV * overload_sub_eq(SV * a, SV * b, SV * third) {
+SV * overload_sub_eq(pTHX_ SV * a, SV * b, SV * third) {
      mpz_t t;
 #ifdef USE_LONG_DOUBLE
      char buffer[50];
@@ -3170,7 +3171,7 @@ SV * overload_sub_eq(SV * a, SV * b, SV * third) {
 
 }
 
-SV * overload_add_eq(SV * a, SV * b, SV * third) {
+SV * overload_add_eq(pTHX_ SV * a, SV * b, SV * third) {
      mpz_t t;
 #ifdef USE_LONG_DOUBLE
      char buffer[50];
@@ -3241,7 +3242,7 @@ SV * overload_add_eq(SV * a, SV * b, SV * third) {
 
 }
 
-SV * overload_mul_eq(SV * a, SV * b, SV * third) {
+SV * overload_mul_eq(pTHX_ SV * a, SV * b, SV * third) {
      mpz_t t;
 #ifdef USE_LONG_DOUBLE
      char buffer[50];
@@ -3306,7 +3307,7 @@ SV * overload_mul_eq(SV * a, SV * b, SV * third) {
      croak("Invalid argument supplied to Math::GMPz::overload_mul_eq");
 }
 
-SV * eratosthenes_string(SV * x_arg) {
+SV * eratosthenes_string(pTHX_ SV * x_arg) {
 
 unsigned char *v, set[8] = {254,253,251,247,239,223,191,127};
 unsigned long leap, i, size, b, imax, k, x = (unsigned long)SvUV(x_arg);
@@ -3346,11 +3347,11 @@ return ret;
 
 }
 
-SV * gmp_v(void) {
+SV * gmp_v(pTHX) {
      return newSVpv(gmp_version, 0);
 }
 
-SV * wrap_gmp_printf(SV * a, SV * b) {
+SV * wrap_gmp_printf(pTHX_ SV * a, SV * b) {
      int ret;
      if(sv_isobject(b)) {
        const char *h = HvNAME(SvSTASH(SvRV(b))); 
@@ -3401,7 +3402,7 @@ SV * wrap_gmp_printf(SV * a, SV * b) {
      croak("Unrecognised type supplied as argument to Rmpz_printf");
 }
 
-SV * wrap_gmp_fprintf(FILE * stream, SV * a, SV * b) {
+SV * wrap_gmp_fprintf(pTHX_ FILE * stream, SV * a, SV * b) {
      int ret;
      if(sv_isobject(b)) {
        const char *h = HvNAME(SvSTASH(SvRV(b)));
@@ -3452,26 +3453,36 @@ SV * wrap_gmp_fprintf(FILE * stream, SV * a, SV * b) {
      croak("Unrecognised type supplied as argument to Rmpz_fprintf");
 }
 
-SV * wrap_gmp_sprintf(char * stream, SV * a, SV * b) {
+SV * wrap_gmp_sprintf(pTHX_ SV * s, SV * a, SV * b, int buflen) {
      int ret;
+     char *stream;
+
+     Newx(stream, buflen, char);
+
      if(sv_isobject(b)) {
        const char *h = HvNAME(SvSTASH(SvRV(b))); 
        if(strEQ(h, "Math::GMPz") ||
          strEQ(h, "Math::GMP") ||
          strEQ(h, "GMP::Mpz")) {
          ret = gmp_sprintf(stream, SvPV_nolen(a), *(INT2PTR(mpz_t *, SvIV(SvRV(b)))));
+         sv_setpv(s, stream);
+         Safefree(stream);
          return newSViv(ret);
        }
 
        if(strEQ(h, "Math::GMPq") ||
          strEQ(h, "GMP::Mpq")) {
          ret = gmp_sprintf(stream, SvPV_nolen(a), *(INT2PTR(mpq_t *, SvIV(SvRV(b)))));
+         sv_setpv(s, stream);
+         Safefree(stream);
          return newSViv(ret);
        }
 
        if(strEQ(h, "Math::GMPf") ||
          strEQ(h, "GMP::Mpf")) {
          ret = gmp_sprintf(stream, SvPV_nolen(a), *(INT2PTR(mpf_t *, SvIV(SvRV(b)))));
+         sv_setpv(s, stream);
+         Safefree(stream);
          return newSViv(ret);
        }
 
@@ -3480,47 +3491,65 @@ SV * wrap_gmp_sprintf(char * stream, SV * a, SV * b) {
 
      if(SvUOK(b)) {
        ret = gmp_sprintf(stream, SvPV_nolen(a), SvUV(b));
+       sv_setpv(s, stream);
+       Safefree(stream);
        return newSViv(ret);
      }
 
      if(SvIOK(b)) {
        ret = gmp_sprintf(stream, SvPV_nolen(a), SvIV(b));
+       sv_setpv(s, stream);
+       Safefree(stream);
        return newSViv(ret);
      }
 
      if(SvNOK(b)) {
        ret = gmp_sprintf(stream, SvPV_nolen(a), SvNV(b));
+       sv_setpv(s, stream);
+       Safefree(stream);
        return newSViv(ret);
      }
 
      if(SvPOK(b)) {
        ret = gmp_sprintf(stream, SvPV_nolen(a), SvPV_nolen(b));
+       sv_setpv(s, stream);
+       Safefree(stream);
        return newSViv(ret);
      }
 
      croak("Unrecognised type supplied as argument to Rmpz_sprintf");
 }
 
-SV * wrap_gmp_snprintf(char * stream, SV * bytes, SV * a, SV * b) {
+SV * wrap_gmp_snprintf(pTHX_ SV * s, SV * bytes, SV * a, SV * b, int buflen) {
      int ret;
+     char * stream;
+
+     Newx(stream, buflen, char);
+
      if(sv_isobject(b)) {
        const char *h = HvNAME(SvSTASH(SvRV(b))); 
        if(strEQ(h, "Math::GMPz") ||
          strEQ(h, "Math::GMP") ||
          strEQ(h, "GMP::Mpz")) {
          ret = gmp_snprintf(stream, (size_t)SvUV(bytes), SvPV_nolen(a), *(INT2PTR(mpz_t *, SvIV(SvRV(b)))));
+         sv_setpv(s, stream);
+         Safefree(stream);
          return newSViv(ret);
        }
 
        if(strEQ(h, "Math::GMPq") ||
          strEQ(h, "GMP::Mpq")) {
          ret = gmp_snprintf(stream, (size_t)SvUV(bytes), SvPV_nolen(a), *(INT2PTR(mpq_t *, SvIV(SvRV(b)))));
+         sv_setpv(s, stream);
+         Safefree(stream);
          return newSViv(ret);
        }
 
        if(strEQ(h, "Math::GMPf") ||
          strEQ(h, "GMP::Mpf")) {
          ret = gmp_snprintf(stream, (size_t)SvUV(bytes), SvPV_nolen(a), *(INT2PTR(mpf_t *, SvIV(SvRV(b)))));
+         sv_setpv(s, stream);
+         Safefree(stream);
          return newSViv(ret);
        }
 
@@ -3529,28 +3558,36 @@ SV * wrap_gmp_snprintf(char * stream, SV * bytes, SV * a, SV * b) {
 
      if(SvUOK(b)) {
        ret = gmp_snprintf(stream, (size_t)SvUV(bytes), SvPV_nolen(a), SvUV(b));
+       sv_setpv(s, stream);
+       Safefree(stream);
        return newSViv(ret);
      }
 
      if(SvIOK(b)) {
        ret = gmp_snprintf(stream, (size_t)SvUV(bytes), SvPV_nolen(a), SvIV(b));
+       sv_setpv(s, stream);
+       Safefree(stream);
        return newSViv(ret);
      }
 
      if(SvNOK(b)) {
        ret = gmp_snprintf(stream, (size_t)SvUV(bytes), SvPV_nolen(a), SvNV(b));
+       sv_setpv(s, stream);
+       Safefree(stream);
        return newSViv(ret);
      }
 
      if(SvPOK(b)) {
        ret = gmp_snprintf(stream, (size_t)SvUV(bytes), SvPV_nolen(a), SvPV_nolen(b));
+       sv_setpv(s, stream);
+       Safefree(stream);
        return newSViv(ret);
      }
 
      croak("Unrecognised type supplied as argument to Rmpz_snprintf");
 }
 
-SV * _itsa(SV * a) {
+SV * _itsa(pTHX_ SV * a) {
      if(SvUOK(a)) return newSVuv(1);
      if(SvIOK(a)) return newSVuv(2);
      if(SvNOK(a)) return newSVuv(3);
@@ -3563,7 +3600,7 @@ SV * _itsa(SV * a) {
      return newSVuv(0);
 }
 
-void Rmpz_urandomb(SV * p, ...) {
+void Rmpz_urandomb(pTHX_ SV * p, ...) {
      dXSARGS;
      unsigned long q, i, thingies;
 
@@ -3579,7 +3616,7 @@ void Rmpz_urandomb(SV * p, ...) {
      XSRETURN(0);
 }
 
-void Rmpz_urandomm(SV * x, ...){
+void Rmpz_urandomm(pTHX_ SV * x, ...){
      dXSARGS;
      unsigned long q, i, thingies;
 
@@ -3595,7 +3632,7 @@ void Rmpz_urandomm(SV * x, ...){
      XSRETURN(0);
 }
 
-void Rmpz_rrandomb(SV * x, ...) {
+void Rmpz_rrandomb(pTHX_ SV * x, ...) {
      dXSARGS;
      unsigned long q, i, thingies;
 
@@ -3611,7 +3648,7 @@ void Rmpz_rrandomb(SV * x, ...) {
      XSRETURN(0);
 }
 
-SV * rand_init(SV * seed) {
+SV * rand_init(pTHX_ SV * seed) {
      gmp_randstate_t * state;
      SV * obj_ref, * obj;
 
@@ -3626,7 +3663,7 @@ SV * rand_init(SV * seed) {
      return obj_ref;
      }
 
-void rand_clear(SV * p) {
+void rand_clear(pTHX_ SV * p) {
      gmp_randclear(*(INT2PTR(gmp_randstate_t *, SvIV(SvRV(p)))));
      Safefree(INT2PTR(gmp_randstate_t *, SvIV(SvRV(p))));
      }
@@ -3652,7 +3689,7 @@ int _has_inttypes(void) {
 #ifdef _MSC_VER
 return 0;
 #else
-#if defined USE_64_BIT_INT || defined USE_LONG_DOUBLE
+#if defined USE_64_BIT_INT
 return 1;
 #else
 return 0;
@@ -3660,31 +3697,39 @@ return 0;
 #endif
 }
 
-SV * Rmpz_inp_raw(mpz_t * a, FILE * stream) {
+SV * Rmpz_inp_raw(pTHX_ mpz_t * a, FILE * stream) {
      size_t ret = mpz_inp_raw(*a, stream);
      fflush(stream);
      return newSVuv(ret);
 }
 
-SV * Rmpz_out_raw(FILE * stream, mpz_t * a) {
+SV * Rmpz_out_raw(pTHX_ FILE * stream, mpz_t * a) {
      size_t ret = mpz_out_raw(stream, *a);
      fflush(stream);
      return newSVuv(ret);
 }
 
-SV * ___GNU_MP_VERSION(void) {
+SV * ___GNU_MP_VERSION(pTHX) {
      return newSVuv(__GNU_MP_VERSION);
 }
 
-SV * ___GNU_MP_VERSION_MINOR(void) {
+SV * ___GNU_MP_VERSION_MINOR(pTHX) {
      return newSVuv(__GNU_MP_VERSION_MINOR);
 }
 
-SV * ___GNU_MP_VERSION_PATCHLEVEL(void) {
+SV * ___GNU_MP_VERSION_PATCHLEVEL(pTHX) {
      return newSVuv(__GNU_MP_VERSION_PATCHLEVEL);
 }
 
-SV * ___GMP_CC(void) {
+SV * ___GNU_MP_RELEASE(pTHX) {
+#if defined(__GNU_MP_RELEASE)
+     return newSVuv(__GNU_MP_RELEASE);
+#else
+     return &PL_sv_undef;
+#endif
+}
+
+SV * ___GMP_CC(pTHX) {
 #ifdef __GMP_CC
      char * ret = __GMP_CC;
      return newSVpv(ret, 0);
@@ -3693,7 +3738,7 @@ SV * ___GMP_CC(void) {
 #endif
 }
 
-SV * ___GMP_CFLAGS(void) {
+SV * ___GMP_CFLAGS(pTHX) {
 #ifdef __GMP_CFLAGS
      char * ret = __GMP_CFLAGS;
      return newSVpv(ret, 0);
@@ -3704,16 +3749,16 @@ SV * ___GMP_CFLAGS(void) {
 
 #if __GNU_MP_VERSION >= 5
 #ifndef __MPIR_VERSION
-void Rmpz_powm_sec(mpz_t * dest, mpz_t * base, mpz_t * exp, mpz_t * mod) {
+void Rmpz_powm_sec(pTHX_ mpz_t * dest, mpz_t * base, mpz_t * exp, mpz_t * mod) {
      mpz_powm_sec(*dest, *base, *exp, *mod);
 }
 #else
-void Rmpz_powm_sec(mpz_t * dest, mpz_t * base, mpz_t * exp, mpz_t * mod) {
+void Rmpz_powm_sec(pTHX_ mpz_t * dest, mpz_t * base, mpz_t * exp, mpz_t * mod) {
      croak("Rmpz_powm_sec not implemented by the mpir library");
 }
 #endif
 #else
-void Rmpz_powm_sec(mpz_t * dest, mpz_t * base, mpz_t * exp, mpz_t * mod) {
+void Rmpz_powm_sec(pTHX_ mpz_t * dest, mpz_t * base, mpz_t * exp, mpz_t * mod) {
      croak("Rmpz_powm_sec not implemented - gmp-5 or later needed, this is gmp-%d", __GNU_MP_VERSION);
 }
 #endif
@@ -3726,7 +3771,7 @@ return 0;
 #endif
 }
 
-SV * _Rmpz_NULL(void) {
+SV * _Rmpz_NULL(pTHX) {
      mpz_t * mpz_t_obj;
      SV * obj_ref, * obj;
 
@@ -3739,11 +3784,11 @@ SV * _Rmpz_NULL(void) {
      return obj_ref;
 }
 
-SV * _wrap_count(void) {
+SV * _wrap_count(pTHX) {
      return newSVuv(PL_sv_count);
 }
 
-void Rprbg_ms(mpz_t * outref, mpz_t * p, mpz_t * q, mpz_t * seed, int bits_required) {
+void Rprbg_ms(pTHX_ mpz_t * outref, mpz_t * p, mpz_t * q, mpz_t * seed, int bits_required) {
      mpz_t n, phi, pless1, qless1, mod, keep;
      unsigned long e, k, bign, r, its, i, r_shift, check;
      double kdoub;
@@ -3815,7 +3860,7 @@ void Rprbg_ms(mpz_t * outref, mpz_t * p, mpz_t * q, mpz_t * seed, int bits_requi
 
 }
 
-void Rprbg_bbs(mpz_t * outref, mpz_t * p, mpz_t * q, mpz_t * seed, int bits_required) {
+void Rprbg_bbs(pTHX_ mpz_t * outref, mpz_t * p, mpz_t * q, mpz_t * seed, int bits_required) {
      mpz_t n, gcd, one;
      unsigned long i, k;
      gmp_randstate_t state;
@@ -4013,6 +4058,19 @@ int Rpoker (mpz_t * bitstream) {
     return 0;        
 }
 
+SV * _get_xs_version(pTHX) {
+     return newSVpv(XS_VERSION, 0);
+}
+
+SV * query_eratosthenes_string(pTHX_ int candidate, char * str) {
+     int cand = candidate - 1;
+     if(cand == 1) return newSVuv(1);
+     if(cand & 1 || cand <= 0) return newSVuv(0);
+     if(str[cand / 16] & 1 << (cand / 2) % 8)
+       return newSVuv(1);
+     return newSVuv(0);
+}
+
 MODULE = Math::GMPz	PACKAGE = Math::GMPz	
 
 PROTOTYPES: DISABLE
@@ -4022,68 +4080,116 @@ SV *
 Rmpz_init_set_str_nobless (num, base)
 	SV *	num
 	SV *	base
+CODE:
+  RETVAL = Rmpz_init_set_str_nobless (aTHX_ num, base);
+OUTPUT:  RETVAL
 
 SV *
 Rmpz_init2_nobless (bits)
 	SV *	bits
+CODE:
+  RETVAL = Rmpz_init2_nobless (aTHX_ bits);
+OUTPUT:  RETVAL
 
 SV *
 Rmpz_init_nobless ()
-		
+CODE:
+  RETVAL = Rmpz_init_nobless (aTHX);
+OUTPUT:  RETVAL
+
 
 SV *
 Rmpz_init_set_nobless (p)
 	mpz_t *	p
+CODE:
+  RETVAL = Rmpz_init_set_nobless (aTHX_ p);
+OUTPUT:  RETVAL
 
 SV *
 Rmpz_init_set_ui_nobless (p)
 	SV *	p
+CODE:
+  RETVAL = Rmpz_init_set_ui_nobless (aTHX_ p);
+OUTPUT:  RETVAL
 
 SV *
 Rmpz_init_set_si_nobless (p)
 	SV *	p
+CODE:
+  RETVAL = Rmpz_init_set_si_nobless (aTHX_ p);
+OUTPUT:  RETVAL
 
 SV *
 Rmpz_init_set_d_nobless (p)
 	SV *	p
+CODE:
+  RETVAL = Rmpz_init_set_d_nobless (aTHX_ p);
+OUTPUT:  RETVAL
 
 SV *
 Rmpz_init ()
-		
+CODE:
+  RETVAL = Rmpz_init (aTHX);
+OUTPUT:  RETVAL
+
 
 SV *
 Rmpz_init_set (p)
 	mpz_t *	p
+CODE:
+  RETVAL = Rmpz_init_set (aTHX_ p);
+OUTPUT:  RETVAL
 
 SV *
 Rmpz_init_set_ui (p)
 	SV *	p
+CODE:
+  RETVAL = Rmpz_init_set_ui (aTHX_ p);
+OUTPUT:  RETVAL
 
 SV *
 Rmpz_init_set_si (p)
 	SV *	p
+CODE:
+  RETVAL = Rmpz_init_set_si (aTHX_ p);
+OUTPUT:  RETVAL
 
 SV *
 Rmpz_init_set_d (p)
 	SV *	p
+CODE:
+  RETVAL = Rmpz_init_set_d (aTHX_ p);
+OUTPUT:  RETVAL
 
 SV *
 _Rmpz_init_set_ld (p)
 	SV *	p
+CODE:
+  RETVAL = _Rmpz_init_set_ld (aTHX_ p);
+OUTPUT:  RETVAL
 
 SV *
 Rmpz_init_set_str (num, base)
 	SV *	num
 	SV *	base
+CODE:
+  RETVAL = Rmpz_init_set_str (aTHX_ num, base);
+OUTPUT:  RETVAL
 
 SV *
 Rmpz_init2 (bits)
 	SV *	bits
+CODE:
+  RETVAL = Rmpz_init2 (aTHX_ bits);
+OUTPUT:  RETVAL
 
 SV *
 Rmpz_get_str (p, base)
 	mpz_t *	p
 	SV *	base
+CODE:
+  RETVAL = Rmpz_get_str (aTHX_ p, base);
+OUTPUT:  RETVAL
 
 void
 DESTROY (p)
@@ -4092,7 +4198,7 @@ DESTROY (p)
 	I32* temp;
 	PPCODE:
 	temp = PL_markstack_ptr++;
-	DESTROY(p);
+	DESTROY(aTHX_ p);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;
@@ -4108,7 +4214,7 @@ Rmpz_clear (p)
 	I32* temp;
 	PPCODE:
 	temp = PL_markstack_ptr++;
-	Rmpz_clear(p);
+	Rmpz_clear(aTHX_ p);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;
@@ -4124,7 +4230,7 @@ Rmpz_clear_mpz (p)
 	I32* temp;
 	PPCODE:
 	temp = PL_markstack_ptr++;
-	Rmpz_clear_mpz(p);
+	Rmpz_clear_mpz(aTHX_ p);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;
@@ -4140,7 +4246,7 @@ Rmpz_clear_ptr (p)
 	I32* temp;
 	PPCODE:
 	temp = PL_markstack_ptr++;
-	Rmpz_clear_ptr(p);
+	Rmpz_clear_ptr(aTHX_ p);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;
@@ -4157,7 +4263,7 @@ Rmpz_realloc2 (integer, bits)
 	I32* temp;
 	PPCODE:
 	temp = PL_markstack_ptr++;
-	Rmpz_realloc2(integer, bits);
+	Rmpz_realloc2(aTHX_ integer, bits);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;
@@ -4174,7 +4280,7 @@ Rmpz_set (copy, original)
 	I32* temp;
 	PPCODE:
 	temp = PL_markstack_ptr++;
-	Rmpz_set(copy, original);
+	Rmpz_set(aTHX_ copy, original);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;
@@ -4191,7 +4297,7 @@ Rmpz_set_q (copy, original)
 	I32* temp;
 	PPCODE:
 	temp = PL_markstack_ptr++;
-	Rmpz_set_q(copy, original);
+	Rmpz_set_q(aTHX_ copy, original);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;
@@ -4208,7 +4314,7 @@ Rmpz_set_f (copy, original)
 	I32* temp;
 	PPCODE:
 	temp = PL_markstack_ptr++;
-	Rmpz_set_f(copy, original);
+	Rmpz_set_f(aTHX_ copy, original);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;
@@ -4225,7 +4331,7 @@ Rmpz_set_si (copy, original)
 	I32* temp;
 	PPCODE:
 	temp = PL_markstack_ptr++;
-	Rmpz_set_si(copy, original);
+	Rmpz_set_si(aTHX_ copy, original);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;
@@ -4242,7 +4348,7 @@ Rmpz_set_ui (copy, original)
 	I32* temp;
 	PPCODE:
 	temp = PL_markstack_ptr++;
-	Rmpz_set_ui(copy, original);
+	Rmpz_set_ui(aTHX_ copy, original);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;
@@ -4259,7 +4365,7 @@ Rmpz_set_d (copy, original)
 	I32* temp;
 	PPCODE:
 	temp = PL_markstack_ptr++;
-	Rmpz_set_d(copy, original);
+	Rmpz_set_d(aTHX_ copy, original);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;
@@ -4277,7 +4383,7 @@ Rmpz_set_str (copy, original, base)
 	I32* temp;
 	PPCODE:
 	temp = PL_markstack_ptr++;
-	Rmpz_set_str(copy, original, base);
+	Rmpz_set_str(aTHX_ copy, original, base);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;
@@ -4294,7 +4400,7 @@ Rmpz_swap (a, b)
 	I32* temp;
 	PPCODE:
 	temp = PL_markstack_ptr++;
-	Rmpz_swap(a, b);
+	Rmpz_swap(aTHX_ a, b);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;
@@ -4306,14 +4412,23 @@ Rmpz_swap (a, b)
 SV *
 Rmpz_get_ui (n)
 	mpz_t *	n
+CODE:
+  RETVAL = Rmpz_get_ui (aTHX_ n);
+OUTPUT:  RETVAL
 
 SV *
 Rmpz_get_si (n)
 	mpz_t *	n
+CODE:
+  RETVAL = Rmpz_get_si (aTHX_ n);
+OUTPUT:  RETVAL
 
 SV *
 Rmpz_get_d (n)
 	mpz_t *	n
+CODE:
+  RETVAL = Rmpz_get_d (aTHX_ n);
+OUTPUT:  RETVAL
 
 void
 Rmpz_get_d_2exp (n)
@@ -4322,7 +4437,7 @@ Rmpz_get_d_2exp (n)
 	I32* temp;
 	PPCODE:
 	temp = PL_markstack_ptr++;
-	Rmpz_get_d_2exp(n);
+	Rmpz_get_d_2exp(aTHX_ n);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;
@@ -4335,6 +4450,9 @@ SV *
 Rmpz_getlimbn (p, n)
 	mpz_t *	p
 	SV *	n
+CODE:
+  RETVAL = Rmpz_getlimbn (aTHX_ p, n);
+OUTPUT:  RETVAL
 
 void
 Rmpz_add (dest, src1, src2)
@@ -4345,7 +4463,7 @@ Rmpz_add (dest, src1, src2)
 	I32* temp;
 	PPCODE:
 	temp = PL_markstack_ptr++;
-	Rmpz_add(dest, src1, src2);
+	Rmpz_add(aTHX_ dest, src1, src2);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;
@@ -4363,7 +4481,7 @@ Rmpz_add_ui (dest, src, num)
 	I32* temp;
 	PPCODE:
 	temp = PL_markstack_ptr++;
-	Rmpz_add_ui(dest, src, num);
+	Rmpz_add_ui(aTHX_ dest, src, num);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;
@@ -4381,7 +4499,7 @@ Rmpz_sub (dest, src1, src2)
 	I32* temp;
 	PPCODE:
 	temp = PL_markstack_ptr++;
-	Rmpz_sub(dest, src1, src2);
+	Rmpz_sub(aTHX_ dest, src1, src2);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;
@@ -4399,7 +4517,7 @@ Rmpz_sub_ui (dest, src, num)
 	I32* temp;
 	PPCODE:
 	temp = PL_markstack_ptr++;
-	Rmpz_sub_ui(dest, src, num);
+	Rmpz_sub_ui(aTHX_ dest, src, num);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;
@@ -4417,7 +4535,7 @@ Rmpz_ui_sub (dest, num, src)
 	I32* temp;
 	PPCODE:
 	temp = PL_markstack_ptr++;
-	Rmpz_ui_sub(dest, num, src);
+	Rmpz_ui_sub(aTHX_ dest, num, src);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;
@@ -4435,7 +4553,7 @@ Rmpz_mul (dest, src1, src2)
 	I32* temp;
 	PPCODE:
 	temp = PL_markstack_ptr++;
-	Rmpz_mul(dest, src1, src2);
+	Rmpz_mul(aTHX_ dest, src1, src2);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;
@@ -4453,7 +4571,7 @@ Rmpz_mul_si (dest, src, num)
 	I32* temp;
 	PPCODE:
 	temp = PL_markstack_ptr++;
-	Rmpz_mul_si(dest, src, num);
+	Rmpz_mul_si(aTHX_ dest, src, num);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;
@@ -4471,7 +4589,7 @@ Rmpz_mul_ui (dest, src, num)
 	I32* temp;
 	PPCODE:
 	temp = PL_markstack_ptr++;
-	Rmpz_mul_ui(dest, src, num);
+	Rmpz_mul_ui(aTHX_ dest, src, num);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;
@@ -4489,7 +4607,7 @@ Rmpz_addmul (dest, src1, src2)
 	I32* temp;
 	PPCODE:
 	temp = PL_markstack_ptr++;
-	Rmpz_addmul(dest, src1, src2);
+	Rmpz_addmul(aTHX_ dest, src1, src2);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;
@@ -4507,7 +4625,7 @@ Rmpz_addmul_ui (dest, src, num)
 	I32* temp;
 	PPCODE:
 	temp = PL_markstack_ptr++;
-	Rmpz_addmul_ui(dest, src, num);
+	Rmpz_addmul_ui(aTHX_ dest, src, num);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;
@@ -4525,7 +4643,7 @@ Rmpz_submul (dest, src1, src2)
 	I32* temp;
 	PPCODE:
 	temp = PL_markstack_ptr++;
-	Rmpz_submul(dest, src1, src2);
+	Rmpz_submul(aTHX_ dest, src1, src2);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;
@@ -4543,7 +4661,7 @@ Rmpz_submul_ui (dest, src, num)
 	I32* temp;
 	PPCODE:
 	temp = PL_markstack_ptr++;
-	Rmpz_submul_ui(dest, src, num);
+	Rmpz_submul_ui(aTHX_ dest, src, num);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;
@@ -4561,7 +4679,7 @@ Rmpz_mul_2exp (dest, src1, b)
 	I32* temp;
 	PPCODE:
 	temp = PL_markstack_ptr++;
-	Rmpz_mul_2exp(dest, src1, b);
+	Rmpz_mul_2exp(aTHX_ dest, src1, b);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;
@@ -4579,7 +4697,7 @@ Rmpz_div_2exp (dest, src1, b)
 	I32* temp;
 	PPCODE:
 	temp = PL_markstack_ptr++;
-	Rmpz_div_2exp(dest, src1, b);
+	Rmpz_div_2exp(aTHX_ dest, src1, b);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;
@@ -4596,7 +4714,7 @@ Rmpz_neg (dest, src)
 	I32* temp;
 	PPCODE:
 	temp = PL_markstack_ptr++;
-	Rmpz_neg(dest, src);
+	Rmpz_neg(aTHX_ dest, src);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;
@@ -4613,7 +4731,7 @@ Rmpz_abs (dest, src)
 	I32* temp;
 	PPCODE:
 	temp = PL_markstack_ptr++;
-	Rmpz_abs(dest, src);
+	Rmpz_abs(aTHX_ dest, src);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;
@@ -4631,7 +4749,7 @@ Rmpz_cdiv_q (q, n, d)
 	I32* temp;
 	PPCODE:
 	temp = PL_markstack_ptr++;
-	Rmpz_cdiv_q(q, n, d);
+	Rmpz_cdiv_q(aTHX_ q, n, d);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;
@@ -4649,7 +4767,7 @@ Rmpz_cdiv_r (mod, n, d)
 	I32* temp;
 	PPCODE:
 	temp = PL_markstack_ptr++;
-	Rmpz_cdiv_r(mod, n, d);
+	Rmpz_cdiv_r(aTHX_ mod, n, d);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;
@@ -4668,7 +4786,7 @@ Rmpz_cdiv_qr (q, r, n, d)
 	I32* temp;
 	PPCODE:
 	temp = PL_markstack_ptr++;
-	Rmpz_cdiv_qr(q, r, n, d);
+	Rmpz_cdiv_qr(aTHX_ q, r, n, d);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;
@@ -4682,12 +4800,18 @@ Rmpz_cdiv_q_ui (q, n, d)
 	mpz_t *	q
 	mpz_t *	n
 	SV *	d
+CODE:
+  RETVAL = Rmpz_cdiv_q_ui (aTHX_ q, n, d);
+OUTPUT:  RETVAL
 
 SV *
 Rmpz_cdiv_r_ui (q, n, d)
 	mpz_t *	q
 	mpz_t *	n
 	SV *	d
+CODE:
+  RETVAL = Rmpz_cdiv_r_ui (aTHX_ q, n, d);
+OUTPUT:  RETVAL
 
 SV *
 Rmpz_cdiv_qr_ui (q, r, n, d)
@@ -4695,11 +4819,17 @@ Rmpz_cdiv_qr_ui (q, r, n, d)
 	mpz_t *	r
 	mpz_t *	n
 	SV *	d
+CODE:
+  RETVAL = Rmpz_cdiv_qr_ui (aTHX_ q, r, n, d);
+OUTPUT:  RETVAL
 
-int
+SV *
 Rmpz_cdiv_ui (n, d)
 	mpz_t *	n
 	SV *	d
+CODE:
+  RETVAL = Rmpz_cdiv_ui (aTHX_ n, d);
+OUTPUT:  RETVAL
 
 void
 Rmpz_cdiv_q_2exp (q, n, b)
@@ -4710,7 +4840,7 @@ Rmpz_cdiv_q_2exp (q, n, b)
 	I32* temp;
 	PPCODE:
 	temp = PL_markstack_ptr++;
-	Rmpz_cdiv_q_2exp(q, n, b);
+	Rmpz_cdiv_q_2exp(aTHX_ q, n, b);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;
@@ -4728,7 +4858,7 @@ Rmpz_cdiv_r_2exp (r, n, b)
 	I32* temp;
 	PPCODE:
 	temp = PL_markstack_ptr++;
-	Rmpz_cdiv_r_2exp(r, n, b);
+	Rmpz_cdiv_r_2exp(aTHX_ r, n, b);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;
@@ -4746,7 +4876,7 @@ Rmpz_fdiv_q (q, n, d)
 	I32* temp;
 	PPCODE:
 	temp = PL_markstack_ptr++;
-	Rmpz_fdiv_q(q, n, d);
+	Rmpz_fdiv_q(aTHX_ q, n, d);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;
@@ -4764,7 +4894,7 @@ Rmpz_div (q, n, d)
 	I32* temp;
 	PPCODE:
 	temp = PL_markstack_ptr++;
-	Rmpz_div(q, n, d);
+	Rmpz_div(aTHX_ q, n, d);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;
@@ -4782,7 +4912,7 @@ Rmpz_fdiv_r (mod, n, d)
 	I32* temp;
 	PPCODE:
 	temp = PL_markstack_ptr++;
-	Rmpz_fdiv_r(mod, n, d);
+	Rmpz_fdiv_r(aTHX_ mod, n, d);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;
@@ -4801,7 +4931,7 @@ Rmpz_fdiv_qr (q, r, n, d)
 	I32* temp;
 	PPCODE:
 	temp = PL_markstack_ptr++;
-	Rmpz_fdiv_qr(q, r, n, d);
+	Rmpz_fdiv_qr(aTHX_ q, r, n, d);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;
@@ -4820,7 +4950,7 @@ Rmpz_divmod (q, r, n, d)
 	I32* temp;
 	PPCODE:
 	temp = PL_markstack_ptr++;
-	Rmpz_divmod(q, r, n, d);
+	Rmpz_divmod(aTHX_ q, r, n, d);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;
@@ -4834,18 +4964,27 @@ Rmpz_fdiv_q_ui (q, n, d)
 	mpz_t *	q
 	mpz_t *	n
 	SV *	d
+CODE:
+  RETVAL = Rmpz_fdiv_q_ui (aTHX_ q, n, d);
+OUTPUT:  RETVAL
 
 SV *
 Rmpz_div_ui (q, n, d)
 	mpz_t *	q
 	mpz_t *	n
 	SV *	d
+CODE:
+  RETVAL = Rmpz_div_ui (aTHX_ q, n, d);
+OUTPUT:  RETVAL
 
 SV *
 Rmpz_fdiv_r_ui (q, n, d)
 	mpz_t *	q
 	mpz_t *	n
 	SV *	d
+CODE:
+  RETVAL = Rmpz_fdiv_r_ui (aTHX_ q, n, d);
+OUTPUT:  RETVAL
 
 SV *
 Rmpz_fdiv_qr_ui (q, r, n, d)
@@ -4853,6 +4992,9 @@ Rmpz_fdiv_qr_ui (q, r, n, d)
 	mpz_t *	r
 	mpz_t *	n
 	SV *	d
+CODE:
+  RETVAL = Rmpz_fdiv_qr_ui (aTHX_ q, r, n, d);
+OUTPUT:  RETVAL
 
 SV *
 Rmpz_divmod_ui (q, r, n, d)
@@ -4860,11 +5002,17 @@ Rmpz_divmod_ui (q, r, n, d)
 	mpz_t *	r
 	mpz_t *	n
 	SV *	d
+CODE:
+  RETVAL = Rmpz_divmod_ui (aTHX_ q, r, n, d);
+OUTPUT:  RETVAL
 
-int
+SV *
 Rmpz_fdiv_ui (n, d)
 	mpz_t *	n
 	SV *	d
+CODE:
+  RETVAL = Rmpz_fdiv_ui (aTHX_ n, d);
+OUTPUT:  RETVAL
 
 void
 Rmpz_fdiv_q_2exp (q, n, b)
@@ -4875,7 +5023,7 @@ Rmpz_fdiv_q_2exp (q, n, b)
 	I32* temp;
 	PPCODE:
 	temp = PL_markstack_ptr++;
-	Rmpz_fdiv_q_2exp(q, n, b);
+	Rmpz_fdiv_q_2exp(aTHX_ q, n, b);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;
@@ -4893,7 +5041,7 @@ Rmpz_fdiv_r_2exp (r, n, b)
 	I32* temp;
 	PPCODE:
 	temp = PL_markstack_ptr++;
-	Rmpz_fdiv_r_2exp(r, n, b);
+	Rmpz_fdiv_r_2exp(aTHX_ r, n, b);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;
@@ -4911,7 +5059,7 @@ Rmpz_mod_2exp (r, n, b)
 	I32* temp;
 	PPCODE:
 	temp = PL_markstack_ptr++;
-	Rmpz_mod_2exp(r, n, b);
+	Rmpz_mod_2exp(aTHX_ r, n, b);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;
@@ -4929,7 +5077,7 @@ Rmpz_tdiv_q (q, n, d)
 	I32* temp;
 	PPCODE:
 	temp = PL_markstack_ptr++;
-	Rmpz_tdiv_q(q, n, d);
+	Rmpz_tdiv_q(aTHX_ q, n, d);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;
@@ -4947,7 +5095,7 @@ Rmpz_tdiv_r (mod, n, d)
 	I32* temp;
 	PPCODE:
 	temp = PL_markstack_ptr++;
-	Rmpz_tdiv_r(mod, n, d);
+	Rmpz_tdiv_r(aTHX_ mod, n, d);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;
@@ -4966,7 +5114,7 @@ Rmpz_tdiv_qr (q, r, n, d)
 	I32* temp;
 	PPCODE:
 	temp = PL_markstack_ptr++;
-	Rmpz_tdiv_qr(q, r, n, d);
+	Rmpz_tdiv_qr(aTHX_ q, r, n, d);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;
@@ -4980,12 +5128,18 @@ Rmpz_tdiv_q_ui (q, n, d)
 	mpz_t *	q
 	mpz_t *	n
 	SV *	d
+CODE:
+  RETVAL = Rmpz_tdiv_q_ui (aTHX_ q, n, d);
+OUTPUT:  RETVAL
 
 SV *
 Rmpz_tdiv_r_ui (q, n, d)
 	mpz_t *	q
 	mpz_t *	n
 	SV *	d
+CODE:
+  RETVAL = Rmpz_tdiv_r_ui (aTHX_ q, n, d);
+OUTPUT:  RETVAL
 
 SV *
 Rmpz_tdiv_qr_ui (q, r, n, d)
@@ -4993,11 +5147,17 @@ Rmpz_tdiv_qr_ui (q, r, n, d)
 	mpz_t *	r
 	mpz_t *	n
 	SV *	d
+CODE:
+  RETVAL = Rmpz_tdiv_qr_ui (aTHX_ q, r, n, d);
+OUTPUT:  RETVAL
 
-int
+SV *
 Rmpz_tdiv_ui (n, d)
 	mpz_t *	n
 	SV *	d
+CODE:
+  RETVAL = Rmpz_tdiv_ui (aTHX_ n, d);
+OUTPUT:  RETVAL
 
 void
 Rmpz_tdiv_q_2exp (q, n, b)
@@ -5008,7 +5168,7 @@ Rmpz_tdiv_q_2exp (q, n, b)
 	I32* temp;
 	PPCODE:
 	temp = PL_markstack_ptr++;
-	Rmpz_tdiv_q_2exp(q, n, b);
+	Rmpz_tdiv_q_2exp(aTHX_ q, n, b);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;
@@ -5026,7 +5186,7 @@ Rmpz_tdiv_r_2exp (r, n, b)
 	I32* temp;
 	PPCODE:
 	temp = PL_markstack_ptr++;
-	Rmpz_tdiv_r_2exp(r, n, b);
+	Rmpz_tdiv_r_2exp(aTHX_ r, n, b);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;
@@ -5044,7 +5204,7 @@ Rmpz_mod (r, n, d)
 	I32* temp;
 	PPCODE:
 	temp = PL_markstack_ptr++;
-	Rmpz_mod(r, n, d);
+	Rmpz_mod(aTHX_ r, n, d);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;
@@ -5058,6 +5218,9 @@ Rmpz_mod_ui (r, n, d)
 	mpz_t *	r
 	mpz_t *	n
 	SV *	d
+CODE:
+  RETVAL = Rmpz_mod_ui (aTHX_ r, n, d);
+OUTPUT:  RETVAL
 
 void
 Rmpz_divexact (dest, n, d)
@@ -5068,7 +5231,7 @@ Rmpz_divexact (dest, n, d)
 	I32* temp;
 	PPCODE:
 	temp = PL_markstack_ptr++;
-	Rmpz_divexact(dest, n, d);
+	Rmpz_divexact(aTHX_ dest, n, d);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;
@@ -5086,7 +5249,7 @@ Rmpz_divexact_ui (dest, n, d)
 	I32* temp;
 	PPCODE:
 	temp = PL_markstack_ptr++;
-	Rmpz_divexact_ui(dest, n, d);
+	Rmpz_divexact_ui(aTHX_ dest, n, d);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;
@@ -5100,33 +5263,48 @@ Rmpz_divisible_p (n, d)
 	mpz_t *	n
 	mpz_t *	d
 
-int
+SV *
 Rmpz_divisible_ui_p (n, d)
 	mpz_t *	n
 	SV *	d
+CODE:
+  RETVAL = Rmpz_divisible_ui_p (aTHX_ n, d);
+OUTPUT:  RETVAL
 
-int
+SV *
 Rmpz_divisible_2exp_p (n, b)
 	mpz_t *	n
 	SV *	b
+CODE:
+  RETVAL = Rmpz_divisible_2exp_p (aTHX_ n, b);
+OUTPUT:  RETVAL
 
 SV *
 Rmpz_congruent_p (n, c, d)
 	mpz_t *	n
 	mpz_t *	c
 	mpz_t *	d
+CODE:
+  RETVAL = Rmpz_congruent_p (aTHX_ n, c, d);
+OUTPUT:  RETVAL
 
 SV *
 Rmpz_congruent_ui_p (n, c, d)
 	mpz_t *	n
 	SV *	c
 	SV *	d
+CODE:
+  RETVAL = Rmpz_congruent_ui_p (aTHX_ n, c, d);
+OUTPUT:  RETVAL
 
 SV *
 Rmpz_congruent_2exp_p (n, c, d)
 	mpz_t *	n
 	mpz_t *	c
 	SV *	d
+CODE:
+  RETVAL = Rmpz_congruent_2exp_p (aTHX_ n, c, d);
+OUTPUT:  RETVAL
 
 void
 Rmpz_powm (dest, base, exp, mod)
@@ -5138,7 +5316,7 @@ Rmpz_powm (dest, base, exp, mod)
 	I32* temp;
 	PPCODE:
 	temp = PL_markstack_ptr++;
-	Rmpz_powm(dest, base, exp, mod);
+	Rmpz_powm(aTHX_ dest, base, exp, mod);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;
@@ -5157,7 +5335,7 @@ Rmpz_powm_ui (dest, base, exp, mod)
 	I32* temp;
 	PPCODE:
 	temp = PL_markstack_ptr++;
-	Rmpz_powm_ui(dest, base, exp, mod);
+	Rmpz_powm_ui(aTHX_ dest, base, exp, mod);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;
@@ -5175,7 +5353,7 @@ Rmpz_pow_ui (dest, base, exp)
 	I32* temp;
 	PPCODE:
 	temp = PL_markstack_ptr++;
-	Rmpz_pow_ui(dest, base, exp);
+	Rmpz_pow_ui(aTHX_ dest, base, exp);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;
@@ -5193,7 +5371,7 @@ Rmpz_ui_pow_ui (dest, base, exp)
 	I32* temp;
 	PPCODE:
 	temp = PL_markstack_ptr++;
-	Rmpz_ui_pow_ui(dest, base, exp);
+	Rmpz_ui_pow_ui(aTHX_ dest, base, exp);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;
@@ -5207,6 +5385,9 @@ Rmpz_root (r, n, d)
 	mpz_t *	r
 	mpz_t *	n
 	SV *	d
+CODE:
+  RETVAL = Rmpz_root (aTHX_ r, n, d);
+OUTPUT:  RETVAL
 
 void
 Rmpz_sqrt (r, n)
@@ -5216,7 +5397,7 @@ Rmpz_sqrt (r, n)
 	I32* temp;
 	PPCODE:
 	temp = PL_markstack_ptr++;
-	Rmpz_sqrt(r, n);
+	Rmpz_sqrt(aTHX_ r, n);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;
@@ -5234,7 +5415,7 @@ Rmpz_sqrtrem (root, rem, src)
 	I32* temp;
 	PPCODE:
 	temp = PL_markstack_ptr++;
-	Rmpz_sqrtrem(root, rem, src);
+	Rmpz_sqrtrem(aTHX_ root, rem, src);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;
@@ -5251,10 +5432,13 @@ int
 Rmpz_perfect_square_p (in)
 	mpz_t *	in
 
-int
+SV *
 Rmpz_probab_prime_p (cand, reps)
 	mpz_t *	cand
 	SV *	reps
+CODE:
+  RETVAL = Rmpz_probab_prime_p (aTHX_ cand, reps);
+OUTPUT:  RETVAL
 
 void
 Rmpz_nextprime (prime, init)
@@ -5264,7 +5448,7 @@ Rmpz_nextprime (prime, init)
 	I32* temp;
 	PPCODE:
 	temp = PL_markstack_ptr++;
-	Rmpz_nextprime(prime, init);
+	Rmpz_nextprime(aTHX_ prime, init);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;
@@ -5282,7 +5466,7 @@ Rmpz_gcd (gcd, src1, src2)
 	I32* temp;
 	PPCODE:
 	temp = PL_markstack_ptr++;
-	Rmpz_gcd(gcd, src1, src2);
+	Rmpz_gcd(aTHX_ gcd, src1, src2);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;
@@ -5296,6 +5480,9 @@ Rmpz_gcd_ui (gcd, n, d)
 	mpz_t *	gcd
 	mpz_t *	n
 	SV *	d
+CODE:
+  RETVAL = Rmpz_gcd_ui (aTHX_ gcd, n, d);
+OUTPUT:  RETVAL
 
 void
 Rmpz_gcdext (g, s, t, a, b)
@@ -5308,7 +5495,7 @@ Rmpz_gcdext (g, s, t, a, b)
 	I32* temp;
 	PPCODE:
 	temp = PL_markstack_ptr++;
-	Rmpz_gcdext(g, s, t, a, b);
+	Rmpz_gcdext(aTHX_ g, s, t, a, b);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;
@@ -5326,7 +5513,7 @@ Rmpz_lcm (lcm, src1, src2)
 	I32* temp;
 	PPCODE:
 	temp = PL_markstack_ptr++;
-	Rmpz_lcm(lcm, src1, src2);
+	Rmpz_lcm(aTHX_ lcm, src1, src2);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;
@@ -5344,7 +5531,7 @@ Rmpz_lcm_ui (lcm, src1, src2)
 	I32* temp;
 	PPCODE:
 	temp = PL_markstack_ptr++;
-	Rmpz_lcm_ui(lcm, src1, src2);
+	Rmpz_lcm_ui(aTHX_ lcm, src1, src2);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;
@@ -5374,31 +5561,46 @@ Rmpz_kronecker (a, b)
 	mpz_t *	a
 	mpz_t *	b
 
-int
+SV *
 Rmpz_kronecker_si (a, b)
 	mpz_t *	a
 	SV *	b
+CODE:
+  RETVAL = Rmpz_kronecker_si (aTHX_ a, b);
+OUTPUT:  RETVAL
 
-int
+SV *
 Rmpz_kronecker_ui (a, b)
 	mpz_t *	a
 	SV *	b
+CODE:
+  RETVAL = Rmpz_kronecker_ui (aTHX_ a, b);
+OUTPUT:  RETVAL
 
-int
+SV *
 Rmpz_si_kronecker (a, b)
 	SV *	a
 	mpz_t *	b
+CODE:
+  RETVAL = Rmpz_si_kronecker (aTHX_ a, b);
+OUTPUT:  RETVAL
 
-int
+SV *
 Rmpz_ui_kronecker (a, b)
 	SV *	a
 	mpz_t *	b
+CODE:
+  RETVAL = Rmpz_ui_kronecker (aTHX_ a, b);
+OUTPUT:  RETVAL
 
 SV *
 Rmpz_remove (rem, src1, src2)
 	mpz_t *	rem
 	mpz_t *	src1
 	mpz_t *	src2
+CODE:
+  RETVAL = Rmpz_remove (aTHX_ rem, src1, src2);
+OUTPUT:  RETVAL
 
 void
 Rmpz_fac_ui (fac, b)
@@ -5408,7 +5610,7 @@ Rmpz_fac_ui (fac, b)
 	I32* temp;
 	PPCODE:
 	temp = PL_markstack_ptr++;
-	Rmpz_fac_ui(fac, b);
+	Rmpz_fac_ui(aTHX_ fac, b);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;
@@ -5425,7 +5627,7 @@ Rmpz_2fac_ui (fac, b)
 	I32* temp;
 	PPCODE:
 	temp = PL_markstack_ptr++;
-	Rmpz_2fac_ui(fac, b);
+	Rmpz_2fac_ui(aTHX_ fac, b);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;
@@ -5443,7 +5645,7 @@ Rmpz_mfac_uiui (fac, b, c)
 	I32* temp;
 	PPCODE:
 	temp = PL_markstack_ptr++;
-	Rmpz_mfac_uiui(fac, b, c);
+	Rmpz_mfac_uiui(aTHX_ fac, b, c);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;
@@ -5460,7 +5662,7 @@ Rmpz_primorial_ui (fac, b)
 	I32* temp;
 	PPCODE:
 	temp = PL_markstack_ptr++;
-	Rmpz_primorial_ui(fac, b);
+	Rmpz_primorial_ui(aTHX_ fac, b);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;
@@ -5478,7 +5680,7 @@ Rmpz_bin_ui (dest, n, d)
 	I32* temp;
 	PPCODE:
 	temp = PL_markstack_ptr++;
-	Rmpz_bin_ui(dest, n, d);
+	Rmpz_bin_ui(aTHX_ dest, n, d);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;
@@ -5496,7 +5698,7 @@ Rmpz_bin_uiui (dest, n, d)
 	I32* temp;
 	PPCODE:
 	temp = PL_markstack_ptr++;
-	Rmpz_bin_uiui(dest, n, d);
+	Rmpz_bin_uiui(aTHX_ dest, n, d);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;
@@ -5513,7 +5715,7 @@ Rmpz_fib_ui (dest, b)
 	I32* temp;
 	PPCODE:
 	temp = PL_markstack_ptr++;
-	Rmpz_fib_ui(dest, b);
+	Rmpz_fib_ui(aTHX_ dest, b);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;
@@ -5531,7 +5733,7 @@ Rmpz_fib2_ui (fn, fnsub1, b)
 	I32* temp;
 	PPCODE:
 	temp = PL_markstack_ptr++;
-	Rmpz_fib2_ui(fn, fnsub1, b);
+	Rmpz_fib2_ui(aTHX_ fn, fnsub1, b);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;
@@ -5548,7 +5750,7 @@ Rmpz_lucnum_ui (dest, b)
 	I32* temp;
 	PPCODE:
 	temp = PL_markstack_ptr++;
-	Rmpz_lucnum_ui(dest, b);
+	Rmpz_lucnum_ui(aTHX_ dest, b);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;
@@ -5566,7 +5768,7 @@ Rmpz_lucnum2_ui (ln, lnsub1, b)
 	I32* temp;
 	PPCODE:
 	temp = PL_markstack_ptr++;
-	Rmpz_lucnum2_ui(ln, lnsub1, b);
+	Rmpz_lucnum2_ui(aTHX_ ln, lnsub1, b);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;
@@ -5580,35 +5782,50 @@ Rmpz_cmp (n, d)
 	mpz_t *	n
 	mpz_t *	d
 
-int
+SV *
 Rmpz_cmp_d (n, d)
 	mpz_t *	n
 	SV *	d
+CODE:
+  RETVAL = Rmpz_cmp_d (aTHX_ n, d);
+OUTPUT:  RETVAL
 
-int
+SV *
 Rmpz_cmp_si (n, d)
 	mpz_t *	n
 	SV *	d
+CODE:
+  RETVAL = Rmpz_cmp_si (aTHX_ n, d);
+OUTPUT:  RETVAL
 
-int
+SV *
 Rmpz_cmp_ui (n, d)
 	mpz_t *	n
 	SV *	d
+CODE:
+  RETVAL = Rmpz_cmp_ui (aTHX_ n, d);
+OUTPUT:  RETVAL
 
 int
 Rmpz_cmpabs (n, d)
 	mpz_t *	n
 	mpz_t *	d
 
-int
+SV *
 Rmpz_cmpabs_d (n, d)
 	mpz_t *	n
 	SV *	d
+CODE:
+  RETVAL = Rmpz_cmpabs_d (aTHX_ n, d);
+OUTPUT:  RETVAL
 
-int
+SV *
 Rmpz_cmpabs_ui (n, d)
 	mpz_t *	n
 	SV *	d
+CODE:
+  RETVAL = Rmpz_cmpabs_ui (aTHX_ n, d);
+OUTPUT:  RETVAL
 
 int
 Rmpz_sgn (n)
@@ -5623,7 +5840,7 @@ Rmpz_and (dest, src1, src2)
 	I32* temp;
 	PPCODE:
 	temp = PL_markstack_ptr++;
-	Rmpz_and(dest, src1, src2);
+	Rmpz_and(aTHX_ dest, src1, src2);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;
@@ -5641,7 +5858,7 @@ Rmpz_ior (dest, src1, src2)
 	I32* temp;
 	PPCODE:
 	temp = PL_markstack_ptr++;
-	Rmpz_ior(dest, src1, src2);
+	Rmpz_ior(aTHX_ dest, src1, src2);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;
@@ -5659,7 +5876,7 @@ Rmpz_xor (dest, src1, src2)
 	I32* temp;
 	PPCODE:
 	temp = PL_markstack_ptr++;
-	Rmpz_xor(dest, src1, src2);
+	Rmpz_xor(aTHX_ dest, src1, src2);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;
@@ -5676,7 +5893,7 @@ Rmpz_com (dest, src)
 	I32* temp;
 	PPCODE:
 	temp = PL_markstack_ptr++;
-	Rmpz_com(dest, src);
+	Rmpz_com(aTHX_ dest, src);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;
@@ -5698,11 +5915,17 @@ SV *
 Rmpz_scan0 (n, start_bit)
 	mpz_t *	n
 	SV *	start_bit
+CODE:
+  RETVAL = Rmpz_scan0 (aTHX_ n, start_bit);
+OUTPUT:  RETVAL
 
 SV *
 Rmpz_scan1 (n, start_bit)
 	mpz_t *	n
 	SV *	start_bit
+CODE:
+  RETVAL = Rmpz_scan1 (aTHX_ n, start_bit);
+OUTPUT:  RETVAL
 
 void
 Rmpz_setbit (num, bit_index)
@@ -5712,7 +5935,7 @@ Rmpz_setbit (num, bit_index)
 	I32* temp;
 	PPCODE:
 	temp = PL_markstack_ptr++;
-	Rmpz_setbit(num, bit_index);
+	Rmpz_setbit(aTHX_ num, bit_index);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;
@@ -5729,7 +5952,7 @@ Rmpz_clrbit (num, bit_index)
 	I32* temp;
 	PPCODE:
 	temp = PL_markstack_ptr++;
-	Rmpz_clrbit(num, bit_index);
+	Rmpz_clrbit(aTHX_ num, bit_index);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;
@@ -5738,10 +5961,13 @@ Rmpz_clrbit (num, bit_index)
         /* must have used dXSARGS; list context implied */
 	return; /* assume stack size is correct */
 
-int
+SV *
 Rmpz_tstbit (num, bit_index)
 	mpz_t *	num
 	SV *	bit_index
+CODE:
+  RETVAL = Rmpz_tstbit (aTHX_ num, bit_index);
+OUTPUT:  RETVAL
 
 void
 Rmpz_import (rop, count, order, size, endian, nails, op)
@@ -5756,7 +5982,7 @@ Rmpz_import (rop, count, order, size, endian, nails, op)
 	I32* temp;
 	PPCODE:
 	temp = PL_markstack_ptr++;
-	Rmpz_import(rop, count, order, size, endian, nails, op);
+	Rmpz_import(aTHX_ rop, count, order, size, endian, nails, op);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;
@@ -5772,6 +5998,9 @@ Rmpz_export (order, size, endian, nails, number)
 	SV *	endian
 	SV *	nails
 	mpz_t *	number
+CODE:
+  RETVAL = Rmpz_export (aTHX_ order, size, endian, nails, number);
+OUTPUT:  RETVAL
 
 int
 Rmpz_fits_ulong_p (in)
@@ -5808,11 +6037,17 @@ Rmpz_even_p (in)
 SV *
 Rmpz_size (in)
 	mpz_t *	in
+CODE:
+  RETVAL = Rmpz_size (aTHX_ in);
+OUTPUT:  RETVAL
 
 SV *
 Rmpz_sizeinbase (in, base)
 	mpz_t *	in
 	SV *	base
+CODE:
+  RETVAL = Rmpz_sizeinbase (aTHX_ in, base);
+OUTPUT:  RETVAL
 
 void
 Rsieve_gmp (x_arg, a, number)
@@ -5823,7 +6058,7 @@ Rsieve_gmp (x_arg, a, number)
 	I32* temp;
 	PPCODE:
 	temp = PL_markstack_ptr++;
-	Rsieve_gmp(x_arg, a, number);
+	Rsieve_gmp(aTHX_ x_arg, a, number);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;
@@ -5832,32 +6067,47 @@ Rsieve_gmp (x_arg, a, number)
         /* must have used dXSARGS; list context implied */
 	return; /* assume stack size is correct */
 
-int
+SV *
 Rfermat_gmp (num, base)
 	mpz_t *	num
 	SV *	base
+CODE:
+  RETVAL = Rfermat_gmp (aTHX_ num, base);
+OUTPUT:  RETVAL
 
-int
+SV *
 Rrm_gmp (num, base)
 	mpz_t *	num
 	SV *	base
+CODE:
+  RETVAL = Rrm_gmp (aTHX_ num, base);
+OUTPUT:  RETVAL
 
 SV *
 _Rmpz_out_str (p, base)
 	mpz_t *	p
 	SV *	base
+CODE:
+  RETVAL = _Rmpz_out_str (aTHX_ p, base);
+OUTPUT:  RETVAL
 
 SV *
 _Rmpz_out_strS (p, base, suff)
 	mpz_t *	p
 	SV *	base
 	SV *	suff
+CODE:
+  RETVAL = _Rmpz_out_strS (aTHX_ p, base, suff);
+OUTPUT:  RETVAL
 
 SV *
 _Rmpz_out_strP (pre, p, base)
 	SV *	pre
 	mpz_t *	p
 	SV *	base
+CODE:
+  RETVAL = _Rmpz_out_strP (aTHX_ pre, p, base);
+OUTPUT:  RETVAL
 
 SV *
 _Rmpz_out_strPS (pre, p, base, suff)
@@ -5865,12 +6115,18 @@ _Rmpz_out_strPS (pre, p, base, suff)
 	mpz_t *	p
 	SV *	base
 	SV *	suff
+CODE:
+  RETVAL = _Rmpz_out_strPS (aTHX_ pre, p, base, suff);
+OUTPUT:  RETVAL
 
 SV *
 _TRmpz_out_str (stream, base, p)
 	FILE *	stream
 	SV *	base
 	mpz_t *	p
+CODE:
+  RETVAL = _TRmpz_out_str (aTHX_ stream, base, p);
+OUTPUT:  RETVAL
 
 SV *
 _TRmpz_out_strS (stream, base, p, suff)
@@ -5878,6 +6134,9 @@ _TRmpz_out_strS (stream, base, p, suff)
 	SV *	base
 	mpz_t *	p
 	SV *	suff
+CODE:
+  RETVAL = _TRmpz_out_strS (aTHX_ stream, base, p, suff);
+OUTPUT:  RETVAL
 
 SV *
 _TRmpz_out_strP (pre, stream, base, p)
@@ -5885,6 +6144,9 @@ _TRmpz_out_strP (pre, stream, base, p)
 	FILE *	stream
 	SV *	base
 	mpz_t *	p
+CODE:
+  RETVAL = _TRmpz_out_strP (aTHX_ pre, stream, base, p);
+OUTPUT:  RETVAL
 
 SV *
 _TRmpz_out_strPS (pre, stream, base, p, suff)
@@ -5893,17 +6155,26 @@ _TRmpz_out_strPS (pre, stream, base, p, suff)
 	SV *	base
 	mpz_t *	p
 	SV *	suff
+CODE:
+  RETVAL = _TRmpz_out_strPS (aTHX_ pre, stream, base, p, suff);
+OUTPUT:  RETVAL
 
 SV *
 Rmpz_inp_str (p, base)
 	mpz_t *	p
 	SV *	base
+CODE:
+  RETVAL = Rmpz_inp_str (aTHX_ p, base);
+OUTPUT:  RETVAL
 
 SV *
 TRmpz_inp_str (p, stream, base)
 	mpz_t *	p
 	FILE *	stream
 	SV *	base
+CODE:
+  RETVAL = TRmpz_inp_str (aTHX_ p, stream, base);
+OUTPUT:  RETVAL
 
 void
 eratosthenes (x_arg)
@@ -5912,7 +6183,7 @@ eratosthenes (x_arg)
 	I32* temp;
 	PPCODE:
 	temp = PL_markstack_ptr++;
-	eratosthenes(x_arg);
+	eratosthenes(aTHX_ x_arg);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;
@@ -5921,10 +6192,13 @@ eratosthenes (x_arg)
         /* must have used dXSARGS; list context implied */
 	return; /* assume stack size is correct */
 
-int
+SV *
 trial_div_ul (num, x_arg)
 	mpz_t *	num
 	SV *	x_arg
+CODE:
+  RETVAL = trial_div_ul (aTHX_ num, x_arg);
+OUTPUT:  RETVAL
 
 void
 Rmpz_rootrem (root, rem, u, d)
@@ -5936,7 +6210,7 @@ Rmpz_rootrem (root, rem, u, d)
 	I32* temp;
 	PPCODE:
 	temp = PL_markstack_ptr++;
-	Rmpz_rootrem(root, rem, u, d);
+	Rmpz_rootrem(aTHX_ root, rem, u, d);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;
@@ -5953,7 +6227,7 @@ Rmpz_combit (num, bitpos)
 	I32* temp;
 	PPCODE:
 	temp = PL_markstack_ptr++;
-	Rmpz_combit(num, bitpos);
+	Rmpz_combit(aTHX_ num, bitpos);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;
@@ -5967,262 +6241,399 @@ overload_mul (a, b, third)
 	SV *	a
 	SV *	b
 	SV *	third
+CODE:
+  RETVAL = overload_mul (aTHX_ a, b, third);
+OUTPUT:  RETVAL
 
 SV *
 overload_add (a, b, third)
 	SV *	a
 	SV *	b
 	SV *	third
+CODE:
+  RETVAL = overload_add (aTHX_ a, b, third);
+OUTPUT:  RETVAL
 
 SV *
 overload_sub (a, b, third)
 	SV *	a
 	SV *	b
 	SV *	third
+CODE:
+  RETVAL = overload_sub (aTHX_ a, b, third);
+OUTPUT:  RETVAL
 
 SV *
 overload_div (a, b, third)
 	SV *	a
 	SV *	b
 	SV *	third
+CODE:
+  RETVAL = overload_div (aTHX_ a, b, third);
+OUTPUT:  RETVAL
 
 SV *
 overload_mod (a, b, third)
 	mpz_t *	a
 	SV *	b
 	SV *	third
+CODE:
+  RETVAL = overload_mod (aTHX_ a, b, third);
+OUTPUT:  RETVAL
 
 SV *
 overload_string (p, second, third)
 	mpz_t *	p
 	SV *	second
 	SV *	third
+CODE:
+  RETVAL = overload_string (aTHX_ p, second, third);
+OUTPUT:  RETVAL
 
 SV *
 overload_copy (p, second, third)
 	mpz_t *	p
 	SV *	second
 	SV *	third
+CODE:
+  RETVAL = overload_copy (aTHX_ p, second, third);
+OUTPUT:  RETVAL
 
 SV *
 overload_abs (p, second, third)
 	mpz_t *	p
 	SV *	second
 	SV *	third
+CODE:
+  RETVAL = overload_abs (aTHX_ p, second, third);
+OUTPUT:  RETVAL
 
 SV *
 overload_lshift (a, b, third)
 	mpz_t *	a
 	SV *	b
 	SV *	third
+CODE:
+  RETVAL = overload_lshift (aTHX_ a, b, third);
+OUTPUT:  RETVAL
 
 SV *
 overload_rshift (a, b, third)
 	mpz_t *	a
 	SV *	b
 	SV *	third
+CODE:
+  RETVAL = overload_rshift (aTHX_ a, b, third);
+OUTPUT:  RETVAL
 
 SV *
 overload_pow (a, b, third)
 	SV *	a
 	SV *	b
 	SV *	third
+CODE:
+  RETVAL = overload_pow (aTHX_ a, b, third);
+OUTPUT:  RETVAL
 
 SV *
 overload_sqrt (p, second, third)
 	mpz_t *	p
 	SV *	second
 	SV *	third
+CODE:
+  RETVAL = overload_sqrt (aTHX_ p, second, third);
+OUTPUT:  RETVAL
 
 SV *
 overload_and (a, b, third)
 	mpz_t *	a
 	SV *	b
 	SV *	third
+CODE:
+  RETVAL = overload_and (aTHX_ a, b, third);
+OUTPUT:  RETVAL
 
 SV *
 overload_ior (a, b, third)
 	mpz_t *	a
 	SV *	b
 	SV *	third
+CODE:
+  RETVAL = overload_ior (aTHX_ a, b, third);
+OUTPUT:  RETVAL
 
 SV *
 overload_xor (a, b, third)
 	mpz_t *	a
 	SV *	b
 	SV *	third
+CODE:
+  RETVAL = overload_xor (aTHX_ a, b, third);
+OUTPUT:  RETVAL
 
 SV *
 overload_com (p, second, third)
 	mpz_t *	p
 	SV *	second
 	SV *	third
+CODE:
+  RETVAL = overload_com (aTHX_ p, second, third);
+OUTPUT:  RETVAL
 
 SV *
 overload_gt (a, b, third)
 	mpz_t *	a
 	SV *	b
 	SV *	third
+CODE:
+  RETVAL = overload_gt (aTHX_ a, b, third);
+OUTPUT:  RETVAL
 
 SV *
 overload_gte (a, b, third)
 	mpz_t *	a
 	SV *	b
 	SV *	third
+CODE:
+  RETVAL = overload_gte (aTHX_ a, b, third);
+OUTPUT:  RETVAL
 
 SV *
 overload_lt (a, b, third)
 	mpz_t *	a
 	SV *	b
 	SV *	third
+CODE:
+  RETVAL = overload_lt (aTHX_ a, b, third);
+OUTPUT:  RETVAL
 
 SV *
 overload_lte (a, b, third)
 	mpz_t *	a
 	SV *	b
 	SV *	third
+CODE:
+  RETVAL = overload_lte (aTHX_ a, b, third);
+OUTPUT:  RETVAL
 
 SV *
 overload_spaceship (a, b, third)
 	mpz_t *	a
 	SV *	b
 	SV *	third
+CODE:
+  RETVAL = overload_spaceship (aTHX_ a, b, third);
+OUTPUT:  RETVAL
 
 SV *
 overload_equiv (a, b, third)
 	mpz_t *	a
 	SV *	b
 	SV *	third
+CODE:
+  RETVAL = overload_equiv (aTHX_ a, b, third);
+OUTPUT:  RETVAL
 
 SV *
 overload_not_equiv (a, b, third)
 	mpz_t *	a
 	SV *	b
 	SV *	third
+CODE:
+  RETVAL = overload_not_equiv (aTHX_ a, b, third);
+OUTPUT:  RETVAL
 
 SV *
 overload_not (a, second, third)
 	mpz_t *	a
 	SV *	second
 	SV *	third
+CODE:
+  RETVAL = overload_not (aTHX_ a, second, third);
+OUTPUT:  RETVAL
 
 SV *
 overload_xor_eq (a, b, third)
 	SV *	a
 	SV *	b
 	SV *	third
+CODE:
+  RETVAL = overload_xor_eq (aTHX_ a, b, third);
+OUTPUT:  RETVAL
 
 SV *
 overload_ior_eq (a, b, third)
 	SV *	a
 	SV *	b
 	SV *	third
+CODE:
+  RETVAL = overload_ior_eq (aTHX_ a, b, third);
+OUTPUT:  RETVAL
 
 SV *
 overload_and_eq (a, b, third)
 	SV *	a
 	SV *	b
 	SV *	third
+CODE:
+  RETVAL = overload_and_eq (aTHX_ a, b, third);
+OUTPUT:  RETVAL
 
 SV *
 overload_pow_eq (a, b, third)
 	SV *	a
 	SV *	b
 	SV *	third
+CODE:
+  RETVAL = overload_pow_eq (aTHX_ a, b, third);
+OUTPUT:  RETVAL
 
 SV *
 overload_rshift_eq (a, b, third)
 	SV *	a
 	SV *	b
 	SV *	third
+CODE:
+  RETVAL = overload_rshift_eq (aTHX_ a, b, third);
+OUTPUT:  RETVAL
 
 SV *
 overload_lshift_eq (a, b, third)
 	SV *	a
 	SV *	b
 	SV *	third
+CODE:
+  RETVAL = overload_lshift_eq (aTHX_ a, b, third);
+OUTPUT:  RETVAL
 
 SV *
 overload_inc (p, second, third)
 	SV *	p
 	SV *	second
 	SV *	third
+CODE:
+  RETVAL = overload_inc (aTHX_ p, second, third);
+OUTPUT:  RETVAL
 
 SV *
 overload_dec (p, second, third)
 	SV *	p
 	SV *	second
 	SV *	third
+CODE:
+  RETVAL = overload_dec (aTHX_ p, second, third);
+OUTPUT:  RETVAL
 
 SV *
 overload_mod_eq (a, b, third)
 	SV *	a
 	SV *	b
 	SV *	third
+CODE:
+  RETVAL = overload_mod_eq (aTHX_ a, b, third);
+OUTPUT:  RETVAL
 
 SV *
 get_refcnt (s)
 	SV *	s
+CODE:
+  RETVAL = get_refcnt (aTHX_ s);
+OUTPUT:  RETVAL
 
 SV *
 overload_div_eq (a, b, third)
 	SV *	a
 	SV *	b
 	SV *	third
+CODE:
+  RETVAL = overload_div_eq (aTHX_ a, b, third);
+OUTPUT:  RETVAL
 
 SV *
 overload_sub_eq (a, b, third)
 	SV *	a
 	SV *	b
 	SV *	third
+CODE:
+  RETVAL = overload_sub_eq (aTHX_ a, b, third);
+OUTPUT:  RETVAL
 
 SV *
 overload_add_eq (a, b, third)
 	SV *	a
 	SV *	b
 	SV *	third
+CODE:
+  RETVAL = overload_add_eq (aTHX_ a, b, third);
+OUTPUT:  RETVAL
 
 SV *
 overload_mul_eq (a, b, third)
 	SV *	a
 	SV *	b
 	SV *	third
+CODE:
+  RETVAL = overload_mul_eq (aTHX_ a, b, third);
+OUTPUT:  RETVAL
 
 SV *
 eratosthenes_string (x_arg)
 	SV *	x_arg
+CODE:
+  RETVAL = eratosthenes_string (aTHX_ x_arg);
+OUTPUT:  RETVAL
 
 SV *
 gmp_v ()
-		
+CODE:
+  RETVAL = gmp_v (aTHX);
+OUTPUT:  RETVAL
+
 
 SV *
 wrap_gmp_printf (a, b)
 	SV *	a
 	SV *	b
+CODE:
+  RETVAL = wrap_gmp_printf (aTHX_ a, b);
+OUTPUT:  RETVAL
 
 SV *
 wrap_gmp_fprintf (stream, a, b)
 	FILE *	stream
 	SV *	a
 	SV *	b
+CODE:
+  RETVAL = wrap_gmp_fprintf (aTHX_ stream, a, b);
+OUTPUT:  RETVAL
 
 SV *
-wrap_gmp_sprintf (stream, a, b)
-	char *	stream
+wrap_gmp_sprintf (s, a, b, buflen)
+	SV *	s
 	SV *	a
 	SV *	b
+	int	buflen
+CODE:
+  RETVAL = wrap_gmp_sprintf (aTHX_ s, a, b, buflen);
+OUTPUT:  RETVAL
 
 SV *
-wrap_gmp_snprintf (stream, bytes, a, b)
-	char *	stream
+wrap_gmp_snprintf (s, bytes, a, b, buflen)
+	SV *	s
 	SV *	bytes
 	SV *	a
 	SV *	b
+	int	buflen
+CODE:
+  RETVAL = wrap_gmp_snprintf (aTHX_ s, bytes, a, b, buflen);
+OUTPUT:  RETVAL
 
 SV *
 _itsa (a)
 	SV *	a
+CODE:
+  RETVAL = _itsa (aTHX_ a);
+OUTPUT:  RETVAL
 
 void
 Rmpz_urandomb (p, ...)
@@ -6231,7 +6642,7 @@ Rmpz_urandomb (p, ...)
 	I32* temp;
 	PPCODE:
 	temp = PL_markstack_ptr++;
-	Rmpz_urandomb(p);
+	Rmpz_urandomb(aTHX_ p);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;
@@ -6247,7 +6658,7 @@ Rmpz_urandomm (x, ...)
 	I32* temp;
 	PPCODE:
 	temp = PL_markstack_ptr++;
-	Rmpz_urandomm(x);
+	Rmpz_urandomm(aTHX_ x);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;
@@ -6263,7 +6674,7 @@ Rmpz_rrandomb (x, ...)
 	I32* temp;
 	PPCODE:
 	temp = PL_markstack_ptr++;
-	Rmpz_rrandomb(x);
+	Rmpz_rrandomb(aTHX_ x);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;
@@ -6275,6 +6686,9 @@ Rmpz_rrandomb (x, ...)
 SV *
 rand_init (seed)
 	SV *	seed
+CODE:
+  RETVAL = rand_init (aTHX_ seed);
+OUTPUT:  RETVAL
 
 void
 rand_clear (p)
@@ -6283,7 +6697,7 @@ rand_clear (p)
 	I32* temp;
 	PPCODE:
 	temp = PL_markstack_ptr++;
-	rand_clear(p);
+	rand_clear(aTHX_ p);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;
@@ -6308,31 +6722,59 @@ SV *
 Rmpz_inp_raw (a, stream)
 	mpz_t *	a
 	FILE *	stream
+CODE:
+  RETVAL = Rmpz_inp_raw (aTHX_ a, stream);
+OUTPUT:  RETVAL
 
 SV *
 Rmpz_out_raw (stream, a)
 	FILE *	stream
 	mpz_t *	a
+CODE:
+  RETVAL = Rmpz_out_raw (aTHX_ stream, a);
+OUTPUT:  RETVAL
 
 SV *
 ___GNU_MP_VERSION ()
-		
+CODE:
+  RETVAL = ___GNU_MP_VERSION (aTHX);
+OUTPUT:  RETVAL
+
 
 SV *
 ___GNU_MP_VERSION_MINOR ()
-		
+CODE:
+  RETVAL = ___GNU_MP_VERSION_MINOR (aTHX);
+OUTPUT:  RETVAL
+
 
 SV *
 ___GNU_MP_VERSION_PATCHLEVEL ()
-		
+CODE:
+  RETVAL = ___GNU_MP_VERSION_PATCHLEVEL (aTHX);
+OUTPUT:  RETVAL
+
+
+SV *
+___GNU_MP_RELEASE ()
+CODE:
+  RETVAL = ___GNU_MP_RELEASE (aTHX);
+OUTPUT:  RETVAL
+
 
 SV *
 ___GMP_CC ()
-		
+CODE:
+  RETVAL = ___GMP_CC (aTHX);
+OUTPUT:  RETVAL
+
 
 SV *
 ___GMP_CFLAGS ()
-		
+CODE:
+  RETVAL = ___GMP_CFLAGS (aTHX);
+OUTPUT:  RETVAL
+
 
 void
 Rmpz_powm_sec (dest, base, exp, mod)
@@ -6344,7 +6786,7 @@ Rmpz_powm_sec (dest, base, exp, mod)
 	I32* temp;
 	PPCODE:
 	temp = PL_markstack_ptr++;
-	Rmpz_powm_sec(dest, base, exp, mod);
+	Rmpz_powm_sec(aTHX_ dest, base, exp, mod);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;
@@ -6359,11 +6801,17 @@ _using_mpir ()
 
 SV *
 _Rmpz_NULL ()
-		
+CODE:
+  RETVAL = _Rmpz_NULL (aTHX);
+OUTPUT:  RETVAL
+
 
 SV *
 _wrap_count ()
-		
+CODE:
+  RETVAL = _wrap_count (aTHX);
+OUTPUT:  RETVAL
+
 
 void
 Rprbg_ms (outref, p, q, seed, bits_required)
@@ -6376,7 +6824,7 @@ Rprbg_ms (outref, p, q, seed, bits_required)
 	I32* temp;
 	PPCODE:
 	temp = PL_markstack_ptr++;
-	Rprbg_ms(outref, p, q, seed, bits_required);
+	Rprbg_ms(aTHX_ outref, p, q, seed, bits_required);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;
@@ -6396,7 +6844,7 @@ Rprbg_bbs (outref, p, q, seed, bits_required)
 	I32* temp;
 	PPCODE:
 	temp = PL_markstack_ptr++;
-	Rprbg_bbs(outref, p, q, seed, bits_required);
+	Rprbg_bbs(aTHX_ outref, p, q, seed, bits_required);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;
@@ -6420,4 +6868,19 @@ Rruns (bitstream)
 int
 Rpoker (bitstream)
 	mpz_t *	bitstream
+
+SV *
+_get_xs_version ()
+CODE:
+  RETVAL = _get_xs_version (aTHX);
+OUTPUT:  RETVAL
+
+
+SV *
+query_eratosthenes_string (candidate, str)
+	int	candidate
+	char *	str
+CODE:
+  RETVAL = query_eratosthenes_string (aTHX_ candidate, str);
+OUTPUT:  RETVAL
 
