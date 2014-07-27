@@ -1,6 +1,7 @@
 use warnings;
 use strict;
 use Math::GMPz qw(__GNU_MP_VERSION __GNU_MP_VERSION_MINOR __GNU_MP_VERSION_PATCHLEVEL);
+use Math::GMPz::V;
 
 print "1..9\n";
 
@@ -9,7 +10,8 @@ warn "# Using gmp library version ", Math::GMPz::gmp_v(), "\n";
 warn "# CC is ", Math::GMPz::__GMP_CC, "\n" if defined Math::GMPz::__GMP_CC;
 warn "# CFLAGS are ", Math::GMPz::__GMP_CFLAGS, "\n" if defined Math::GMPz::__GMP_CFLAGS;
 
-if($Math::GMPz::VERSION eq '0.38' && $Math::GMPz::Random::VERSION eq '0.38' &&
+if($Math::GMPz::VERSION eq '0.39' && $Math::GMPz::Random::VERSION eq '0.39' &&
+   $Math::GMPz::V::VERSION eq '0.39' &&
    Math::GMPz::_get_xs_version() eq $Math::GMPz::VERSION) {print "ok 1\n"}
 else {print "not ok 1 $Math::GMPz::VERSION $Math::GMPz::Random::VERSION ", Math::GMPz::_get_xs_version(), "\n"}
 

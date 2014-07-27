@@ -34,11 +34,11 @@ else {print "not ok 1\n"}
 
 Rmpz_swap($x, $y);
 
-if(Rmpz_get_str($y, 10) eq '26984951330683686935405' 
+if(Rmpz_get_str($y, 10) eq '26984951330683686935405'
    &&
    lc(Rmpz_get_str($x, 16)) eq '6db6db6db6db6db6db6')
      {print "ok 2\n"}
-else {print "not ok 2\n"} 
+else {print "not ok 2\n"}
 
 my $z = Rmpz_init2(45);
 my $q = Rmpz_init();
@@ -81,16 +81,16 @@ if(Rmpz_get_str($z, 33) eq '9999999999999999999999')
 else {print "not ok 8\n"}
 
 # Two stupid tests that rely on sizeof(long) == 4
-# (which is not always the case). 
+# (which is not always the case).
 # Let's just remove tests 9 and 10
 
 #my $truncated = Rmpz_get_ui($y);
-#if($truncated == 1840700269) 
+#if($truncated == 1840700269)
 print "ok 9\n";
 #else {print "not ok 9\n"}
 
 #$truncated = Rmpz_get_si($y);
-#if($truncated == 1840700269) 
+#if($truncated == 1840700269)
 print "ok 10\n";
 #else {print "not ok 10\n"}
 

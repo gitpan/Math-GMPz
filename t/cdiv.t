@@ -54,7 +54,7 @@ $ret = Rmpz_cdiv_qr_ui($q, $r, $z, $ul);
 if($ret == 356
    &&
    Rmpz_get_str($r, 10) eq '-356'
-   && 
+   &&
    Rmpz_get_str($q, 10) eq '23804590197253')
      {print "ok 6\n"}
 else {print "not ok 6\n"}

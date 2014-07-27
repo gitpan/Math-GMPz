@@ -9,7 +9,7 @@ print "# Using gmp version ", Math::GMPz::gmp_v(), "\n";
 
 my $z = Rmpz_init2(50);
 
-my 
+my
 $binstring = 'ôW¼+¯·?+ACé??+ÅRHK3V+Ü¦n-¦+üû!é+?k7ß';
 Rmpz_import($z, length($binstring), 1, 1, 0, 0, $binstring);
 my

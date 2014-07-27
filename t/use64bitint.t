@@ -24,7 +24,7 @@ if($_64) {
     ) {$ok = 'a'}
 
   my $pp1 = Rmpz_get_str($int1, 10);
-  if($pp1 == -144115188075868217) {$ok .= 'b'} 
+  if($pp1 == -144115188075868217) {$ok .= 'b'}
 
   $pp1 += 14;
 
@@ -33,14 +33,14 @@ if($_64) {
   if($int2 == $pp1
      && $int2 - $int1 - 14 == 0
      && !($int2 - $int1 - 14)
-     ) {$ok .= 'c'}  
+     ) {$ok .= 'c'}
 
 my $uintmax = ~0;
 my $mpz1 = Math::GMPz->new($uintmax);
 my $mpz2 = Math::GMPz::new($uintmax);
 
 if($mpz1 == $mpz2 &&
-   $mpz2 == $uintmax && 
+   $mpz2 == $uintmax &&
    $uintmax == $mpz1) {$ok .= 'd'}
 
 
@@ -128,7 +128,7 @@ if(!$_64) {
   my $mpz2 = Math::GMPz::new($uintmax);
 
   if($mpz1 == $mpz2 &&
-     $mpz2 == $uintmax && 
+     $mpz2 == $uintmax &&
      $uintmax == $mpz1) {print "ok 1\n"}
   else {print "not ok 1\n"}
   warn "Skipping test 2 - nothing to test\n";

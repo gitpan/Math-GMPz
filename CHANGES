@@ -1,8 +1,15 @@
+0.39
+ - Add metadata to Makefile.PL
+ - Add Rmpz_bin_si, as suggested by Dana Jacobsen. (Added even though the gmp
+   library provides only mpz_bin_ui and mpz_bin_uiui.)
+ - Tweaks to Math::GMPz::gmp_v() and Math::GMPz::V::gmp_v()
+ - Fix bug in Rruns function.
+
 0.38
  - Alter wrap_gmp_sprintf and wrap_gmp_snprintf to take an extra arg (length of
    buffer to which we write).
  - Remove Rmpz_sprintf_ret and Rmpz_snprintf_ret. (These now seem pointless in
-   view of the changes to wrap_gmp_sprintf and wrap_gmp_snprintf.) 
+   view of the changes to wrap_gmp_sprintf and wrap_gmp_snprintf.)
  - Add Math::GMPz::__GNU_MP_RELEASE.
  - Alter V.xs to accommodate the possibility that the global constant gmp_version
    has not been set in gmp.h. I've assumed this can only happen if the gmp
@@ -37,7 +44,7 @@
 
 0.32
  - Add Rmpz_powm_sec (gmp-5 only, and not available when building against mpir).
- - In the documentation, elaborate on the way that Math::GMPz::get_v() and 
+ - In the documentation, elaborate on the way that Math::GMPz::get_v() and
    __GNU_MP_VERSION & friends determine their values. (Thanks Vincent Lefevre.)
  - Add Rmpz_div, Rmpz_divmod, Rmpz_div_ui, Rmpz_divmod_ui,
    Rmpz_div_2exp and Rmpz_mod_2exp.
@@ -59,7 +66,7 @@
  - Amendment to Makefile.PL wrt 'long long' and 'long double' support.
  - Remove reliance on $Config{use64bitint} in t/new.t and t/out_str.t
  - Add some MAC OS X notes to README and fix some typos.
- 
+
  In response to bug http://rt.cpan.org/Ticket/Display.html?id=46603
  - In Rmpz_get_d_2exp, change data type of 'exp' from unsigned to signed.
 
@@ -77,7 +84,7 @@
    of signed long ints.
  - Add __GNU_MP_VERSION, __GNU_MP_VERSION_MINOR, __GNU_MP_VERSION_PATCHLEVEL,
    __GMP_CC and __GMP_CFLAGS
- - Change Rmpz_scan0 and Rmpz_scan1 to return unsigned long. (Returning a 
+ - Change Rmpz_scan0 and Rmpz_scan1 to return unsigned long. (Returning a
    signed long int was wrong.)
  - Change Rmpz_printf() so that, like its fprintf and sprintf counterparts,
    it formats only one variable at a time.
@@ -94,15 +101,15 @@
    string that will be prepended to the mpz_out_str() output.
  - Remove the tests in the Makefile.PL that test for the presence of
    a suitable compiler and GMP library.
- - Remove the "homegrown" primes and supplementary functions from the 
+ - Remove the "homegrown" primes and supplementary functions from the
    list of exportable functions. (They don't really belong here.) Also
    remove the documentation pertaining to these functions from the POD.
-   This is done in preparation for the eventual removal of these 
+   This is done in preparation for the eventual removal of these
    functions from Math::GMPz. For the time being, however, these
    functions are still available via their fully-qualified names - and
    they're still being tested in the test suite.
 
-0.22 
+0.22
  - Rewrite new()
  - Rmpz_out_str() now takes an optional third argument - a string that
    will be appended to the mpz_out_str() output. Also stdout is

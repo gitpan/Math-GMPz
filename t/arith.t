@@ -21,7 +21,7 @@ if(Rmpz_get_str($z, 10) eq '9007199254740991')
      {print "ok 1\n"}
 else {print "not ok 1\n"}
 
-my 
+my
 $ul = 1009;
 
 Rmpz_add_ui($z, $z, $ul);
@@ -57,7 +57,7 @@ else {print "not ok 7\n"}
 Rmpz_mul_ui($z, $z, $ul);
 if(Rmpz_get_str($z, 10) eq '-18354647385777381697206677762236852690')
      {print "ok 8\n"}
-else {print "not ok 8\n"}  
+else {print "not ok 8\n"}
 
 Rmpz_addmul($z, $x, $y);
 if(Rmpz_get_str($z, 10) eq '-18354629357106396011999216659753099200')

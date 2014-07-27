@@ -82,7 +82,7 @@ $ok = '';
 
 my $f19 = Math::GMPz->new('z', 62);
 if($f19 == 61) {$ok .= 'a'}
-else {warn "\n3a:\nExpected: 61\nGot: $f19\n"} 
+else {warn "\n3a:\nExpected: 61\nGot: $f19\n"}
 
 my $f20 = Math::GMPz->new();
 Rmpz_set_ui($f20, $ui);

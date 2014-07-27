@@ -1,4 +1,4 @@
-# Just some additional tests to check that ~0, unsigned and signed longs are 
+# Just some additional tests to check that ~0, unsigned and signed longs are
 # are being handled as expected.
 
 use warnings;
@@ -37,5 +37,5 @@ else {
   else {print "not ok 3 B $gmpz3 != $n\n"}
 }
 
-  
+
 

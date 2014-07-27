@@ -21,7 +21,7 @@ $use_long_double = 0;# Let perl decide whether to include 'long double' support
 
 my $defines = $] < 5.008 ? "-DOLDPERL" : "-DNEWPERL";
 
-if($use_64_bit_int == -1) {}                                
+if($use_64_bit_int == -1) {}
 elsif($use_64_bit_int == 1) {$defines .= " -DUSE_64_BIT_INT"}
 else {
   unless($Config::Config{ivsize} < 8) {
@@ -47,7 +47,7 @@ $defines =~ /-DUSE_LONG_DOUBLE/ ? print "Building with 'long double' support\n" 
 
 print "If this is wrong, see the \"64-bit support\" section in the README\n\n";
 
-my %options = (       
+my %options = (
   NAME => 'Math::GMPz',
   AUTHOR => 'Sisyphus (sisyphus at (@) cpan dot (.) org)',
   ABSTRACT => 'Perl interface to the GMP integer functions',
@@ -55,8 +55,19 @@ my %options = (
   LIBS => [
     '-lgmp'
   ],
+  LICENSE  => 'perl',
   VERSION_FROM => 'GMPz.pm',
   clean   => { FILES => 'out1.txt out2.txt out3.txt out4.txt out5.txt out6.txt out7.txt' },
+  META_MERGE => {
+   'meta-spec' => { version => 2 },
+    resources => {
+      repository => {
+        type => 'git',
+        url => 'https://github.com/sisyphus/math-gmpz.git',
+        web => 'https://github.com/sisyphus/math-gmpz',
+      },
+    },
+  },
 );
 WriteMakefile(%options);
 

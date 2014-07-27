@@ -216,7 +216,7 @@ for(0 .. 100) {
   if($x >= 2 ** 15) {
     warn "$x is out of range\n";
     $ok = 0;
-  } 
+  }
 }
 
 if($ok) {print "ok 15\n"}
@@ -228,7 +228,7 @@ for(0 .. 100) {
   if($x >= $ui) {
     warn "$x is greater than $ui\n";
     $ok = 0;
-  } 
+  }
 }
 
 if($ok) {print "ok 16\n"}

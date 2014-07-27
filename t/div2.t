@@ -59,7 +59,7 @@ $ret = Rmpz_tdiv_qr_ui($q, $r, $z, $ul);
 if($ret == 653
    &&
    Rmpz_get_str($r, 10) eq '653'
-   && 
+   &&
    Rmpz_get_str($q, 10) eq '23804590197252')
      {print "ok 6\n"}
 else {print "not ok 6\n"}

@@ -4,7 +4,7 @@ use Math::GMPz qw(:mpz);
 use Math::BigInt;
 
 #$| = 1;
-print "1..29\n";
+print "1..34\n";
 
 print "# Using gmp version ", Math::GMPz::gmp_v(), "\n";
 
@@ -116,7 +116,7 @@ Rmpz_set_ui($q, 10);
 my
  $ok = Rmpz_remove($z, $z, $q);
 if($ok == 12
-   && 
+   &&
    Rmpz_get_str($z, 10) eq '30414093201713378043612608166064768844377641568960512')
      {print "ok 16\n"}
 else {print "not ok 16\n"}
@@ -204,4 +204,35 @@ else {
   warn
   print "not ok 29\n";
 }
+
+Rmpz_bin_si($q, Math::GMPz->new(-5), Math::GMPz->new(-10));
+if($q == -126) {print "ok 30\n"}
+else {
+  warn "\n  Expected -126\n  Got $q\n";
+  print "not ok 30\n";
+}
+
+Rmpz_bin_si($q, Math::GMPz->new(5), Math::GMPz->new(-10));
+if($q == 0) {print "ok 31\n"}
+else {
+  warn "\n  Expected 0\n Got $q\n";
+  print "not ok 31\n";
+}
+
+Rmpz_bin_si($q, Math::GMPz->new(-11), Math::GMPz->new(-10));
+if($q == 0) {print "ok 32\n"}
+else {
+  warn "\n  Expected 0\n Got $q\n";
+  print "not ok 32\n";
+}
+
+Rmpz_bin_ui($z, Math::GMPz->new(10), Math::GMPz->new(15));
+Rmpz_bin_si($q, Math::GMPz->new(10), Math::GMPz->new(15));
+if($z == $q) {print "ok 33\n"}
+else {print "not ok 33\n"}
+
+Rmpz_bin_ui($z, Math::GMPz->new(-10), Math::GMPz->new(15));
+Rmpz_bin_si($q, Math::GMPz->new(-10), Math::GMPz->new(15));
+if($z == $q) {print "ok 34\n"}
+else {print "not ok 34\n"}
 

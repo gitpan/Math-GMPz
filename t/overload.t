@@ -91,7 +91,7 @@ my $z2 = -13 - $z;
 $z2 = $z2 - (2 ** 39);
 $z2 += (2 ** 39) - -13;
 $z2 *= -1;
- 
+
 if("$z" eq '-5938393582141440'
    && Math::GMPz::get_refcnt($z2) == 1) { print "ok 6\n"}
 else {print "not ok 6\n"}
@@ -405,25 +405,25 @@ my $mers = Rmpz_init_set_str('1' x 2000, 2);
 
 $ok = '';
 
-my $and = $mers & 1234; 
+my $and = $mers & 1234;
 if("$and" eq '1234'
    && $and == 1234
    && Math::GMPz::get_refcnt($and) == 1
    && Math::GMPz::get_refcnt($mers) == 1) {$ok = 'a'}
 
-$and = $mers & $m; 
+$and = $mers & $m;
 if("$and" eq "$m"
    && $and == $m
    && Math::GMPz::get_refcnt($and) == 1
    && Math::GMPz::get_refcnt($mers) == 1) {$ok .= 'b'}
 
-$and = $mers & $w; 
+$and = $mers & $w;
 if("$and" eq "$w"
    && $and == $w
    && Math::GMPz::get_refcnt($and) == 1
    && Math::GMPz::get_refcnt($mers) == 1) {$ok .= 'c'}
 
-$and = $mers & $z; 
+$and = $mers & $z;
 if("$and" eq "$z"
    && Math::GMPz::get_refcnt($and) == 1
    && Math::GMPz::get_refcnt($mers) == 1) {$ok .= 'd'}
@@ -433,25 +433,25 @@ else {print "not ok 19 $ok\n"}
 
 $ok = '';
 
-my $ior = $mers | 1234; 
+my $ior = $mers | 1234;
 if("$ior" eq "$mers"
    && $ior == $mers
    && Math::GMPz::get_refcnt($ior) == 1
    && Math::GMPz::get_refcnt($mers) == 1) {$ok = 'a'}
 
-$ior = $mers | $m; 
+$ior = $mers | $m;
 if("$ior" eq "$mers"
    && $ior == $mers
    && Math::GMPz::get_refcnt($ior) == 1
    && Math::GMPz::get_refcnt($mers) == 1) {$ok .= 'b'}
 
-$ior = $mers | $w; 
+$ior = $mers | $w;
 if("$ior" eq "$mers"
    && $ior == $mers
    && Math::GMPz::get_refcnt($ior) == 1
    && Math::GMPz::get_refcnt($mers) == 1) {$ok .= 'c'}
 
-$ior = $mers | $z; 
+$ior = $mers | $z;
 if("$ior" eq "$mers"
    && $ior == $mers
    && Math::GMPz::get_refcnt($ior) == 1
@@ -462,25 +462,25 @@ else {print "not ok 20 $ok\n"}
 
 $ok = '';
 
-my $xor = $mers ^ 1234; 
+my $xor = $mers ^ 1234;
 if("$xor" eq Rmpz_get_str($mers - 1234, 10)
    && $xor == $mers - 1234
    && Math::GMPz::get_refcnt($xor) == 1
    && Math::GMPz::get_refcnt($mers) == 1) {$ok = 'a'}
 
-$xor = $mers ^ $m; 
+$xor = $mers ^ $m;
 if("$xor" eq Rmpz_get_str($mers - $m, 10)
    && $xor == $mers - $m
    && Math::GMPz::get_refcnt($xor) == 1
    && Math::GMPz::get_refcnt($mers) == 1) {$ok .= 'b'}
 
-$xor = $mers ^ $w; 
+$xor = $mers ^ $w;
 if("$xor" eq Rmpz_get_str($mers - $w, 10)
    && $xor == $mers - $w
    && Math::GMPz::get_refcnt($xor) == 1
    && Math::GMPz::get_refcnt($mers) == 1) {$ok .= 'c'}
 
-$xor = $mers ^ $z; 
+$xor = $mers ^ $z;
 if("$xor" eq Rmpz_get_str($mers - $z, 10)
    && $xor == $mers - $z
    && Math::GMPz::get_refcnt($xor) == 1
@@ -492,25 +492,25 @@ else {print "not ok 21 $ok\n"}
 $ok = '';
 
 $and = $mers;
-$and &= 1234; 
+$and &= 1234;
 if("$and" eq '1234'
    && Math::GMPz::get_refcnt($and) == 1
    && Math::GMPz::get_refcnt($mers) == 1) {$ok = 'a'}
 
 $and = $mers * 1;
-$and &= $m; 
+$and &= $m;
 if("$and" eq "$m"
    && Math::GMPz::get_refcnt($and) == 1
    && Math::GMPz::get_refcnt($mers) == 1) {$ok .= 'b'}
 
 $and = $mers;
-$and &= $w; 
+$and &= $w;
 if("$and" eq "$w"
    && Math::GMPz::get_refcnt($and) == 1
    && Math::GMPz::get_refcnt($mers) == 1) {$ok .= 'c'}
 
 $and = $mers + 0;
-$and &= $z; 
+$and &= $z;
 if("$and" eq "$z"
    && Math::GMPz::get_refcnt($and) == 1
    && Math::GMPz::get_refcnt($mers) == 1) {$ok .= 'd'}
@@ -521,25 +521,25 @@ else {print "not ok 22 $ok\n"}
 $ok = '';
 
 $ior = $mers * 1;
-$ior |= 1234; 
+$ior |= 1234;
 if("$ior" eq "$mers"
    && Math::GMPz::get_refcnt($ior) == 1
    && Math::GMPz::get_refcnt($mers) == 1) {$ok = 'a'}
 
 $ior = $mers - 0;
-$ior |= $m; 
+$ior |= $m;
 if("$ior" eq "$mers"
    && Math::GMPz::get_refcnt($ior) == 1
    && Math::GMPz::get_refcnt($mers) == 1) {$ok .= 'b'}
 
 $ior = $mers;
-$ior |= $w; 
+$ior |= $w;
 if("$ior" eq "$mers"
    && Math::GMPz::get_refcnt($ior) == 1
    && Math::GMPz::get_refcnt($mers) == 1) {$ok .= 'c'}
 
 $ior = $mers;
-$ior |= $z; 
+$ior |= $z;
 if("$ior" eq "$mers"
    && Math::GMPz::get_refcnt($ior) == 1
    && Math::GMPz::get_refcnt($mers) == 1) {$ok .= 'd'}
@@ -550,25 +550,25 @@ else {print "not ok 23 $ok\n"}
 $ok = '';
 
 $xor = $mers;
-$xor ^= 1234; 
+$xor ^= 1234;
 if("$xor" eq Rmpz_get_str($mers - 1234, 10)
    && Math::GMPz::get_refcnt($xor) == 1
    && Math::GMPz::get_refcnt($mers) == 1) {$ok = 'a'}
 
 $xor = $mers;
-$xor ^= $m; 
+$xor ^= $m;
 if("$xor" eq Rmpz_get_str($mers - $m, 10)
    && Math::GMPz::get_refcnt($xor) == 1
    && Math::GMPz::get_refcnt($mers) == 1) {$ok .= 'b'}
 
 $xor = $mers;
-$xor ^= $w; 
+$xor ^= $w;
 if("$xor" eq Rmpz_get_str($mers - $w, 10)
    && Math::GMPz::get_refcnt($xor) == 1
    && Math::GMPz::get_refcnt($mers) == 1) {$ok .= 'c'}
 
 $xor = $mers;
-$xor ^= $z; 
+$xor ^= $z;
 if("$xor" eq Rmpz_get_str($mers - $z, 10)
    && Math::GMPz::get_refcnt($xor) == 1
    && Math::GMPz::get_refcnt($mers) == 1) {$ok .= 'd'}

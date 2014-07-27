@@ -131,7 +131,7 @@ if($@ =~ /must pass 2 arguments/) {$ok .= 'g'}
 else {warn "3g got: $@\n"}
 
 if($ok eq 'abcdefg') {print "ok 3\n"}
-else {print "not ok 3 $ok\n"}                                                                                                                                                                                                                                          
+else {print "not ok 3 $ok\n"}
 
 $ok = '';
 
